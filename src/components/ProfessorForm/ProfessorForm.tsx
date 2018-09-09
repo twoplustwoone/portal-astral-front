@@ -37,6 +37,11 @@ class ProfessorForm extends React.Component<IProps, IState> {
     },
   };
 
+  constructor(props) {
+    super(props);
+    console.log({ props });
+  }
+
   handleChange = (prop: string) => (event: any) => {
     this.setState({
       ...this.state,
@@ -57,9 +62,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   handleSubmit = () => {
     if (this.validateAll()) {
-      // TODO dispatch post professor action
-    } else {
-
+      this.props.onSubmit(this.state.fields);
     }
   };
 
@@ -68,9 +71,9 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     /* Validate all fields and set errors */
     const results: boolean[] = Object.keys(this.state.fields).map((field) => {
-      const result = this.validate(field, this.state.fields[field]);
-      errors[field] = result;
-      return result;
+      const isValid = this.validate(field, this.state.fields[field]);
+      errors[field] = !isValid;
+      return isValid;
     });
     const reduce = results.reduce(this.checkBooleans, true);
     /* Update error state */
@@ -78,7 +81,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
       ...this.state,
       errors: errors,
     });
-    return reduce
+    return reduce;
   };
 
   checkBooleans = (acc: boolean, elem: boolean) => {
@@ -109,23 +112,22 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   validateFirstName = (value: any): boolean => {
-    return value == '';
+    return value !== '';
   };
 
   validateLastName = (value: any): boolean => {
-    return value == '';
+    return value !== '';
   };
 
   validateEmail = (value: any): boolean => {
-    return !value.includes('@') || value == '';
+    return value !== '' && value.includes('@');
   };
 
   validatePassword = (value: any): boolean => {
-    return !(value || !(value.length < 6 || value.length > 20));
+    return value !== '' && value.length > 6 && value.length < 20;
   };
 
   render() {
-    console.log({ styles });
     return (
       <div className={styles.NewProfessor}>
         <Typography className={styles['New-Professor-title']} color='textSecondary'>

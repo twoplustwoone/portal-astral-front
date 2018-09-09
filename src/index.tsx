@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import reducers from '../src/reducers';
@@ -39,7 +40,9 @@ if (process.env.NODE_ENV === 'production') {
 
 const rootEl = document.getElementById('root');
 
-const store = createStore(reducers);
+const store = createStore(reducers,
+  applyMiddleware(thunk),
+);
 
 export const getState = store.getState.bind(store);
 
@@ -61,20 +64,7 @@ if (module.hot) {
   });
 }
 
-function removeMuleyLoader() {
-  if (document) {
-    const loading = document.getElementById('logo-mule-wrapper');
-    if (loading) {
-      const parentNode = loading.parentNode;
-      if (parentNode) {
-        parentNode.removeChild(loading); // Cross browser fix for IE11
-      }
-    }
-  }
-}
-
 function initRender() {
-  removeMuleyLoader();
   renderApp();
 }
 

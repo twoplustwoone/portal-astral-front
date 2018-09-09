@@ -4,6 +4,7 @@ export interface IProps extends IDispatchProps, IValueProps {
 
 /* These are all the functions the component will receive as props from the parent container */
 export interface IDispatchProps {
+  onSubmit: (professor: IProfessor) => any;
 }
 
 /* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */

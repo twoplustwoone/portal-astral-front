@@ -2,7 +2,8 @@ import * as React from 'react';
 import { IProps, IState } from './types';
 import './App.css';
 import { Route } from 'react-router-dom'
-import { Home, ProfessorForm } from 'src/components';
+import { Home } from 'src/components';
+import { ProfessorForm } from 'src/containers';
 
 class App extends React.PureComponent<IProps, IState> {
 
