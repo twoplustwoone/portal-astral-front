@@ -10,7 +10,9 @@
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",
     "react-scripts-ts": "2.17.0",
-    "redux": "^4.0.0"
+    "redux": "^4.0.0",
+    "react-router-redux": "latest",
+    "redux-thunk": "latest"
   },
   "scripts": {
     "start": "react-scripts-ts start",
