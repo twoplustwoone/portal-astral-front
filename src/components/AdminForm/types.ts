@@ -1,25 +1,14 @@
 /* Totality of props received. Usually left empty */
-export interface IProps extends IDispatchProps, IValueProps, IContainerProps {
+export interface IProps extends IDispatchProps, IValueProps {
 }
 
 /* These are all the functions the component will receive as props from the parent container */
 export interface IDispatchProps {
   onSubmit: (professor: IProfessor) => any;
-  onCancel: () => any;
 }
 
 /* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */
 export interface IValueProps {
-  professor?: IProfessor;
-}
-
-export interface IContainerProps {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-  history: any;
 }
 
 /* Internal state. Usually left empty except for forms and other small exceptions */
@@ -27,8 +16,6 @@ export interface IState {
   fields: IFields;
   showPassword: boolean;
   errors: IErrors;
-  isNew: boolean;
-  isEditing: boolean;
 }
 
 export interface IFields {

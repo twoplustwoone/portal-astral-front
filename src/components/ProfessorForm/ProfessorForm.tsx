@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { IErrors, IProps, IState } from './types';
-import './ProfessorForm.pcss';
 import {
   FormControl,
   InputLabel,
@@ -13,6 +12,7 @@ import {
   Card,
   FormHelperText,
   Typography,
+  CardHeader,
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -27,6 +27,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
       lastName: '',
       email: '',
       password: '',
+      id: '',
     },
     showPassword: false,
     errors: {
@@ -35,11 +36,30 @@ class ProfessorForm extends React.Component<IProps, IState> {
       email: false,
       password: false,
     },
+    isNew: true,
+    isEditing: true,
   };
 
-  constructor(props) {
-    super(props);
-    console.log({ props });
+
+  componentDidMount() {
+    const { professor } = this.props;
+
+    /* If professor was passed as a prop, then set the information for the professor into the fields */
+    if (professor) {
+      const { email, firstName, lastName, id } = professor;
+      this.setState({
+        ...this.state,
+        fields: {
+          ...this.state.fields,
+          email,
+          firstName,
+          lastName,
+          id: id,
+        },
+        isNew: false,
+        isEditing: false,
+      });
+    }
   }
 
   handleChange = (prop: string) => (event: any) => {
@@ -127,42 +147,77 @@ class ProfessorForm extends React.Component<IProps, IState> {
     return value !== '' && value.length > 6 && value.length < 20;
   };
 
+  areInputsReadOnly = () => {
+    const { isEditing } = this.state;
+    return !isEditing;
+  };
+
+  handleEdit = () => {
+    this.setState({ ...this.state, isEditing: true });
+  };
+
+  handleCancel = () => {
+    if (this.state.isNew) {
+      this.props.onCancel();
+    } else {
+      this.setState({ ...this.state, isEditing: false });
+    }
+  };
+
+  getHeader = () => {
+    if (this.state.isNew) {
+      return 'Create professor';
+    } else {
+      return 'Edit professor';
+    }
+  };
+
   render() {
+    const { fields, showPassword, errors } = this.state;
+
+    const readOnly = this.areInputsReadOnly();
+
     return (
       <div className={styles.NewProfessor}>
         <Typography className={styles['New-Professor-title']} color='textSecondary'>
-          Create professor
+          {
+            this.getHeader()
+          }
         </Typography>
-
-        {/*<h1 className='New-Professor-title'>Create professor</h1>*/}
         <Card className={styles['New-Professor-box']}>
+          <CardHeader title={`${fields.firstName} ${fields.lastName}`} className={styles.displayName} />
           <CardContent>
             <form className={styles['New-Professor-form']}>
-              <FormControl className={styles['professor-form-control']} error={this.state.errors.firstName}>
+              <FormControl className={styles['professor-form-control']} error={errors.firstName}>
                 <InputLabel required htmlFor='professor-name'>First name</InputLabel>
                 <Input id='professor-name'
-                       value={this.state.fields.firstName}
-                       onChange={this.handleChange('firstName')} />
+                       value={fields.firstName}
+                       onChange={this.handleChange('firstName')}
+                       readOnly={readOnly}
+                />
               </FormControl>
-              <FormControl className={styles['professor-form-control']} error={this.state.errors.lastName}>
+              <FormControl className={styles['professor-form-control']} error={errors.lastName}>
                 <InputLabel required htmlFor='professor-surname'>Last name</InputLabel>
                 <Input id='professor-surname'
-                       value={this.state.fields.lastName}
-                       onChange={this.handleChange('lastName')} />
+                       value={fields.lastName}
+                       onChange={this.handleChange('lastName')}
+                       readOnly={readOnly}
+                />
               </FormControl>
-              <FormControl className={styles['professor-form-control']} error={this.state.errors.email}>
+              <FormControl className={styles['professor-form-control']} error={errors.email}>
                 <InputLabel required htmlFor='professor-email'>E-mail</InputLabel>
                 <Input id='professor-email'
-                       value={this.state.fields.email}
-                       onChange={this.handleChange('email')} />
+                       value={fields.email}
+                       onChange={this.handleChange('email')}
+                       readOnly={readOnly}
+                />
               </FormControl>
-              <FormControl className={styles['professor-form-control']} error={this.state.errors.password}>
-                {/* LA PASSWORD -> Entre 6 y 20 caracters, una letra, un numero minimo*/}
+              <FormControl className={styles['professor-form-control']} error={errors.password}>
                 <InputLabel required htmlFor='adornment-password'>Password</InputLabel>
                 <Input
                   id='adornment-password'
-                  type={this.state.showPassword ? 'text' : 'password'}
-                  value={this.state.fields.password}
+                  type={showPassword ? 'text' : 'password'}
+                  value={fields.password}
                   onChange={this.handleChange('password')}
                   endAdornment={
                     <InputAdornment position='end'>
@@ -171,10 +226,11 @@ class ProfessorForm extends React.Component<IProps, IState> {
                         onClick={this.handleClickShowPassword}
                         onMouseDown={this.handleMouseDownPassword}
                       >
-                        {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   }
+                  readOnly={readOnly}
                 />
                 <FormHelperText className={styles['password-helper-text']} id='password-helper-text'>
                   Must be between 6 and 20 characters with at least one number and one letter
@@ -184,17 +240,36 @@ class ProfessorForm extends React.Component<IProps, IState> {
           </CardContent>
 
           <CardActions>
-            <Button
-              variant='contained'
-              color='primary'
-              className={styles['create-professor-button']}
-              onClick={this.handleSubmit}
-            >
-              SAVE
-            </Button>
-            <Button variant='outlined' className={styles['create-professor-button']}>
-              CANCEL
-            </Button>
+            {
+              readOnly
+                ? <div>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    className={styles['create-professor-button']}
+                    onClick={this.handleEdit}
+                  >
+                    EDIT
+                  </Button>
+                </div>
+                : <div>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    className={styles['create-professor-button']}
+                    onClick={this.handleSubmit}
+                  >
+                    SAVE
+                  </Button>
+                  <Button
+                    variant='outlined'
+                    className={styles['create-professor-button']}
+                    onClick={this.handleCancel}
+                  >
+                    CANCEL
+                  </Button>
+                </div>
+            }
           </CardActions>
 
         </Card>

@@ -7,7 +7,7 @@ declare interface IUser {
   firstName: string;
   lastName: string;
   email: string;
-  id?: string;
+  id: string;
   password?: string;
 }
 

@@ -5,7 +5,7 @@ import { Route } from 'react-router-dom'
 import { Home } from 'src/components';
 import { ProfessorForm } from 'src/containers';
 
-class App extends React.PureComponent<IProps, IState> {
+class App extends React.Component<IProps, IState> {
 
   /* Initial state for the component */
   state: IState = {};
@@ -15,6 +15,7 @@ class App extends React.PureComponent<IProps, IState> {
       <div>
         <Route path={'/'} component={Home} />
         <Route path={'/new-professor'} component={ProfessorForm} />
+        <Route path={'/professor/:id'} component={ProfessorForm} />
         <Route />
       </div>
     );

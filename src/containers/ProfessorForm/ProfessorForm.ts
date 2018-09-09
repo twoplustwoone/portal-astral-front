@@ -1,18 +1,31 @@
 import { connect } from 'react-redux';
 import { IStore } from '../../reducers';
-import { ProfessorForm, IProfessorFormDispatchProps, IProfessorFormValueProps } from '../../components';
+import {
+  ProfessorForm,
+  IProfessorFormDispatchProps,
+  IProfessorFormValueProps,
+  IProfessorContainerProps,
+} from '../../components';
 import { professorActions } from "../../actions";
+import { withRouter } from "react-router";
 
-const mapStateToProps = (state: IStore): IProfessorFormValueProps => {
-  console.log('Is creating professor?');
-  console.log(state.ui.is.creating.professor);
-  return {};
+const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IProfessorFormValueProps => {
+  const { id } = ownProps.match.params;
+  const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
+
+  return {
+    professor,
+  };
 };
 
-const mapDispatchToProps = (dispatch: (action: any) => any | void): IProfessorFormDispatchProps => ({
+const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfessorContainerProps): IProfessorFormDispatchProps => ({
   onSubmit: function (professor: IProfessor) {
     dispatch(professorActions.createProfessor(professor));
   },
+
+  onCancel() {
+    props.history.push('/');
+  },
 });
 
-export default (connect(mapStateToProps, mapDispatchToProps) as any)(ProfessorForm) as typeof ProfessorForm;
+export default withRouter((connect(mapStateToProps, mapDispatchToProps) as any)(ProfessorForm)) as typeof ProfessorForm;
