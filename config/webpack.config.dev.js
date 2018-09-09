@@ -1,7 +1,7 @@
 'use strict';
-
 const autoprefixer = require('autoprefixer');
 const path = require('path');
+const alias = require('./alias');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -95,17 +95,7 @@ module.exports = {
       '.web.jsx',
       '.jsx',
     ],
-    alias: {
-      
-      // Support React Native Web
-      // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      'react-native': 'react-native-web',
-      'components': 'src/components',
-      'containers': 'src/containers',
-      'reducers': 'src/reducers',
-      'actions': 'src/actions',
-      'services': 'src/services'
-    },
+    alias,
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
       // This often causes confusion because we only process files within src/ with babel.
