@@ -1,3 +1,4 @@
 // @ts-ignore
 export { default as App } from './App/App';
 export { default as Home } from './Home/Home';
+export { default as ProfessorForm } from './ProfessorForm/ProfessorForm';
