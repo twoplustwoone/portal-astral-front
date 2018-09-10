@@ -8,6 +8,7 @@ import {
 } from '../../components';
 import { professorActions, uiActions } from "../../actions";
 import { withRouter } from "react-router";
+import {IProfessor} from "../../../globals";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IProfessorFormValueProps => {
   const { id } = ownProps.match.params;

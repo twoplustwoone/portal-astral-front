@@ -1,4 +1,5 @@
 import { professorActions, uiActions } from "../actions";
+import {IAction} from "../../globals";
 
 export interface IState {
   is: {
