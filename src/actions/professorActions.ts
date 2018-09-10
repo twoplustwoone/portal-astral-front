@@ -3,7 +3,7 @@ import { IStore } from "../reducers";
 
 namespace ProfessorActions {
 
-  export const CREATE_PROFESSOR_REQUEST = '@ASTRAL_CREATE_PROFESSOR_REQUEST';
+  export const CREATE_PROFESSOR_REQUEST = '@ASTRAL.CREATE_PROFESSOR_REQUEST';
 
   export const createProfessorRequest = (): IAction => ({
     type: CREATE_PROFESSOR_REQUEST,
@@ -39,12 +39,12 @@ namespace ProfessorActions {
       });
   };
 
-  export const getProfessors = () => (dispatch, getState: () => IStore) => {
-    dispatch(createProfessorRequest());
+  export const deleteProfessor = (professor: IProfessor) => (dispatch, getState: () => IStore) => {
+    // TODO implement delete
+  };
 
-    return fetch(`/professor`, {
-      method: 'GET',
-    });
+  export const getProfessors = () => (dispatch, getState: () => IStore) => {
+    // TODO implement get
   }
 }
 

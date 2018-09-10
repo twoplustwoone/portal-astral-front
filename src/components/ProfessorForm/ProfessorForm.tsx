@@ -13,6 +13,8 @@ import {
   FormHelperText,
   Typography,
   CardHeader,
+  Dialog,
+  DialogTitle, DialogActions, DialogContent, DialogContentText,
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -172,20 +174,77 @@ class ProfessorForm extends React.Component<IProps, IState> {
     }
   };
 
+  handleDeleteClick = () => {
+    this.props.onClickDelete(this.props.professor as IProfessor);
+  };
+
+  handleCloseDelete = () => {
+    this.props.onCloseDelete();
+  };
+
+  handleConfirmDelete = () => {
+    this.props.onConfirmDelete(this.props.professor as IProfessor);
+  };
+
+  renderTitle = () => {
+    const { isNew } = this.state;
+    const { firstName, lastName } = this.state.fields;
+    return <div>
+      {
+        !isNew &&
+        <div className={styles.deleteButtonDiv}>
+          <Button
+            variant='contained'
+            color='secondary'
+            onClick={this.handleDeleteClick}
+          >
+            DELETE
+          </Button>
+        </div>
+      }
+      <div className={styles.displayNameDiv}>{`${firstName} ${lastName}`}</div>
+    </div>
+  };
+
   render() {
     const { fields, showPassword, errors } = this.state;
+
+    const { isDeleteConfirmationOpen } = this.props;
 
     const readOnly = this.areInputsReadOnly();
 
     return (
       <div className={styles.NewProfessor}>
+
+        {
+          isDeleteConfirmationOpen &&
+          <Dialog open={true}>
+            <DialogTitle>Confirm delete "{`${fields.firstName} ${fields.lastName}`}"</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                This will permanently delete the professor {`${fields.firstName} ${fields.lastName}`} and cannot be
+                undone.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleCloseDelete} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={this.handleConfirmDelete} color="secondary" variant='contained'>
+                Confirm
+              </Button>
+            </DialogActions>
+          </Dialog>
+        }
+
+
         <Typography className={styles['New-Professor-title']} color='textSecondary'>
           {
             this.getHeader()
           }
         </Typography>
         <Card className={styles['New-Professor-box']}>
-          <CardHeader title={`${fields.firstName} ${fields.lastName}`} className={styles.displayName} />
+          <CardHeader title={this.renderTitle()} className={styles.displayName} />
           <CardContent>
             <form className={styles['New-Professor-form']}>
               <FormControl className={styles['professor-form-control']} error={errors.firstName}>
@@ -240,10 +299,10 @@ class ProfessorForm extends React.Component<IProps, IState> {
           </CardContent>
 
           <CardActions>
-            {
-              readOnly
-                ? <div>
-                  <Button
+            <div className={styles.buttonContainer}>
+              {
+                readOnly
+                  ? <Button
                     variant='contained'
                     color='primary'
                     className={styles['create-professor-button']}
@@ -251,25 +310,25 @@ class ProfessorForm extends React.Component<IProps, IState> {
                   >
                     EDIT
                   </Button>
-                </div>
-                : <div>
-                  <Button
-                    variant='contained'
-                    color='primary'
-                    className={styles['create-professor-button']}
-                    onClick={this.handleSubmit}
-                  >
-                    SAVE
-                  </Button>
-                  <Button
-                    variant='outlined'
-                    className={styles['create-professor-button']}
-                    onClick={this.handleCancel}
-                  >
-                    CANCEL
-                  </Button>
-                </div>
-            }
+                  : <div className={styles.submitCancelButtons}>
+                    <Button
+                      variant='outlined'
+                      className={styles['create-professor-button']}
+                      onClick={this.handleCancel}
+                    >
+                      CANCEL
+                    </Button>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      className={styles['create-professor-button']}
+                      onClick={this.handleSubmit}
+                    >
+                      SAVE
+                    </Button>
+                  </div>
+              }
+            </div>
           </CardActions>
 
         </Card>

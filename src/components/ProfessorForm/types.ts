@@ -6,11 +6,15 @@ export interface IProps extends IDispatchProps, IValueProps, IContainerProps {
 export interface IDispatchProps {
   onSubmit: (professor: IProfessor) => any;
   onCancel: () => any;
+  onClickDelete: (professor: IProfessor) => any;
+  onCloseDelete: () => any;
+  onConfirmDelete: (professor: IProfessor) => any;
 }
 
 /* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */
 export interface IValueProps {
   professor?: IProfessor;
+  isDeleteConfirmationOpen: boolean;
 }
 
 export interface IContainerProps {
