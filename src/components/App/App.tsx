@@ -4,6 +4,29 @@ import './App.css';
 import { Route } from 'react-router-dom'
 import { Home } from 'src/components';
 import { ProfessorForm } from 'src/containers';
+import Topbar from "../layout/topbar/Topbar";
+import Sidebar from "../layout/sidebar/Sidebar";
+import {withStyles} from "@material-ui/core";
+import AdminForm from "../AdminForm/AdminForm";
+import StudentListPage from "../student/StudentListPage";
+
+const styles = (theme: any) => ({
+    root: {
+        flexGrow: 1,
+        height: '100%',
+        zIndex: 1,
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        width: '100%',
+    },
+    content: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.default,
+        padding: theme.spacing.unit * 3,
+    },
+    toolbar: theme.mixins.toolbar,
+});
 
 class App extends React.Component<IProps, IState> {
 
@@ -11,15 +34,22 @@ class App extends React.Component<IProps, IState> {
   state: IState = {};
 
   render() {
-    return (
-      <div>
-        <Route path={'/'} component={Home} />
-        <Route path={'/new-professor'} component={ProfessorForm} />
-        <Route path={'/professor/:id'} component={ProfessorForm} />
-        <Route />
-      </div>
+      const { classes}: any = this.props;
+
+      return (
+        <div className={classes.root}>
+            <Topbar userName="Sebas Belaustegui"/>
+            <Sidebar/>
+            <main className={classes.content}>
+                <div className={classes.toolbar} />
+                <Route path={'/'} component={Home} />
+                <Route path={'/new-professor'} component={ProfessorForm} />
+                <Route path={'/admin'} component={AdminForm} />
+                <Route path={'/students'} component={StudentListPage} />
+            </main>
+        </div>
     );
   }
 }
 
-export default App;
+export default withStyles(styles as any, { withTheme: true })(App);
