@@ -22,7 +22,7 @@ const styles = (theme: any) => ({
     },
     content: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: 'transparent',
         padding: theme.spacing.unit * 3,
     },
     toolbar: theme.mixins.toolbar,
@@ -34,12 +34,12 @@ class App extends React.Component<IProps, IState> {
   state: IState = {};
 
   render() {
-      const { classes}: any = this.props;
+      const { classes, history}: any = this.props;
 
       return (
         <div className={classes.root}>
             <Topbar userName="Sebas Belaustegui"/>
-            <Sidebar/>
+            <Sidebar history={history}/>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Route path={'/'} component={Home} />

@@ -3,6 +3,7 @@ import StudentTable from "./all-students/Students";
 import {Student} from "./student-model";
 import {WebData} from "../../../globals";
 import {success} from "@devexperts/remote-data-ts";
+import {IProps, IState} from "../ProfessorForm/types";
 
 const dummyStudent: Student = {
     id: "id",
@@ -19,22 +20,21 @@ const model: StudentsState = {
     students: success([dummyStudent, dummyStudent, dummyStudent]),
 };
 
-class StudentListPage extends React.Component {
+class StudentListPage extends React.Component<IProps, IState> {
     public render() {
         return (
             <div>
                 <div>
                     {
                         model.students.foldL(
-                        () => <p>Pending request</p>,
+                        () => <p>Loading</p>,
                         () => <p>Loading</p>,
                         err => <p>Error!</p>,
-                        students => StudentTable(students),
+                        students => StudentTable(students, this.props),
                     )}
                 </div>
             </div>
-    )
-    }
+    )}
 }
 
 export default StudentListPage;

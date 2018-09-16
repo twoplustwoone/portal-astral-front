@@ -41,7 +41,7 @@ class Sidebar  extends React.Component<any, any> {
     };
 
     render() {
-        const { classes, theme}: any = this.props;
+        const { classes, theme, history}: any = this.props;
 
         const drawer = (
             <div>
@@ -60,7 +60,7 @@ class Sidebar  extends React.Component<any, any> {
                         </ListItemIcon>
                         <ListItemText primary='Profesores' />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button onClick={() => history.push('/students')}>
                         <ListItemIcon>
                             <SchoolIcon />
                         </ListItemIcon>

@@ -29,7 +29,6 @@ namespace StudentActions {
             method: 'GET',
         })
             .then(response => {
-                /* TODO stream the response to treat it as a user-friendly JSON */
                 dispatch(getStudentSuccess(response));
             })
             .catch(error => {
