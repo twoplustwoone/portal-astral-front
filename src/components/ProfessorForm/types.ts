@@ -5,16 +5,20 @@ export interface IProps extends IDispatchProps, IValueProps, IContainerProps {
 /* These are all the functions the component will receive as props from the parent container */
 export interface IDispatchProps {
   onSubmit: (professor: IProfessor) => any;
+  onEdit: (professor: IProfessor) => any;
   onCancel: () => any;
+  onSave: () => any;
   onClickDelete: (professor: IProfessor) => any;
   onCloseDelete: () => any;
   onConfirmDelete: (professor: IProfessor) => any;
+  onLoading: (professor: IProfessor) => any;
 }
 
 /* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */
 export interface IValueProps {
   professor?: IProfessor;
   isDeleteConfirmationOpen: boolean;
+  isLoadingOpen: boolean;
 }
 
 export interface IContainerProps {
@@ -36,11 +40,12 @@ export interface IState {
 }
 
 export interface IFields {
-  firstName: string;
+  name: string;
   lastName: string;
   email: string;
   password: string;
   id: string;
+  file: string;
 }
 
 export type IErrors = {
