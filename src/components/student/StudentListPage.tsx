@@ -5,19 +5,33 @@ import {WebData} from "../../../globals";
 import {success} from "@devexperts/remote-data-ts";
 import {IProps, IState} from "../ProfessorForm/types";
 
-const dummyStudent: Student = {
-    id: "id",
-    firstName: "first name",
-    lastName: "last name",
-    email: "user@provider.com",
-};
+const students: Student[] = [
+    {
+        id: "1",
+        firstName: "Sebas",
+        lastName: "Belaustegui",
+        email: "sebas@mail.com",
+    },
+    {
+        id: "2",
+        firstName: "Pipa",
+        lastName: "Pepe",
+        email: "pipa@gmail.com",
+    },
+    {
+        id: "3",
+        firstName: "Jerma",
+        lastName: "Mila",
+        email: "jerma@mail.com",
+    },
+];
 
 export interface StudentsState {
     readonly students: WebData<Student[]>
 }
 
 const model: StudentsState = {
-    students: success([dummyStudent, dummyStudent, dummyStudent]),
+    students: success(students),
 };
 
 class StudentListPage extends React.Component<IProps, IState> {
@@ -27,9 +41,9 @@ class StudentListPage extends React.Component<IProps, IState> {
                 <div>
                     {
                         model.students.foldL(
-                        () => <p>Loading</p>,
-                        () => <p>Loading</p>,
-                        err => <p>Error!</p>,
+                        () => <p>Cargando</p>,
+                        () => <p>Cargando</p>,
+                        err => <p>Hubo un error al cargar los estudiantes. Por favor inténtelo nuevamente mas tarde.</p>,
                         students => StudentTable(students, this.props),
                     )}
                 </div>
