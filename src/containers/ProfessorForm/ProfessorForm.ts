@@ -8,26 +8,21 @@ import {
 } from '../../components';
 import { professorActions, uiActions } from "../../actions";
 import { withRouter } from "react-router";
-import {IProfessor} from "../../../globals";
+import { IProfessor } from "../../../globals";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IProfessorFormValueProps => {
   const { id } = ownProps.match.params;
-  // const professor: IProfessor | undefined = {
-  //   email: 'dffadsfasd@gmail.com',
-  //   name: 'Francisco',
-  //   id,
-  //   lastName: 'Di Giandomenico',
-  //   password: 'fasfdasf',
-  //   file: "sasa",
-  // };
   const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
 
-    console.log(ownProps.match.params.id);
+  const isFetchingProfessor = state.ui.is.fetching.professor[id];
 
-    return {
+  console.log({ isFetchingProfessor });
+
+  return {
     professor,
     isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
     isLoadingOpen: state.ui.is.open.loadingModal,
+    isFetchingProfessor: isFetchingProfessor,
   };
 };
 
@@ -60,9 +55,14 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
     dispatch(professorActions.deleteProfessor(professor));
   },
 
-  onLoading(professor: IProfessor){
+  onLoading(professor: IProfessor) {
     dispatch(uiActions.openLoadingModal(professor));
   },
+
+  onFetchProfessor(professorId: string) {
+    dispatch(professorActions.fetchProfessor(professorId));
+  },
+
 });
 
 export default withRouter((connect(mapStateToProps, mapDispatchToProps) as any)(ProfessorForm)) as typeof ProfessorForm;

@@ -14,6 +14,7 @@ export interface IDispatchProps {
   onCloseDelete: () => any;
   onConfirmDelete: (professor: IProfessor) => any;
   onLoading: (professor: IProfessor) => any;
+  onFetchProfessor: (professorId: string) => any;
 }
 
 /* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */
@@ -21,6 +22,7 @@ export interface IValueProps {
   professor?: IProfessor;
   isDeleteConfirmationOpen: boolean;
   isLoadingOpen: boolean;
+  isFetchingProfessor: boolean;
 }
 
 export interface IContainerProps {

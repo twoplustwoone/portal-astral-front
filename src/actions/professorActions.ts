@@ -1,5 +1,6 @@
 import { IStore } from "../reducers";
-import {IAction, IProfessor} from "../../globals";
+import { IAction, IProfessor } from "../../globals";
+import handleResponseError from "../domains/handleResponseError";
 
 
 namespace ProfessorActions {
@@ -7,13 +8,20 @@ namespace ProfessorActions {
   export const CREATE_PROFESSOR_REQUEST = '@ASTRAL.CREATE_PROFESSOR_REQUEST';
   export const EDIT_PROFESSOR_REQUEST = '@ASTRAL.EDIT_PROFESSOR_REQUEST';
   export const DELETE_PROFESSOR_REQUEST = '@ASTRAL.DELETE_PROFESSOR_REQUEST';
+  export const FETCH_PROFESSORS_REQUEST = '@ASTRAL.FETCH_PROFESSORS_REQUEST';
+  export const FETCH_PROFESSORS_SUCCESS = '@ASTRAL.FETCH_PROFESSORS_SUCCESS';
+  export const FETCH_PROFESSORS_ERROR = '@ASTRAL.FETCH_PROFESSORS_ERROR';
+  export const FETCH_PROFESSOR_REQUEST = '@ASTRAL.FETCH_PROFESSOR_REQUEST';
+  export const FETCH_PROFESSOR_SUCCESS = '@ASTRAL.FETCH_PROFESSOR_SUCCESS';
+  export const FETCH_PROFESSOR_ERROR = '@ASTRAL.FETCH_PROFESSOR_ERROR';
+  export const DELETE_PROFESSOR_SUCCESS = '@ASTRAL.DELETE_PROFESSOR_SUCCESS';
 
   export const createProfessorRequest = (): IAction => ({
     type: CREATE_PROFESSOR_REQUEST,
   });
 
   export const editProfessorRequest = (): IAction => ({
-      type: EDIT_PROFESSOR_REQUEST,
+    type: EDIT_PROFESSOR_REQUEST,
   });
 
   export const createProfessorError = (error): IAction => ({
@@ -24,21 +32,65 @@ namespace ProfessorActions {
   });
 
   export const editProfessorError = (error): IAction => ({
-      type: EDIT_PROFESSOR_REQUEST,
-      payload: {
-          error,
-      },
+    type: EDIT_PROFESSOR_REQUEST,
+    payload: {
+      error,
+    },
   });
 
   export const deleteProfessorRequest = (): IAction => ({
-      type: DELETE_PROFESSOR_REQUEST,
+    type: DELETE_PROFESSOR_REQUEST,
+  });
+
+  export const deleteProfessorSuccess = (): IAction => ({
+    type: DELETE_PROFESSOR_SUCCESS,
   });
 
   export const deleteProfessorError = (error): IAction => ({
-      type: DELETE_PROFESSOR_REQUEST,
-      payload: {
-          error,
-      },
+    type: DELETE_PROFESSOR_REQUEST,
+    payload: {
+      error,
+    },
+  });
+
+  export const fetchProfessorRequest = (professorId: string): IAction => ({
+    type: FETCH_PROFESSOR_REQUEST,
+    payload: {
+      professorId,
+    },
+  });
+
+  export const fetchProfessorSuccess = (professor: IProfessor): IAction => ({
+    type: FETCH_PROFESSOR_SUCCESS,
+    payload: {
+      professor,
+    },
+  });
+
+  export const fetchProfessorError = (professorId: string, error: any): IAction => ({
+    type: FETCH_PROFESSOR_ERROR,
+    payload: {
+      professorId,
+      error,
+    },
+  });
+
+  export const fetchProfessorsRequest = (): IAction => ({
+    type: FETCH_PROFESSORS_REQUEST,
+  });
+
+  export const fetchProfessorsSuccess = (professors: IProfessor[]): IAction => ({
+    type: FETCH_PROFESSORS_SUCCESS,
+    payload: {
+      professors,
+    },
+  });
+
+  export const fetchProfessorsError = (error: any): IAction => ({
+    type: FETCH_PROFESSORS_ERROR,
+    payload: {
+      error,
+    },
   });
 
   /**
@@ -48,18 +100,17 @@ namespace ProfessorActions {
    * @param professor The professor object to be created
    */
   export const createProfessor = (professor: IProfessor) => (dispatch, getState: () => IStore) => {
-    console.log('Create professor.');
     dispatch(createProfessorRequest());
     professor.file = "";
-      return fetch('http://localhost:9000/professor', {
-          method: 'POST',
-          body: JSON.stringify(professor),
-          headers: {'content-type': 'application/json'},
-      })
-          .then(function(response) {
-              return response
-          }).then(function(body) {
-              console.log(body);
+    return fetch('http://localhost:9000/professor', {
+      method: 'POST',
+      body: JSON.stringify(professor),
+      headers: { 'content-type': 'application/json' },
+    })
+      .then(function (response) {
+        return response
+      }).then(function (body) {
+        console.log(body);
       })
       .catch(error => {
         dispatch(createProfessorError(error));
@@ -67,52 +118,69 @@ namespace ProfessorActions {
   };
 
   export const editProfessor = (professor: IProfessor) => (dispatch, getState: () => IStore) => {
-      console.log('Edit professor.');
-      dispatch(editProfessorRequest());
-      const id = localStorage.getItem("professorId");
-      console.log("Edit id: "+ id);
-      return fetch('http://localhost:9000/professor/' + id, {
-          method: 'PUT',
-          body: JSON.stringify(professor),
-          headers: {'content-type': 'application/json'},
+    dispatch(editProfessorRequest());
+    return fetch('http://localhost:9000/professor/' + professor.id, {
+      method: 'PUT',
+      body: JSON.stringify(professor),
+      headers: { 'content-type': 'application/json' },
+    })
+      .then(function (response) {
+        console.log("editing...");
+        console.log(response);
+        return response.json()
+      }).then(function (body) {
+        console.log(body);
       })
-          .then(function(response) {
-              console.log("editing...");
-              console.log(response);
-              return response.json()
-          }).then(function(body) {
-              console.log(body);
-          })
-          .catch(error => {
-              dispatch(editProfessorError(error));
-          });
+      .catch(error => {
+        dispatch(editProfessorError(error));
+      });
   };
 
   export const deleteProfessor = (professor: IProfessor) => (dispatch, getState: () => IStore) => {
-      console.log('Delete professor.');
-      dispatch(deleteProfessorRequest());
-      const id = localStorage.getItem("professorId");
-      //el id esta siendo undefined
-      return fetch('http://localhost:9000/professor/' + id, {
-          method: 'DELETE',
-          body: JSON.stringify(professor),
-          headers: {'content-type': 'application/json'},
+    dispatch(deleteProfessorRequest());
+    return fetch('http://localhost:9000/professor/' + professor.id, {
+      method: 'DELETE',
+      body: JSON.stringify(professor),
+      headers: { 'content-type': 'application/json' },
+    })
+      .then(function (response) {
+        console.log("deleting...");
+        console.log(response);
+        return response.json()
+      }).then(function (body) {
+        return dispatch(deleteProfessorSuccess());
       })
-          .then(function(response) {
-              console.log("deleting...");
-              console.log(response);
-              return response.json()
-          }).then(function(body) {
-              console.log(body);
-          })
-          .catch(error => {
-              dispatch(deleteProfessorError(error));
-          });
+      .catch(error => {
+        dispatch(deleteProfessorError(error));
+      });
   };
 
-  export const getProfessors = () => (dispatch, getState: () => IStore) => {
-    // TODO implement get
-  }
+  export const fetchProfessors = () => (dispatch, getState: () => IStore) => {
+    dispatch(fetchProfessorsRequest());
+
+    return fetch('http://localhost:9000/professor', {
+      method: 'GET',
+    })
+      .then(handleResponseError)
+      .then(professors => {
+        dispatch(fetchProfessorsSuccess(professors));
+      })
+      .catch(error => dispatch(fetchProfessorsError(error)));
+  };
+
+  export const fetchProfessor = (professorId: string) => (dispatch, getState: () => IStore) => {
+    dispatch(fetchProfessorRequest(professorId));
+
+    return fetch('http://localhost:9000/professor/' + professorId, {
+      method: 'GET',
+    })
+      .then(handleResponseError)
+      .then(professor => {
+        dispatch(fetchProfessorSuccess(professor));
+      })
+      .catch(error => dispatch(fetchProfessorError(professorId, error)));
+  };
+
 }
 
 export default ProfessorActions;
