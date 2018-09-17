@@ -2,7 +2,7 @@ import * as React from 'react';
 import {IProps, IState} from './types';
 import './App.css';
 import {Route} from 'react-router-dom'
-import {Home} from 'src/components';
+import {AdminForm, Home} from 'src/components';
 import {ProfessorForm} from 'src/containers';
 import AdminListPage from "../../pages/AdminsListPage";
 import NotFoundPage from "../../pages/NotFoundPage";
@@ -22,6 +22,7 @@ class App extends React.Component<IProps, IState> {
                     <Route path='/new-professor' component={ProfessorForm}/>
                     <Route path='/professor/:id' component={ProfessorForm}/>
 
+                    <Route path='/new-admin' component={AdminForm}/>
                     <Route path='/admins' component={AdminListPage}/>
 
                     <Route component={NotFoundPage}/>

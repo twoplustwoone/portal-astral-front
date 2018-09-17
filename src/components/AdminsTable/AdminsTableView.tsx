@@ -1,21 +1,31 @@
 import * as React from 'react';
-import {Paper, Table, TableHead, TableRow, TableBody, TableCell} from "@material-ui/core";
-import {DeleteOutline, Edit} from '@material-ui/icons';
+import {Paper, Table, TableHead, TableRow, TableBody, TableCell, Button, Grid} from "@material-ui/core";
+import {Add, DeleteOutline, Edit} from '@material-ui/icons';
 import {IAdmin, WebData} from "../../../globals";
 import * as h from 'react-hyperscript'
+import {Link} from 'react-router-dom'
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
 
 const AdminsTableView: React.SFC<WebData<Array<IAdmin>>> = (remoteAdmins) => {
 
     return (
-        h('div', {},
-            remoteAdmins.foldL(
-                () => <p>Pending request</p>,
-                () => <p>Loading</p>,
-                err => <p>Error!</p>,
-                admins => adminsTable(admins),
-            ))
-    );
+        h('div', {}, [
+            h(Link, {to: "/new-admin", style: {float: 'right'}},
+                h(Button, {variant: "fab", color: "primary"},
+                    h(Add),
+                ),
+            ),
+            h(Grid, {},
+                remoteAdmins.foldL(
+                    () => h(CircularProgress),
+                    () => h(CircularProgress),
+                    err => h('p', 'Error!'),
+                    admins => adminsTable(admins),
+                ),
+            ),
+        ])
+    )
 };
 
 const adminsTable = (admins: Array<IAdmin>) => {

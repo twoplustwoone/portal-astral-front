@@ -34,6 +34,7 @@ class AdminListPage extends React.Component<PropsType> {
 const mapStateToProps = (store: IStore, router: RouterProps) => ({
     admins: store.adminsState.admins,
 });
+
 const mapDispatchToProps = (dispatch): DispatchProps => ({
     getAdmins: () => dispatch(adminActions.getAdmins()),
     deleteAdmin: (id: string) => dispatch(adminActions.deleteAdmin(id)),
