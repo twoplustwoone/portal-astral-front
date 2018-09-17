@@ -27,7 +27,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   state: IState = {
     fields: {
-      firstName: '',
+      name: '',
       lastName: '',
       email: '',
       password: '',
@@ -35,7 +35,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
     },
     showPassword: false,
     errors: {
-      firstName: false,
+      name: false,
       lastName: false,
       email: false,
       password: false,
@@ -50,13 +50,13 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     /* If professor was passed as a prop, then set the information for the professor into the fields */
     if (professor) {
-      const { email, firstName, lastName, id } = professor;
+      const { email, name, lastName, id } = professor;
       this.setState({
         ...this.state,
         fields: {
           ...this.state.fields,
           email,
-          firstName,
+          name,
           lastName,
           id: id,
         },
@@ -114,9 +114,9 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   validate = (field: string, value: any): boolean => {
     switch (field) {
-      case 'firstName':
+      case 'name':
         return (
-          this.validateFirstName(value)
+          this.validatename(value)
         );
       case 'lastName':
         return (
@@ -135,7 +135,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
     }
   };
 
-  validateFirstName = (value: any): boolean => {
+  validatename = (value: any): boolean => {
     return value !== '';
   };
 
@@ -190,7 +190,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   renderTitle = () => {
     const { isNew } = this.state;
-    const { firstName, lastName } = this.state.fields;
+    const { name, lastName } = this.state.fields;
     return <div>
       {
         !isNew &&
@@ -204,7 +204,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
           </Button>
         </div>
       }
-      <div className={styles.displayNameDiv}>{`${firstName} ${lastName}`}</div>
+      <div className={styles.displayNameDiv}>{`${name} ${lastName}`}</div>
     </div>
   };
 
@@ -221,10 +221,10 @@ class ProfessorForm extends React.Component<IProps, IState> {
         {
           isDeleteConfirmationOpen &&
           <Dialog open={true}>
-            <DialogTitle>Confirm delete "{`${fields.firstName} ${fields.lastName}`}"</DialogTitle>
+            <DialogTitle>Confirm delete "{`${fields.name} ${fields.lastName}`}"</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                This will permanently delete the professor {`${fields.firstName} ${fields.lastName}`} and cannot be
+                This will permanently delete the professor {`${fields.name} ${fields.lastName}`} and cannot be
                 undone.
               </DialogContentText>
             </DialogContent>
@@ -249,11 +249,11 @@ class ProfessorForm extends React.Component<IProps, IState> {
           <CardHeader title={this.renderTitle()} className={styles.displayName} />
           <CardContent>
             <form className={styles['New-Professor-form']}>
-              <FormControl className={styles['professor-form-control']} error={errors.firstName}>
+              <FormControl className={styles['professor-form-control']} error={errors.name}>
                 <InputLabel required htmlFor='professor-name'>First name</InputLabel>
                 <Input id='professor-name'
-                       value={fields.firstName}
-                       onChange={this.handleChange('firstName')}
+                       value={fields.name}
+                       onChange={this.handleChange('name')}
                        readOnly={readOnly}
                 />
               </FormControl>

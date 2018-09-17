@@ -8,7 +8,7 @@ import Topbar from "../layout/topbar/Topbar";
 import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
-import StudentListPage from "../student/StudentListPage";
+import StudentTable from "../../containers/Student/StudentTable";
 
 const styles = (theme: any) => ({
     root: {
@@ -45,7 +45,7 @@ class App extends React.Component<IProps, IState> {
                 <Route path={'/'} component={Home} />
                 <Route path={'/new-professor'} component={ProfessorForm} />
                 <Route path={'/admin'} component={AdminForm} />
-                <Route path={'/students'} component={StudentListPage} />
+                <Route path={'/students'} component={StudentTable} />
             </main>
         </div>
     );

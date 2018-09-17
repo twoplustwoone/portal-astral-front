@@ -14,7 +14,7 @@ const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IPr
   const { id } = ownProps.match.params;
   const professor: IProfessor | undefined = {
     email: 'dffadsfasd@gmail.com',
-    firstName: 'Francisco',
+    name: 'Francisco',
     id,
     lastName: 'Di Giandomenico',
     password: 'fasfdasf',
