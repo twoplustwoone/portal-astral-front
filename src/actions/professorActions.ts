@@ -1,4 +1,5 @@
 import { IStore } from "../reducers";
+import {IAction, IProfessor} from "../../globals";
 
 
 namespace ProfessorActions {

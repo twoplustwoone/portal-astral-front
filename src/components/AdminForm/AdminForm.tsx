@@ -129,7 +129,7 @@ class AdminForm extends React.Component<IProps, IState> {
 
   render() {
     return (
-      <div className={styles.NewAdmin}>
+          <div className={styles.NewAdmin}>
         <Typography className={styles['New-Admin-title']} color='textSecondary'>
           Create Admin
         </Typography>

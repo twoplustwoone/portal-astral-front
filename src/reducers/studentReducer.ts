@@ -1,7 +1,7 @@
-import {IAction, IProfessor} from "../../globals";
+import {IAction, IStudent} from "../../globals";
 
 export interface IState {
-  [id: string]: IProfessor;
+  [id: string]: IStudent;
 }
 
 const initialState: IState = {};
