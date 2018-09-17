@@ -10,6 +10,7 @@ declare interface IUser {
   lastName: string;
   email: string;
   id: string;
+  file:string;
   password?: string;
   file?: string;
 }

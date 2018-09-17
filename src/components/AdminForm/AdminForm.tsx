@@ -26,6 +26,7 @@ class AdminForm extends React.Component<IProps, IState> {
       lastName: '',
       email: '',
       password: '',
+      file: '',
       id: '',
     },
     showPassword: false,
@@ -34,6 +35,7 @@ class AdminForm extends React.Component<IProps, IState> {
       lastName: false,
       email: false,
       password: false,
+      file: false,
     },
   };
 
@@ -106,6 +108,7 @@ class AdminForm extends React.Component<IProps, IState> {
         return (
           this.validatePassword(value)
         );
+        // todo validate file?
       default:
         return true;
     }

@@ -18,7 +18,8 @@ import {
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import {IProfessor} from "../../../globals";
+import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
+import { IProfessor } from "../../../globals";
 
 const styles = require('./ProfessorForm.pcss');
 
@@ -31,6 +32,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
       lastName: '',
       email: '',
       password: '',
+      file: '',
       id: '',
     },
     showPassword: false,
@@ -39,6 +41,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
       lastName: false,
       email: false,
       password: false,
+      file: false,
     },
     isNew: true,
     isEditing: true,
@@ -46,7 +49,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
 
   componentDidMount() {
-    const { professor } = this.props;
+    const { professor, match } = this.props;
 
     /* If professor was passed as a prop, then set the information for the professor into the fields */
     if (professor) {
@@ -63,8 +66,38 @@ class ProfessorForm extends React.Component<IProps, IState> {
         isNew: false,
         isEditing: false,
       });
+      this.setProfessor();
+    } else {
+      console.log(this.props);
+      if (match.params.id) {
+        console.log('Fetch!');
+        this.props.onFetchProfessor(match.params.id);
+      }
     }
   }
+
+  componentDidUpdate(prevProps: IProps) {
+    if (this.props.professor && !prevProps.professor) {
+      this.setProfessor();
+    }
+  }
+
+  setProfessor = () => {
+    const { email, name, lastName, file, id } = this.props.professor as IProfessor;
+    this.setState({
+      ...this.state,
+      fields: {
+        ...this.state.fields,
+        email,
+        name,
+        lastName,
+        file,
+        id: id,
+      },
+      isNew: false,
+      isEditing: false,
+    });
+  };
 
   handleChange = (prop: string) => (event: any) => {
     this.setState({
@@ -86,7 +119,20 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   handleSubmit = () => {
     if (this.validateAll()) {
-      this.props.onSubmit(this.state.fields);
+      if (!this.state.isNew) {
+        this.handleLoading();
+        //todo pegarle al otro end -> /professor/:id
+        localStorage.setItem("professorId", this.props.onEdit(this.state.fields));
+        this.handleCancel();
+      }
+      else {
+        // todo el back tiene que avisarte que termino de guardar
+        this.handleLoading();
+        // setTimeout(20);
+        console.log("agregando...");
+        localStorage.setItem("professorId", this.props.onSubmit(this.state.fields));
+        // this.props.onSave();
+      }
     }
   };
 
@@ -148,7 +194,13 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   validatePassword = (value: any): boolean => {
-    return value !== '' && value.length > 6 && value.length < 20;
+    return !!(value != "" && value.length >= 6 && value.length < 20 && this.checkLetters(value));
+  };
+
+  checkLetters = (value: string): boolean => {
+    const words = value.match("[A-z]+");
+    const numbers = value.match("[0-9]+");
+    return words != undefined && words.length > 0 && numbers != undefined && numbers.length > 0;
   };
 
   areInputsReadOnly = () => {
@@ -164,7 +216,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
     if (this.state.isNew) {
       this.props.onCancel();
     } else {
-      this.setState({ ...this.state, isEditing: false });
+      this.setState({ ...this.state, isEditing: false }, this.setProfessor);
     }
   };
 
@@ -185,7 +237,13 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   handleConfirmDelete = () => {
+    // todo borrar el profesor
     this.props.onConfirmDelete(this.props.professor as IProfessor);
+    // this.props.onSave();
+  };
+
+  handleLoading = () => {
+    this.props.onLoading(this.props.professor as IProfessor);
   };
 
   renderTitle = () => {
@@ -213,6 +271,12 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     const { isDeleteConfirmationOpen } = this.props;
 
+    const { isLoadingOpen, isFetchingProfessor } = this.props;
+
+    if (isFetchingProfessor || isLoadingOpen) {
+      return <div><CircularProgress /></div>
+    }
+
     const readOnly = this.areInputsReadOnly();
 
     return (
@@ -239,6 +303,12 @@ class ProfessorForm extends React.Component<IProps, IState> {
           </Dialog>
         }
 
+        {
+          isLoadingOpen &&
+          <Dialog open={true}>
+            <CircularProgress className={styles['loading']} />
+          </Dialog>
+        }
 
         <Typography className={styles['New-Professor-title']} color='textSecondary'>
           {
@@ -273,12 +343,21 @@ class ProfessorForm extends React.Component<IProps, IState> {
                        readOnly={readOnly}
                 />
               </FormControl>
+              {/*todo*/}
+              <FormControl className={styles['professor-form-control']} error={errors.file}>
+                <InputLabel required htmlFor='professor-email'>File</InputLabel>
+                <Input id='professor-file'
+                       value={fields.file}
+                       onChange={this.handleChange('file')}
+                       readOnly={readOnly}
+                />
+              </FormControl>
               <FormControl className={styles['professor-form-control']} error={errors.password}>
                 <InputLabel required htmlFor='adornment-password'>Password</InputLabel>
                 <Input
                   id='adornment-password'
                   type={showPassword ? 'text' : 'password'}
-                  value={fields.password}
+                  value={this.state.isEditing ? fields.password : ""}
                   onChange={this.handleChange('password')}
                   endAdornment={
                     <InputAdornment position='end'>
