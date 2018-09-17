@@ -21,11 +21,12 @@ export interface IState {
 }
 
 export interface IFields {
-  firstName: string;
+  name: string;
   lastName: string;
   email: string;
   password: string;
   id: string;
+  file: string;
 }
 
 export type IErrors = {

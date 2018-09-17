@@ -6,10 +6,11 @@ declare interface IAction {
 }
 
 declare interface IUser {
-  firstName: string;
+  name: string;
   lastName: string;
   email: string;
   id: string;
+  file:string;
   password?: string;
 }
 

@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import {IProfessor} from "../../../globals";
 
 const styles = require('./ProfessorForm.pcss');
@@ -27,18 +28,20 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   state: IState = {
     fields: {
-      firstName: '',
+      name: '',
       lastName: '',
       email: '',
       password: '',
+      file: '',
       id: '',
     },
     showPassword: false,
     errors: {
-      firstName: false,
+      name: false,
       lastName: false,
       email: false,
       password: false,
+      file: false,
     },
     isNew: true,
     isEditing: true,
@@ -50,14 +53,15 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     /* If professor was passed as a prop, then set the information for the professor into the fields */
     if (professor) {
-      const { email, firstName, lastName, id } = professor;
+      const { email, name, lastName, file, id } = professor;
       this.setState({
         ...this.state,
         fields: {
           ...this.state.fields,
           email,
-          firstName,
+          name,
           lastName,
+          file,
           id: id,
         },
         isNew: false,
@@ -86,7 +90,20 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   handleSubmit = () => {
     if (this.validateAll()) {
-      this.props.onSubmit(this.state.fields);
+      if (!this.state.isNew){
+        this.handleLoading();
+        //todo pegarle al otro end -> /professor/:id
+        localStorage.setItem("professorId", this.props.onEdit(this.state.fields));
+        this.handleCancel();
+      }
+      else {
+        // todo el back tiene que avisarte que termino de guardar
+        this.handleLoading();
+        // setTimeout(20);
+        console.log("agregando...");
+        localStorage.setItem("professorId", this.props.onSubmit(this.state.fields));
+        // this.props.onSave();
+      }
     }
   };
 
@@ -114,9 +131,9 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   validate = (field: string, value: any): boolean => {
     switch (field) {
-      case 'firstName':
+      case 'name':
         return (
-          this.validateFirstName(value)
+          this.validatename(value)
         );
       case 'lastName':
         return (
@@ -135,7 +152,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
     }
   };
 
-  validateFirstName = (value: any): boolean => {
+  validatename = (value: any): boolean => {
     return value !== '';
   };
 
@@ -148,7 +165,13 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   validatePassword = (value: any): boolean => {
-    return value !== '' && value.length > 6 && value.length < 20;
+      return !!(value != "" && value.length >= 6 && value.length < 20 && this.checkLetters(value));
+  };
+
+  checkLetters = (value: string): boolean => {
+      const words = value.match("[A-z]+");
+      const numbers = value.match("[0-9]+");
+      return words != undefined && words.length > 0 && numbers != undefined && numbers.length > 0 ;
   };
 
   areInputsReadOnly = () => {
@@ -185,12 +208,18 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   handleConfirmDelete = () => {
+    // todo borrar el profesor
     this.props.onConfirmDelete(this.props.professor as IProfessor);
+    // this.props.onSave();
+  };
+
+  handleLoading = () => {
+      this.props.onLoading(this.props.professor as IProfessor);
   };
 
   renderTitle = () => {
     const { isNew } = this.state;
-    const { firstName, lastName } = this.state.fields;
+    const { name, lastName } = this.state.fields;
     return <div>
       {
         !isNew &&
@@ -204,7 +233,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
           </Button>
         </div>
       }
-      <div className={styles.displayNameDiv}>{`${firstName} ${lastName}`}</div>
+      <div className={styles.displayNameDiv}>{`${name} ${lastName}`}</div>
     </div>
   };
 
@@ -212,6 +241,8 @@ class ProfessorForm extends React.Component<IProps, IState> {
     const { fields, showPassword, errors } = this.state;
 
     const { isDeleteConfirmationOpen } = this.props;
+
+    const { isLoadingOpen } = this.props;
 
     const readOnly = this.areInputsReadOnly();
 
@@ -221,10 +252,10 @@ class ProfessorForm extends React.Component<IProps, IState> {
         {
           isDeleteConfirmationOpen &&
           <Dialog open={true}>
-            <DialogTitle>Confirm delete "{`${fields.firstName} ${fields.lastName}`}"</DialogTitle>
+            <DialogTitle>Confirm delete "{`${fields.name} ${fields.lastName}`}"</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                This will permanently delete the professor {`${fields.firstName} ${fields.lastName}`} and cannot be
+                This will permanently delete the professor {`${fields.name} ${fields.lastName}`} and cannot be
                 undone.
               </DialogContentText>
             </DialogContent>
@@ -239,8 +270,14 @@ class ProfessorForm extends React.Component<IProps, IState> {
           </Dialog>
         }
 
+          {
+              isLoadingOpen &&
+              <Dialog open={true}>
+                  <CircularProgress  className={styles['loading']}/>
+              </Dialog>
+          }
 
-        <Typography className={styles['New-Professor-title']} color='textSecondary'>
+          <Typography className={styles['New-Professor-title']} color='textSecondary'>
           {
             this.getHeader()
           }
@@ -249,11 +286,11 @@ class ProfessorForm extends React.Component<IProps, IState> {
           <CardHeader title={this.renderTitle()} className={styles.displayName} />
           <CardContent>
             <form className={styles['New-Professor-form']}>
-              <FormControl className={styles['professor-form-control']} error={errors.firstName}>
+              <FormControl className={styles['professor-form-control']} error={errors.name}>
                 <InputLabel required htmlFor='professor-name'>First name</InputLabel>
                 <Input id='professor-name'
-                       value={fields.firstName}
-                       onChange={this.handleChange('firstName')}
+                       value={fields.name}
+                       onChange={this.handleChange('name')}
                        readOnly={readOnly}
                 />
               </FormControl>
@@ -273,12 +310,21 @@ class ProfessorForm extends React.Component<IProps, IState> {
                        readOnly={readOnly}
                 />
               </FormControl>
+                {/*todo*/}
+                <FormControl className={styles['professor-form-control']} error={errors.file}>
+                    <InputLabel required htmlFor='professor-email'>File</InputLabel>
+                    <Input id='professor-file'
+                           value={fields.file}
+                           onChange={this.handleChange('file')}
+                           readOnly={readOnly}
+                    />
+                </FormControl>
               <FormControl className={styles['professor-form-control']} error={errors.password}>
                 <InputLabel required htmlFor='adornment-password'>Password</InputLabel>
                 <Input
                   id='adornment-password'
                   type={showPassword ? 'text' : 'password'}
-                  value={fields.password}
+                  value={this.state.isEditing? fields.password : ""}
                   onChange={this.handleChange('password')}
                   endAdornment={
                     <InputAdornment position='end'>
