@@ -106,19 +106,13 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   handleSubmit = () => {
     if (this.validateAll()) {
-      if (!this.state.isNew) {
         this.handleLoading();
-        //todo pegarle al otro end -> /professor/:id
-        localStorage.setItem("professorId", this.props.onEdit(this.state.fields));
+      if (!this.state.isNew) {
+        this.props.onEdit(this.state.fields);
         this.handleCancel();
       }
       else {
-        // todo el back tiene que avisarte que termino de guardar
-        this.handleLoading();
-        // setTimeout(20);
-        console.log("agregando...");
-        localStorage.setItem("professorId", this.props.onSubmit(this.state.fields));
-        // this.props.onSave();
+        this.props.onSubmit(this.state.fields).then(this.props.history.push('/professors'));
       }
     }
   };
@@ -224,9 +218,8 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   handleConfirmDelete = () => {
-    // todo borrar el profesor
     this.props.onConfirmDelete(this.props.professor as IProfessor);
-    // this.props.onSave();
+    this.props.onSave();
   };
 
   handleLoading = () => {

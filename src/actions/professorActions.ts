@@ -1,6 +1,7 @@
 import { IStore } from "../reducers";
 import { IAction, IProfessor } from "../../globals";
 import handleResponseError from "../domains/handleResponseError";
+import {uiActions} from "./index";
 
 
 namespace ProfessorActions {
@@ -125,8 +126,9 @@ namespace ProfessorActions {
       headers: { 'content-type': 'application/json' },
     })
       .then(function (response) {
-        console.log("editing...");
-        console.log(response);
+          if(response.status != 404){
+              dispatch(uiActions.closeLoadingModal())
+          }
         return response.json()
       }).then(function (body) {
         console.log(body);
@@ -144,8 +146,6 @@ namespace ProfessorActions {
       headers: { 'content-type': 'application/json' },
     })
       .then(function (response) {
-        console.log("deleting...");
-        console.log(response);
         return response.json()
       }).then(function (body) {
         return dispatch(deleteProfessorSuccess());
