@@ -1,40 +1,46 @@
 import * as React from "react";
-import {Admin, WebData} from "../../globals";
-import {success} from "@devexperts/remote-data-ts";
-import AdminsTable from "../components/AdminsTable/AdminsTable";
+import {IAdmin, WebData} from "../../globals";
+import AdminsTableView from "../components/AdminsTable/AdminsTableView";
+import {IStore} from "../reducers";
+import {connect} from "react-redux";
+import {RouteComponentProps, withRouter} from "react-router";
+import {adminActions} from "../actions";
 
-const dummyAdmin: Admin = {
-    id: "id",
-    firstNames: "first names",
-    lastNames: "last names",
-    email: "user@provider.com",
-};
-
-export interface AdminsState {
-    readonly admins: WebData<Admin[]>
+type StateProps = {
+    admins: WebData<Array<IAdmin>>,
 }
 
-const model: AdminsState = {
-    admins: success([dummyAdmin, dummyAdmin, dummyAdmin]),
-};
+type DispatchProps = {
+    getAdmins: () => void;
+    deleteAdmin: (id: string) => void;
+}
 
-class AdminListPage extends React.Component {
-    public render() {
-        return (
-            <div>
-                <div>
-                    {
-                        model.admins.foldL(
-                            () => <p>Pending request</p>,
-                            () => <p>Loading</p>,
-                            err => <p>Error!</p>,
-                            admins => AdminsTable(admins),
-                        )
-                    }
-                </div>
-            </div>
-        )
+type RouterProps = RouteComponentProps<{ id: number }>;
+
+type PropsType = StateProps & DispatchProps & RouterProps;
+
+
+class AdminListPage extends React.Component<PropsType> {
+
+    componentDidMount = () => {
+        this.props.getAdmins();
+    };
+
+    render = () => {
+        return AdminsTableView(this.props.admins)
     }
 }
 
-export default AdminListPage;
+const mapStateToProps = (store: IStore, router: RouterProps) => ({
+    admins: store.adminsState.admins,
+});
+const mapDispatchToProps = (dispatch): DispatchProps => ({
+    getAdmins: () => dispatch(adminActions.getAdmins()),
+    deleteAdmin: (id: string) => dispatch(adminActions.deleteAdmin(id)),
+});
+
+export default withRouter(
+    connect<StateProps, DispatchProps, RouterProps>
+    (mapStateToProps, mapDispatchToProps)
+    (AdminListPage),
+);

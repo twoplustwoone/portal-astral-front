@@ -6,11 +6,12 @@ declare interface IAction {
 }
 
 declare interface IUser {
-  firstName: string;
+  name: string;
   lastName: string;
   email: string;
   id: string;
   password?: string;
+  file?: string;
 }
 
 declare interface IProfessor extends IUser {
@@ -29,14 +30,6 @@ declare interface IStudent extends IUser {
 
 type HttpError = string
 type WebData<A> = RemoteData<HttpError, A>
-
-export interface Admin {
-    readonly id: string
-    readonly firstNames: string
-    readonly lastNames: string
-    readonly email: string
-}
-
 
 
 declare interface ICareer {

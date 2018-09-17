@@ -21,7 +21,7 @@ export interface IState {
 }
 
 export interface IFields {
-  firstName: string;
+  name: string;
   lastName: string;
   email: string;
   password: string;

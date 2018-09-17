@@ -22,7 +22,7 @@ class AdminForm extends React.Component<IProps, IState> {
 
   state: IState = {
     fields: {
-      firstName: '',
+      name: '',
       lastName: '',
       email: '',
       password: '',
@@ -30,7 +30,7 @@ class AdminForm extends React.Component<IProps, IState> {
     },
     showPassword: false,
     errors: {
-      firstName: false,
+      name: false,
       lastName: false,
       email: false,
       password: false,
@@ -138,10 +138,10 @@ class AdminForm extends React.Component<IProps, IState> {
         <Card className={styles['New-Admin-box']}>
           <CardContent>
             <form className={styles['New-Admin-form']}>
-              <FormControl className={styles['Admin-form-control']} error={this.state.errors.firstName}>
+              <FormControl className={styles['Admin-form-control']} error={this.state.errors.name}>
                 <InputLabel required htmlFor='Admin-name'>First name</InputLabel>
                 <Input id='Admin-name'
-                       value={this.state.fields.firstName}
+                       value={this.state.fields.name}
                        onChange={this.handleChange('firstName')} />
               </FormControl>
               <FormControl className={styles['Admin-form-control']} error={this.state.errors.lastName}>
