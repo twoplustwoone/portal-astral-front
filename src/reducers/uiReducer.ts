@@ -1,9 +1,11 @@
-import {professorActions, uiActions} from "../actions";
+import { professorActions, uiActions } from "../actions";
+import {IAction} from "../../globals";
 
 export interface IState {
   is: {
     loading: {
       admins: boolean;
+      students: boolean;
     };
     creating: {
       professor: boolean;
@@ -19,6 +21,7 @@ const initialState: IState = {
   is: {
     loading: {
       admins: false,
+      students: false,
     },
     creating: {
       professor: false,

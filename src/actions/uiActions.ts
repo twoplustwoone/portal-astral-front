@@ -1,3 +1,5 @@
+import {IAction, IUser} from "../../globals";
+
 namespace UIActions {
 
     export const OPEN_DELETE_CONFIRMATION_MODAL = '@ASTRAL.OPEN_DELETE_CONFIRMATION_MODAL';

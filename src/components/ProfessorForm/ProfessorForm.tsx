@@ -19,10 +19,12 @@ import {
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
+import {IProfessor} from "../../../globals";
 
 const styles = require('./ProfessorForm.pcss');
 
 class ProfessorForm extends React.Component<IProps, IState> {
+
 
   state: IState = {
     fields: {
