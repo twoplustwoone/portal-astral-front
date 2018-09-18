@@ -109,7 +109,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
       if (!this.state.isNew) {
         this.handleLoading();
         //todo pegarle al otro end -> /professor/:id
-        localStorage.setItem("professorId", this.props.onEdit(this.state.fields));
+        this.props.onEdit(this.state.fields).then(() => this.props.history.push(''));
         this.handleCancel();
       }
       else {
@@ -117,7 +117,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
         this.handleLoading();
         // setTimeout(20);
         console.log("agregando...");
-        localStorage.setItem("professorId", this.props.onSubmit(this.state.fields));
+        this.props.onSubmit(this.state.fields);
         // this.props.onSave();
       }
     }

@@ -54,7 +54,7 @@ class Sidebar  extends React.Component<any, any> {
                         </ListItemIcon>
                         <ListItemText primary='Administradores' />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button onClick={() => history.push('/professors')}>
                         <ListItemIcon>
                             <AccountBalanceIcon />
                         </ListItemIcon>

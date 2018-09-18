@@ -17,7 +17,6 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
 
     case FETCH_PROFESSORS_SUCCESS:
       return {
-        ...state,
         ...payload.professors.reduce((acc, professor) => ({ ...acc, [professor.id]: professor }), {}),
       };
 
