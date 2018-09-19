@@ -112,16 +112,17 @@ namespace ProfessorActions {
       headers: { 'content-type': 'application/json' },
     })
       .then(function (response) {
-        return response
-      }).then(function (body) {
-        console.log(body);
+        return response.json();
+      })
+      .then(function (body) {
+        return body;
       })
       .catch(error => {
         dispatch(createProfessorError(error));
       });
   };
 
-  export const editProfessor = (professor: IProfessor) => (dispatch, getState: () => IStore) => {
+  export const updateProfessor = (professor: IProfessor) => (dispatch, getState: () => IStore) => {
     dispatch(editProfessorRequest());
     return fetch('http://localhost:9000/professor/' + professor.id, {
       method: 'PUT',
@@ -129,11 +130,10 @@ namespace ProfessorActions {
       headers: { 'content-type': 'application/json' },
     })
       .then(function (response) {
-        console.log("editing...");
-        console.log(response);
-        return response.json()
-      }).then(function (body) {
-        console.log(body);
+        return response.json();
+      })
+      .then(function (body) {
+        return body;
       })
       .catch(error => {
         dispatch(editProfessorError(error));
@@ -149,7 +149,7 @@ namespace ProfessorActions {
     })
       .then(() => {
         dispatch(uiActions.closeDeleteConfirmationModal());
-        dispatch(deleteProfessorSuccess(professor.id));
+        return dispatch(deleteProfessorSuccess(professor.id));
       })
       .catch(error => {
         dispatch(deleteProfessorError(error));

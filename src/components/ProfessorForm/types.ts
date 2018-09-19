@@ -6,14 +6,12 @@ export interface IProps extends IDispatchProps, IValueProps, IContainerProps {
 
 /* These are all the functions the component will receive as props from the parent container */
 export interface IDispatchProps {
-  onSubmit: (professor: IProfessor) => any;
+  onCreate: (professor: IProfessor) => any;
   onEdit: (professor: IProfessor) => any;
   onCancel: () => any;
-  onSave: () => any;
   onClickDelete: (professor: IProfessor) => any;
   onCloseDelete: () => any;
   onConfirmDelete: (professor: IProfessor) => any;
-  onLoading: (professor: IProfessor) => any;
   onFetchProfessor: (professorId: string) => any;
 }
 
@@ -21,8 +19,8 @@ export interface IDispatchProps {
 export interface IValueProps {
   professor?: IProfessor;
   isDeleteConfirmationOpen: boolean;
-  isLoadingOpen: boolean;
   isFetchingProfessor: boolean;
+  isCreating: boolean;
   isDeleting: boolean;
 }
 

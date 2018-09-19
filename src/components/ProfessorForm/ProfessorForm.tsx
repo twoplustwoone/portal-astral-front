@@ -6,7 +6,6 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Dialog,
   FormControl,
   FormHelperText,
   IconButton,
@@ -105,18 +104,10 @@ class ProfessorForm extends React.Component<IProps, IState> {
   handleSubmit = () => {
     if (this.validateAll()) {
       if (!this.state.isNew) {
-        this.handleLoading();
-        //todo pegarle al otro end -> /professor/:id
-        this.props.onEdit(this.state.fields).then(() => this.props.history.push(''));
-        this.handleCancel();
+        this.props.onEdit(this.state.fields).then(() => this.props.history.push('/professors'));
       }
       else {
-        // todo el back tiene que avisarte que termino de guardar
-        this.handleLoading();
-        // setTimeout(20);
-        console.log("agregando...");
-        this.props.onSubmit(this.state.fields);
-        // this.props.onSave();
+        this.props.onCreate(this.state.fields).then(() => this.props.history.push('/professors'));
       }
     }
   };
@@ -222,13 +213,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   handleConfirmDelete = () => {
-    // todo borrar el profesor
-    this.props.onConfirmDelete(this.props.professor as IProfessor);
-    // this.props.onSave();
-  };
-
-  handleLoading = () => {
-    this.props.onLoading(this.props.professor as IProfessor);
+    this.props.onConfirmDelete(this.props.professor as IProfessor).then(() => this.props.history.push('/professors'));
   };
 
   renderTitle = () => {
@@ -256,9 +241,9 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     const { isDeleteConfirmationOpen } = this.props;
 
-    const { isLoadingOpen, isFetchingProfessor, isDeleting } = this.props;
+    const { isFetchingProfessor, isDeleting, isCreating } = this.props;
 
-    if (isFetchingProfessor || isLoadingOpen) {
+    if (isFetchingProfessor || isDeleting || isCreating) {
       return <div><CircularProgress /></div>
     }
 
@@ -276,13 +261,6 @@ class ProfessorForm extends React.Component<IProps, IState> {
             handleCloseDelete={this.handleCloseDelete}
             handleConfirmDelete={this.handleConfirmDelete}
           />
-        }
-
-        {
-          isLoadingOpen &&
-          <Dialog open={true}>
-            <CircularProgress className={styles['loading']} />
-          </Dialog>
         }
 
         <Typography className={styles['New-Professor-title']} color='textSecondary'>
