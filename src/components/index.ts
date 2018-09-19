@@ -13,12 +13,12 @@ export {
 
 
 /* StudentForm */
-export { default as StudentForm } from './ProfessorForm/ProfessorForm';
+export { default as StudentForm } from './StudentForm/StudentForm';
 export {
     IDispatchProps as IStudentFormDispatchProps,
     IValueProps as IStudentFormValueProps,
     IContainerProps as IStudentContainerProps,
-} from './ProfessorForm/types'
+} from './StudentForm/types'
 
 /* StudentTable */
 export { default as StudentTable } from './student/all-students/StudentTable';

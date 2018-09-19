@@ -116,7 +116,7 @@ namespace StudentActions {
             });
     };
 
-    export const editStudent = (student: IStudent) => (dispatch, getState: () => IStore) => {
+    export const updateStudent = (student: IStudent) => (dispatch, getState: () => IStore) => {
         dispatch(editStudentRequest());
         return fetch('http://localhost:9000/student/' + student.id, {
             method: 'PUT',

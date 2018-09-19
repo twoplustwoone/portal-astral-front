@@ -3,7 +3,7 @@ import { IProps, IState } from './types';
 import './App.css';
 import { Route } from 'react-router-dom'
 import { Home } from 'src/components';
-import { ProfessorForm, ProfessorTable } from 'src/containers';
+import { ProfessorForm, ProfessorTable, StudentForm } from 'src/containers';
 import Topbar from "../layout/topbar/Topbar";
 import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
@@ -44,6 +44,7 @@ class App extends React.Component<IProps, IState> {
                 <div className={classes.toolbar} />
                 <Route path={'/'} component={Home} />
                 <Route path={'/new-professor'} component={ProfessorForm} />
+                <Route path={'/new-student'} component={StudentForm} />
                 <Route path={'/admin'} component={AdminForm} />
                 <Route path={'/students'} component={StudentTable} />
                 <Route path={'/professors'} component={ProfessorTable} />

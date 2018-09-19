@@ -25,7 +25,7 @@ declare interface IStudent extends IUser {
   identificationType: string;
   identification: string;
   address?: string;
-  career: ICareer;
+  career?: ICareer;
 }
 
 type HttpError = string
