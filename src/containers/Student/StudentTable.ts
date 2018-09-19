@@ -14,8 +14,6 @@ import StudentTable from "../../components/student/all-students/StudentTable";
 const mapStateToProps = (state: IStore, ownProps: IStudentTableContainerProps): IStudentTableValueProps => {
     const students: IStudent[] = objectToArray(state.students);
 
-    console.log(ownProps.match.params.id);
-
     return {
         students,
         isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,

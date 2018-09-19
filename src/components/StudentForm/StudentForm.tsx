@@ -130,8 +130,6 @@ class StudentForm extends React.Component<IProps, IState> {
         career: mapCareer(careerId),
       };
 
-      console.log({ student });
-
       if (!this.state.isNew) {
         this.props.onEdit(student).then(() => this.props.history.push('/students'));
       }

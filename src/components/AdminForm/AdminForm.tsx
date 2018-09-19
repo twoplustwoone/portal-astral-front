@@ -41,7 +41,6 @@ class AdminForm extends React.Component<IProps, IState> {
 
   constructor(props) {
     super(props);
-    console.log({ props });
   }
 
   handleChange = (prop: string) => (event: any) => {

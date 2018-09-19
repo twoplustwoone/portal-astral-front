@@ -14,7 +14,6 @@ class StudentTable extends React.Component<IProps, IState> {
   }
 
   render() {
-    console.log(this.props);
     const { students = [] } = this.props;
 
     return (

@@ -109,7 +109,6 @@ namespace StudentActions {
             .then(function (response) {
                 return response
             }).then(function (body) {
-                console.log(body);
             })
             .catch(error => {
                 dispatch(createStudentError(error));
@@ -124,11 +123,8 @@ namespace StudentActions {
             headers: { 'content-type': 'application/json' },
         })
             .then(function (response) {
-                console.log("editing...");
-                console.log(response);
                 return response.json()
             }).then(function (body) {
-                console.log(body);
             })
             .catch(error => {
                 dispatch(editStudentError(error));
@@ -143,8 +139,6 @@ namespace StudentActions {
             headers: { 'content-type': 'application/json' },
         })
             .then(function (response) {
-                console.log("deleting...");
-                console.log(response);
                 return response.json()
             }).then(function (body) {
                 return dispatch(deleteStudentSuccess());
