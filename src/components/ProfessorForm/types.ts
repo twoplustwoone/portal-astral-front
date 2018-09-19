@@ -48,7 +48,7 @@ export interface IFields {
   email: string;
   password: string;
   id: string;
-  file: string;
+  file?: string;
 }
 
 export type IErrors = {

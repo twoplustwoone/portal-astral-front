@@ -1,5 +1,5 @@
-import {professorActions, studentActions, uiActions} from "../actions";
-import {IAction} from "../../globals";
+import { professorActions, studentActions, uiActions } from "../actions";
+import { IAction } from "../../globals";
 
 export interface IState {
   is: {
@@ -24,9 +24,6 @@ export interface IState {
     open: {
       deleteConfirmationModal: boolean;
       loadingModal: boolean;
-    };
-    deleting: {
-      professor: boolean;
     };
   };
 }
@@ -55,9 +52,6 @@ const initialState: IState = {
       deleteConfirmationModal: false,
       loadingModal: false,
     },
-    deleting: {
-      professor: false,
-    },
   },
 };
 
@@ -66,13 +60,8 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
   const { type, payload } = action;
 
   const { CREATE_STUDENT_REQUEST } = studentActions;
-  const { CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL } = uiActions;
+  const { CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL, OPEN_LOADING_MODAL, CLOSE_LOADING_MODAL } = uiActions;
   const { CREATE_PROFESSOR_REQUEST, FETCH_PROFESSORS_ERROR, FETCH_PROFESSORS_REQUEST, FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_ERROR, FETCH_PROFESSOR_REQUEST, FETCH_PROFESSOR_SUCCESS, DELETE_PROFESSOR_SUCCESS, DELETE_PROFESSOR_REQUEST } = professorActions;
-
-  const {
-    CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL,
-    OPEN_LOADING_MODAL, CLOSE_LOADING_MODAL,
-  } = uiActions;
 
   switch (type) {
     case DELETE_PROFESSOR_REQUEST:
@@ -111,17 +100,17 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
         },
       };
 
-      case CREATE_STUDENT_REQUEST:
-          return {
-              ...state,
-              is: {
-                  ...state.is,
-                  creating: {
-                      ...state.is.creating,
-                      student: true,
-                  },
-              },
-          };
+    case CREATE_STUDENT_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          creating: {
+            ...state.is.creating,
+            student: true,
+          },
+        },
+      };
 
     case OPEN_DELETE_CONFIRMATION_MODAL:
       return {

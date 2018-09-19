@@ -31,7 +31,7 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IStude
     },
 
     onClickDeleteStudent(student: IStudent) {
-        dispatch(uiActions.openDeleteConfirmationModal(student));
+        dispatch(uiActions.openDeleteConfirmationModal(student.id));
     },
 
     onClickEditStudent(studentId: string) {
