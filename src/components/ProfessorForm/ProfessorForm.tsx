@@ -1,25 +1,24 @@
 import * as React from 'react';
 import { IErrors, IProps, IState } from './types';
 import {
-  FormControl,
-  InputLabel,
-  Input,
-  InputAdornment,
-  IconButton,
   Button,
+  Card,
   CardActions,
   CardContent,
-  Card,
-  FormHelperText,
-  Typography,
   CardHeader,
-  Dialog,
-  DialogTitle, DialogActions, DialogContent, DialogContentText,
+  FormControl,
+  FormHelperText,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  Typography,
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import { IProfessor } from "../../../globals";
+import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 
 const styles = require('./ProfessorForm.pcss');
 
@@ -68,9 +67,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
       });
       this.setProfessor();
     } else {
-      console.log(this.props);
       if (match.params.id) {
-        console.log('Fetch!');
         this.props.onFetchProfessor(match.params.id);
       }
     }
@@ -120,18 +117,10 @@ class ProfessorForm extends React.Component<IProps, IState> {
   handleSubmit = () => {
     if (this.validateAll()) {
       if (!this.state.isNew) {
-        this.handleLoading();
-        //todo pegarle al otro end -> /professor/:id
-        localStorage.setItem("professorId", this.props.onEdit(this.state.fields));
-        this.handleCancel();
+        this.props.onEdit(this.state.fields).then(() => this.props.history.push('/professors'));
       }
       else {
-        // todo el back tiene que avisarte que termino de guardar
-        this.handleLoading();
-        // setTimeout(20);
-        console.log("agregando...");
-        localStorage.setItem("professorId", this.props.onSubmit(this.state.fields));
-        // this.props.onSave();
+        this.props.onCreate(this.state.fields).then(() => this.props.history.push('/professors'));
       }
     }
   };
@@ -237,13 +226,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   handleConfirmDelete = () => {
-    // todo borrar el profesor
-    this.props.onConfirmDelete(this.props.professor as IProfessor);
-    // this.props.onSave();
-  };
-
-  handleLoading = () => {
-    this.props.onLoading(this.props.professor as IProfessor);
+    this.props.onConfirmDelete(this.props.professor as IProfessor).then(() => this.props.history.push('/professors'));
   };
 
   renderTitle = () => {
@@ -271,9 +254,9 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     const { isDeleteConfirmationOpen } = this.props;
 
-    const { isLoadingOpen, isFetchingProfessor } = this.props;
+    const { isFetchingProfessor, isDeleting, isCreating } = this.props;
 
-    if (isFetchingProfessor || isLoadingOpen) {
+    if (isFetchingProfessor || isDeleting || isCreating) {
       return <div><CircularProgress /></div>
     }
 
@@ -284,30 +267,13 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
         {
           isDeleteConfirmationOpen &&
-          <Dialog open={true}>
-            <DialogTitle>Confirm delete "{`${fields.name} ${fields.lastName}`}"</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                This will permanently delete the professor {`${fields.name} ${fields.lastName}`} and cannot be
-                undone.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleCloseDelete} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={this.handleConfirmDelete} color="secondary" variant='contained'>
-                Confirm
-              </Button>
-            </DialogActions>
-          </Dialog>
-        }
-
-        {
-          isLoadingOpen &&
-          <Dialog open={true}>
-            <CircularProgress className={styles['loading']} />
-          </Dialog>
+          <DeleteConfirmationDialog
+            isLoading={isDeleting}
+            userType={'professor'}
+            name={`${fields.name} ${fields.lastName}`}
+            handleCloseDelete={this.handleCloseDelete}
+            handleConfirmDelete={this.handleConfirmDelete}
+          />
         }
 
         <Typography className={styles['New-Professor-title']} color='textSecondary'>
