@@ -12,11 +12,12 @@ import { IProfessor } from "../../../globals";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IProfessorFormValueProps => {
   const { id } = ownProps.match.params;
+
   const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
 
   const isFetchingProfessor = state.ui.is.fetching.professor[id];
-  const isCreating = state.ui.is.creating.professor;
 
+  const isCreating = state.ui.is.creating.professor;
   return {
     professor,
     isFetchingProfessor,

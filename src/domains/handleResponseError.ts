@@ -1,6 +1,6 @@
 export interface IRequestErrorProps {
-  status: number;
-  statusText: string;
+    status: number;
+    statusText: string;
 }
 
 export class RequestError extends Error {
