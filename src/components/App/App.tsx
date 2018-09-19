@@ -47,6 +47,7 @@ class App extends React.Component<IProps, IState> {
                 <Route path={'/new-student'} component={StudentForm} />
                 <Route path={'/admin'} component={AdminForm} />
                 <Route path={'/students'} component={StudentTable} />
+                <Route path={'/student/:id'} component={StudentForm} />
                 <Route path={'/professors'} component={ProfessorTable} />
                 <Route path={'/professor/:id'} component={ProfessorForm} />
             </main>

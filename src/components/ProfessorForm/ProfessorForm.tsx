@@ -52,19 +52,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     /* If professor was passed as a prop, then set the information for the professor into the fields */
     if (professor) {
-      const { email, name, lastName, id } = professor;
-      this.setState({
-        ...this.state,
-        fields: {
-          ...this.state.fields,
-          email,
-          name,
-          lastName,
-          id: id,
-        },
-        isNew: false,
-        isEditing: false,
-      });
+
       this.setProfessor();
     } else {
       if (match.params.id) {
@@ -80,16 +68,17 @@ class ProfessorForm extends React.Component<IProps, IState> {
   }
 
   setProfessor = () => {
-    const { email, name, lastName, file, id } = this.props.professor as IProfessor;
+    const { email, name, lastName, id, password, file } = this.props.professor as IProfessor;
     this.setState({
       ...this.state,
       fields: {
         ...this.state.fields,
         email,
         name,
+        id,
         lastName,
+        password,
         file,
-        id: id,
       },
       isNew: false,
       isEditing: false,

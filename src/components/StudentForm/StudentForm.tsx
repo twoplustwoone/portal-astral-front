@@ -58,19 +58,6 @@ class StudentForm extends React.Component<IProps, IState> {
 
     /* If student was passed as a prop, then set the information for the student into the fields */
     if (student) {
-      const { email, name, lastName, id } = student;
-      this.setState({
-        ...this.state,
-        fields: {
-          ...this.state.fields,
-          email,
-          name,
-          lastName,
-          id: id,
-        },
-        isNew: false,
-        isEditing: false,
-      });
       this.setStudent();
     } else {
       if (match.params.id) {
@@ -86,7 +73,7 @@ class StudentForm extends React.Component<IProps, IState> {
   }
 
   setStudent = () => {
-    const { email, name, lastName, file, id } = this.props.student as IStudent;
+    const { email, name, lastName, id, identificationType, identification, address, career, birthday, file, password } = this.props.student as IStudent;
     this.setState({
       ...this.state,
       fields: {
@@ -94,8 +81,14 @@ class StudentForm extends React.Component<IProps, IState> {
         email,
         name,
         lastName,
+        id,
+        identification,
+        identificationType,
+        address,
+        careerId: career ? career.id : '',
+        birthday,
         file,
-        id: id,
+        password,
       },
       isNew: false,
       isEditing: false,
@@ -136,6 +129,8 @@ class StudentForm extends React.Component<IProps, IState> {
         password,
         career: mapCareer(careerId),
       };
+
+      console.log({ student });
 
       if (!this.state.isNew) {
         this.props.onEdit(student).then(() => this.props.history.push('/students'));
@@ -363,7 +358,7 @@ class StudentForm extends React.Component<IProps, IState> {
                 <Input
                   id='adornment-password'
                   type={showPassword ? 'text' : 'password'}
-                  value={this.state.isEditing ? fields.password : ""}
+                  value={fields.password}
                   onChange={this.handleChange('password')}
                   endAdornment={
                     <InputAdornment position='end'>

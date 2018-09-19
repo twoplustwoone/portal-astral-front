@@ -10,7 +10,7 @@ declare interface IUser {
   lastName: string;
   email: string;
   id: string;
-  password?: string;
+  password: string;
   file?: string;
 }
 
@@ -32,5 +32,5 @@ type HttpError = string
 type WebData<A> = RemoteData<HttpError, A>
 
 declare interface ICareer {
-
+  id: string;
 }
