@@ -1,6 +1,7 @@
 import { IStore } from "../reducers";
 import { IAction, IProfessor } from "../../globals";
 import handleResponseError from "../domains/handleResponseError";
+import { uiActions } from "./index";
 
 
 namespace ProfessorActions {
@@ -42,8 +43,11 @@ namespace ProfessorActions {
     type: DELETE_PROFESSOR_REQUEST,
   });
 
-  export const deleteProfessorSuccess = (): IAction => ({
+  export const deleteProfessorSuccess = (professorId: string): IAction => ({
     type: DELETE_PROFESSOR_SUCCESS,
+    payload: {
+      professorId,
+    },
   });
 
   export const deleteProfessorError = (error): IAction => ({
@@ -143,12 +147,9 @@ namespace ProfessorActions {
       body: JSON.stringify(professor),
       headers: { 'content-type': 'application/json' },
     })
-      .then(function (response) {
-        console.log("deleting...");
-        console.log(response);
-        return response.json()
-      }).then(function (body) {
-        return dispatch(deleteProfessorSuccess());
+      .then(() => {
+        dispatch(uiActions.closeDeleteConfirmationModal());
+        dispatch(deleteProfessorSuccess(professor.id));
       })
       .catch(error => {
         dispatch(deleteProfessorError(error));

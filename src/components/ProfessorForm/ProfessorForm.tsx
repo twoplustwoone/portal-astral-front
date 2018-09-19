@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { IErrors, IProps, IState } from './types';
 import {
-  FormControl,
-  InputLabel,
-  Input,
-  InputAdornment,
-  IconButton,
   Button,
+  Card,
   CardActions,
   CardContent,
-  Card,
-  FormHelperText,
-  Typography,
   CardHeader,
   Dialog,
-  DialogTitle, DialogActions, DialogContent, DialogContentText,
+  FormControl,
+  FormHelperText,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  Typography,
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import { IProfessor } from "../../../globals";
+import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 
 const styles = require('./ProfessorForm.pcss');
 
@@ -55,9 +55,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
     if (professor) {
       this.setProfessor();
     } else {
-      console.log(this.props);
       if (match.params.id) {
-        console.log('Fetch!');
         this.props.onFetchProfessor(match.params.id);
       }
     }
@@ -258,7 +256,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     const { isDeleteConfirmationOpen } = this.props;
 
-    const { isLoadingOpen, isFetchingProfessor } = this.props;
+    const { isLoadingOpen, isFetchingProfessor, isDeleting } = this.props;
 
     if (isFetchingProfessor || isLoadingOpen) {
       return <div><CircularProgress /></div>
@@ -271,23 +269,13 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
         {
           isDeleteConfirmationOpen &&
-          <Dialog open={true}>
-            <DialogTitle>Confirm delete "{`${fields.name} ${fields.lastName}`}"</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                This will permanently delete the professor {`${fields.name} ${fields.lastName}`} and cannot be
-                undone.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleCloseDelete} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={this.handleConfirmDelete} color="secondary" variant='contained'>
-                Confirm
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <DeleteConfirmationDialog
+            isLoading={isDeleting}
+            userType={'professor'}
+            name={`${fields.name} ${fields.lastName}`}
+            handleCloseDelete={this.handleCloseDelete}
+            handleConfirmDelete={this.handleConfirmDelete}
+          />
         }
 
         {

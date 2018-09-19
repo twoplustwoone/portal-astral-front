@@ -54,13 +54,37 @@ const initialState: IState = {
 const reducer = (state: IState = initialState, action: IAction): IState => {
   // @ts-ignore
   const { type, payload } = action;
-  const { CREATE_PROFESSOR_REQUEST, FETCH_PROFESSORS_ERROR, FETCH_PROFESSORS_REQUEST, FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_ERROR, FETCH_PROFESSOR_REQUEST, FETCH_PROFESSOR_SUCCESS } = professorActions;
+  const { CREATE_PROFESSOR_REQUEST, FETCH_PROFESSORS_ERROR, FETCH_PROFESSORS_REQUEST, FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_ERROR, FETCH_PROFESSOR_REQUEST, FETCH_PROFESSOR_SUCCESS, DELETE_PROFESSOR_SUCCESS, DELETE_PROFESSOR_REQUEST } = professorActions;
   const {
     CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL,
     OPEN_LOADING_MODAL, CLOSE_LOADING_MODAL,
   } = uiActions;
 
   switch (type) {
+    case DELETE_PROFESSOR_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          deleting: {
+            ...state.is.deleting,
+            professor: true,
+          },
+        },
+      };
+
+    case DELETE_PROFESSOR_SUCCESS:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          deleting: {
+            ...state.is.deleting,
+            professor: false,
+          },
+        },
+      };
+
     case CREATE_PROFESSOR_REQUEST:
       return {
         ...state,

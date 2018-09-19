@@ -23,6 +23,7 @@ export interface IValueProps {
   isDeleteConfirmationOpen: boolean;
   isLoadingOpen: boolean;
   isFetchingProfessor: boolean;
+  isDeleting: boolean;
 }
 
 export interface IContainerProps {

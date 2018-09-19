@@ -23,6 +23,7 @@ const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IPr
     isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
     isLoadingOpen: state.ui.is.open.loadingModal,
     isFetchingProfessor: isFetchingProfessor,
+    isDeleting: state.ui.is.deleting.professor,
   };
 };
 
@@ -44,7 +45,7 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
   },
 
   onClickDelete(professor: IProfessor) {
-    dispatch(uiActions.openDeleteConfirmationModal(professor));
+    dispatch(uiActions.openDeleteConfirmationModal(professor.id));
   },
 
   onCloseDelete() {
