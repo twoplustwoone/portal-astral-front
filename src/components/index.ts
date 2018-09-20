@@ -25,3 +25,11 @@ export {
   IDispatchProps as IAdminFormDispatchProps,
   IValueProps as IAdminFormValueProps,
 } from './AdminForm/types'
+
+/* Topbar */
+export { default as Topbar } from './layout/topbar/Topbar';
+export {
+    IContainerProps as ITopbarContainerProps,
+    IDispatchProps as ITopbarDispatchProps,
+    IValueProps as ITopbarValueProps,
+} from './layout/topbar/types'

@@ -1,5 +1,6 @@
 import { professorActions, uiActions } from "../actions";
 import { IAction } from "../../globals";
+import topbarActions from "../actions/topbarActions";
 
 export interface IState {
   is: {
@@ -19,6 +20,7 @@ export interface IState {
     open: {
       deleteConfirmationModal: boolean;
       loadingModal: boolean;
+      logOutModal: boolean;
     };
     deleting: {
       professor: boolean;
@@ -44,6 +46,7 @@ const initialState: IState = {
     open: {
       deleteConfirmationModal: false,
       loadingModal: false,
+      logOutModal: false,
     },
     deleting: {
       professor: false,
@@ -55,10 +58,8 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
   // @ts-ignore
   const { type, payload } = action;
   const { CREATE_PROFESSOR_REQUEST, FETCH_PROFESSORS_ERROR, FETCH_PROFESSORS_REQUEST, FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_ERROR, FETCH_PROFESSOR_REQUEST, FETCH_PROFESSOR_SUCCESS } = professorActions;
-  const {
-    CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL,
-    OPEN_LOADING_MODAL, CLOSE_LOADING_MODAL,
-  } = uiActions;
+  const { CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL, OPEN_LOADING_MODAL, CLOSE_LOADING_MODAL, OPEN_LOG_OUT_MODAL, CLOSE_LOG_OUT_MODAL} = uiActions;
+  const { LOG_OUT_REQUEST, LOG_OUT_ERROR} = topbarActions;
 
   switch (type) {
     case CREATE_PROFESSOR_REQUEST:
@@ -201,6 +202,54 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
           },
         },
       };
+
+      case LOG_OUT_REQUEST:
+          return {
+              ...state,
+              is: {
+                  ...state.is,
+                  open: {
+                      ...state.is.open,
+                      logOutModal: false,
+                  },
+              },
+          };
+
+      case LOG_OUT_ERROR:
+          return {
+              ...state,
+              is: {
+                  ...state.is,
+                  open: {
+                      ...state.is.open,
+                      logOutModal: false,
+                  },
+              },
+          };
+
+      case OPEN_LOG_OUT_MODAL:
+          return {
+              ...state,
+              is: {
+                  ...state.is,
+                  open: {
+                      ...state.is.open,
+                      logOutModal: true,
+                  },
+              },
+          };
+
+      case CLOSE_LOG_OUT_MODAL:
+          return {
+              ...state,
+              is: {
+                  ...state.is,
+                  open: {
+                      ...state.is.open,
+                      logOutModal: false,
+                  },
+              },
+          };
 
     default:
       return state;

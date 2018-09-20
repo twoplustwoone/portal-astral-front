@@ -4,11 +4,11 @@ import './App.css';
 import { Route } from 'react-router-dom'
 import { Home } from 'src/components';
 import { ProfessorForm, ProfessorTable } from 'src/containers';
-import Topbar from "../layout/topbar/Topbar";
 import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
 import StudentListPage from "../student/StudentListPage";
+import Topbar from "../../containers/Topbar/Topbar";
 
 const styles = (theme: any) => ({
     root: {
@@ -33,12 +33,24 @@ class App extends React.Component<IProps, IState> {
   /* Initial state for the component */
   state: IState = {};
 
+  // topBarProps: IProps = {
+  //     isLogOutOpen: false,
+  //     // "onClickLogOut" | "onCloseLogOut" | "onConfirmLogOut" | "professor" | "isLogOutOpen" | "match" | "history">,
+  //
+  // };
+
+  // componentDidMount() {
+  //     const { professor, match } = this.props;
+  //     this.props.onFetchProfessor(match.params.id);
+  // }
+
   render() {
       const { classes, history}: any = this.props;
 
       return (
         <div className={classes.root}>
-            <Topbar userName="Sebas Belaustegui"/>
+            {/*<Topbar onClickLogOut={professor} isLogOutOpen={false} match={{ params: { id: "sapo" }}} history={history} />*/}
+            <Topbar/>
             <Sidebar history={history}/>
             <main className={classes.content}>
                 <div className={classes.toolbar} />

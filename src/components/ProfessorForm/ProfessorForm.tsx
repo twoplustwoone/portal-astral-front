@@ -25,7 +25,6 @@ const styles = require('./ProfessorForm.pcss');
 
 class ProfessorForm extends React.Component<IProps, IState> {
 
-
   state: IState = {
     fields: {
       name: '',
@@ -46,7 +45,6 @@ class ProfessorForm extends React.Component<IProps, IState> {
     isNew: true,
     isEditing: true,
   };
-
 
   componentDidMount() {
     const { professor, match } = this.props;
