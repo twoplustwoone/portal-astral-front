@@ -9,6 +9,7 @@ import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
 import StudentTable from "../../containers/Student/StudentTable";
+import Login from "../Login/Login";
 
 const styles = (theme: any) => ({
     root: {
@@ -43,6 +44,7 @@ class App extends React.Component<IProps, IState> {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Route path={'/'} component={Home} />
+                <Route path={'/login'} component={Login} />
                 <Route path={'/new-professor'} component={ProfessorForm} />
                 <Route path={'/new-student'} component={StudentForm} />
                 <Route path={'/admin'} component={AdminForm} />
