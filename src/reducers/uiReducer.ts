@@ -1,4 +1,4 @@
-import { professorActions, uiActions } from "../actions";
+import { professorActions, studentActions, uiActions } from "../actions";
 import { IAction } from "../../globals";
 
 export interface IState {
@@ -15,13 +15,15 @@ export interface IState {
     }
     creating: {
       professor: boolean;
+      student: boolean;
+    };
+    deleting: {
+      professor: boolean;
+      student: boolean;
     };
     open: {
       deleteConfirmationModal: boolean;
       loadingModal: boolean;
-    };
-    deleting: {
-      professor: boolean;
     };
   };
 }
@@ -40,13 +42,15 @@ const initialState: IState = {
     },
     creating: {
       professor: false,
+      student: false,
+    },
+    deleting: {
+      professor: false,
+      student: false,
     },
     open: {
       deleteConfirmationModal: false,
       loadingModal: false,
-    },
-    deleting: {
-      professor: false,
     },
   },
 };
@@ -54,13 +58,36 @@ const initialState: IState = {
 const reducer = (state: IState = initialState, action: IAction): IState => {
   // @ts-ignore
   const { type, payload } = action;
-  const { CREATE_PROFESSOR_REQUEST, FETCH_PROFESSORS_ERROR, FETCH_PROFESSORS_REQUEST, FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_ERROR, FETCH_PROFESSOR_REQUEST, FETCH_PROFESSOR_SUCCESS } = professorActions;
-  const {
-    CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL,
-    OPEN_LOADING_MODAL, CLOSE_LOADING_MODAL,
-  } = uiActions;
+
+  const { CREATE_STUDENT_REQUEST } = studentActions;
+  const { CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL, OPEN_LOADING_MODAL, CLOSE_LOADING_MODAL } = uiActions;
+  const { CREATE_PROFESSOR_REQUEST, FETCH_PROFESSORS_ERROR, FETCH_PROFESSORS_REQUEST, FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_ERROR, FETCH_PROFESSOR_REQUEST, FETCH_PROFESSOR_SUCCESS, DELETE_PROFESSOR_SUCCESS, DELETE_PROFESSOR_REQUEST } = professorActions;
 
   switch (type) {
+    case DELETE_PROFESSOR_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          deleting: {
+            ...state.is.deleting,
+            professor: true,
+          },
+        },
+      };
+
+    case DELETE_PROFESSOR_SUCCESS:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          deleting: {
+            ...state.is.deleting,
+            professor: false,
+          },
+        },
+      };
+
     case CREATE_PROFESSOR_REQUEST:
       return {
         ...state,
@@ -69,6 +96,18 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
           creating: {
             ...state.is.creating,
             professor: true,
+          },
+        },
+      };
+
+    case CREATE_STUDENT_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          creating: {
+            ...state.is.creating,
+            student: true,
           },
         },
       };

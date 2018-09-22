@@ -11,10 +11,8 @@ import { withRouter } from "react-router";
 import { IProfessor } from "../../../globals";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IProfessorFormValueProps => {
-    const { id } = ownProps.match.params;
-
-    const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
-
+  const { id } = ownProps.match.params;
+  const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
     const isFetchingProfessor = state.ui.is.fetching.professor[id];
 
     const isCreating = state.ui.is.creating.professor;
@@ -51,7 +49,7 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
     onConfirmDelete(professor: IProfessor) {
         return dispatch(professorActions.deleteProfessor(professor));
     },
-
+  
     onFetchProfessor(professorId: string) {
         dispatch(professorActions.fetchProfessor(professorId));
     },

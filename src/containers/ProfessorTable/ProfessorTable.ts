@@ -12,14 +12,14 @@ import { IProfessor } from "../../../globals";
 import { objectToArray } from "../../helpers/objectToArray";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorTableContainerProps): IProfessorTableValueProps => {
-    const professors: IProfessor[] = objectToArray(state.professors);
+  const professors: IProfessor[] = objectToArray(state.professors);
 
-    return {
-        professors,
-        isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
-        isLoading: state.ui.is.loading.professors,
-        isDeletingProfessor: state.ui.is.deleting.professor,
-    };
+  return {
+    professors,
+    isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
+    isLoading: state.ui.is.loading.professors,
+    isDeletingProfessor: state.ui.is.deleting.professor,
+  };
 };
 
 const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfessorTableContainerProps): IProfessorTableDispatchProps => ({
@@ -47,6 +47,14 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
     onConfirmDelete(professor: IProfessor) {
         dispatch(professorActions.deleteProfessor(professor));
     },
+
+  onCloseDelete() {
+    dispatch(uiActions.closeDeleteConfirmationModal());
+  },
+
+  onConfirmDelete(professor: IProfessor) {
+    dispatch(professorActions.deleteProfessor(professor));
+  },
 
 });
 

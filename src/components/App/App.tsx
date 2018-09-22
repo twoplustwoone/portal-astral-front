@@ -3,7 +3,7 @@ import { IProps, IState } from './types';
 import './App.css';
 import { Route } from 'react-router-dom'
 import {Home, StudentTable} from 'src/components';
-import { ProfessorForm, ProfessorTable } from 'src/containers';
+import { ProfessorForm, ProfessorTable, StudentForm } from 'src/containers';
 import Topbar from "../layout/topbar/Topbar";
 import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
@@ -11,6 +11,7 @@ import AdminForm from "../AdminForm/AdminForm";
 import StudentForm from "../StudentForm/StudentForm";
 import {Redirect} from "react-router";
 import loginAction from "../../actions/loginActions";
+import StudentTable from "../../containers/Student/StudentTable";
 
 const styles = (theme: any) => ({
     root: {

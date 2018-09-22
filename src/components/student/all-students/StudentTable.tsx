@@ -8,7 +8,6 @@ import AddIcon from "../../../../node_modules/@material-ui/icons/Add";
 const styles = require('./StudentTable.pcss');
 
 class StudentTable extends React.Component<IProps, IState> {
-
     componentDidMount() {
         // this.props.onFetchStudents();
     }
