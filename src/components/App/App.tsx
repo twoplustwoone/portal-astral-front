@@ -2,13 +2,15 @@ import * as React from 'react';
 import { IProps, IState } from './types';
 import './App.css';
 import { Route } from 'react-router-dom'
-import { Home } from 'src/components';
+import {Home, StudentTable} from 'src/components';
 import { ProfessorForm, ProfessorTable } from 'src/containers';
 import Topbar from "../layout/topbar/Topbar";
 import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
-import StudentListPage from "../student/StudentListPage";
+import StudentForm from "../StudentForm/StudentForm";
+import {Redirect} from "react-router";
+import loginAction from "../../actions/loginActions";
 
 const styles = (theme: any) => ({
     root: {
@@ -28,6 +30,24 @@ const styles = (theme: any) => ({
     toolbar: theme.mixins.toolbar,
 });
 
+const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route
+        {...rest}
+        render={props =>
+            loginAction.isAuthenticated ? (
+                <Component {...props} />
+            ) : (
+                <Redirect
+                    to={{
+                        pathname: "/login",
+                        state: { from: props.location },
+                    }}
+                />
+            )
+        }
+    />
+);
+
 class App extends React.Component<IProps, IState> {
 
   /* Initial state for the component */
@@ -43,11 +63,13 @@ class App extends React.Component<IProps, IState> {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Route path={'/'} component={Home} />
-                <Route path={'/new-professor'} component={ProfessorForm} />
-                <Route path={'/admin'} component={AdminForm} />
-                <Route path={'/students'} component={StudentListPage} />
-                <Route path={'/professors'} component={ProfessorTable} />
-                <Route path={'/professor/:id'} component={ProfessorForm} />
+                <PrivateRoute path={'/new-professor'} component={ProfessorForm} />
+                <PrivateRoute path={'/new-student'} component={StudentForm} />
+                <PrivateRoute path={'/admin'} component={AdminForm} />
+                <PrivateRoute path={'/students'} component={StudentTable} />
+                <PrivateRoute path={'/student/:id'} component={StudentForm} />
+                <PrivateRoute path={'/professors'} component={ProfessorTable} />
+                <PrivateRoute path={'/professor/:id'} component={ProfessorForm} />
             </main>
         </div>
     );

@@ -8,10 +8,10 @@ namespace UIActions {
     export const OPEN_LOADING_MODAL = '@ASTRAL.OPEN_LOADING_MODAL';
     export const CLOSE_LOADING_MODAL = '@ASTRAL.CLOSE_LOADING_MODAL';
 
-    export const openDeleteConfirmationModal = (user: IUser): IAction => ({
+    export const openDeleteConfirmationModal = (userId: string): IAction => ({
         type: OPEN_DELETE_CONFIRMATION_MODAL,
         payload: {
-          user,
+          userId,
         },
     });
 

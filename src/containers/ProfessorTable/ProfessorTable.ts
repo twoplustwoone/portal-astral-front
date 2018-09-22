@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import { IStore } from '../../reducers';
 import {
-  ProfessorTable,
-  IProfessorTableDispatchProps,
-  IProfessorTableValueProps,
-  IProfessorTableContainerProps,
+    ProfessorTable,
+    IProfessorTableDispatchProps,
+    IProfessorTableValueProps,
+    IProfessorTableContainerProps,
 } from '../../components';
 import { professorActions, uiActions } from "../../actions";
 import { withRouter } from "react-router";
@@ -12,35 +12,41 @@ import { IProfessor } from "../../../globals";
 import { objectToArray } from "../../helpers/objectToArray";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorTableContainerProps): IProfessorTableValueProps => {
-  const professors: IProfessor[] = objectToArray(state.professors);
+    const professors: IProfessor[] = objectToArray(state.professors);
 
-  console.log(ownProps.match.params.id);
-
-  return {
-    professors,
-    isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
-    isLoading: state.ui.is.loading.professors,
-    isDeletingProfessor: state.ui.is.deleting.professor,
-  };
+    return {
+        professors,
+        isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
+        isLoading: state.ui.is.loading.professors,
+        isDeletingProfessor: state.ui.is.deleting.professor,
+    };
 };
 
 const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfessorTableContainerProps): IProfessorTableDispatchProps => ({
 
-  onClickAddNewProfessor() {
-    props.history.push('/new-professor');
-  },
+    onClickAddNewProfessor() {
+        props.history.push('/new-professor');
+    },
 
-  onClickDeleteProfessor(professor: IProfessor) {
-    dispatch(uiActions.openDeleteConfirmationModal(professor));
-  },
+    onClickDeleteProfessor(professorId: string) {
+        dispatch(uiActions.openDeleteConfirmationModal(professorId));
+    },
 
-  onClickEditProfessor(professorId: string) {
-    props.history.push('/professor/' + professorId);
-  },
+    onClickEditProfessor(professorId: string) {
+        props.history.push('/professor/' + professorId);
+    },
 
-  onFetchProfessors() {
-    dispatch(professorActions.fetchProfessors());
-  },
+    onFetchProfessors() {
+        dispatch(professorActions.fetchProfessors());
+    },
+
+    onCloseDelete() {
+        dispatch(uiActions.closeDeleteConfirmationModal());
+    },
+
+    onConfirmDelete(professor: IProfessor) {
+        dispatch(professorActions.deleteProfessor(professor));
+    },
 
 });
 

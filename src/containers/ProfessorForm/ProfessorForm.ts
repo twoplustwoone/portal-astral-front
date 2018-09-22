@@ -1,67 +1,60 @@
 import { connect } from 'react-redux';
 import { IStore } from '../../reducers';
 import {
-  ProfessorForm,
-  IProfessorFormDispatchProps,
-  IProfessorFormValueProps,
-  IProfessorContainerProps,
+    ProfessorForm,
+    IProfessorFormDispatchProps,
+    IProfessorFormValueProps,
+    IProfessorContainerProps,
 } from '../../components';
 import { professorActions, uiActions } from "../../actions";
 import { withRouter } from "react-router";
 import { IProfessor } from "../../../globals";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IProfessorFormValueProps => {
-  const { id } = ownProps.match.params;
-  const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
+    const { id } = ownProps.match.params;
 
-  const isFetchingProfessor = state.ui.is.fetching.professor[id];
+    const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
 
-  console.log({ isFetchingProfessor });
+    const isFetchingProfessor = state.ui.is.fetching.professor[id];
 
-  return {
-    professor,
-    isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
-    isLoadingOpen: state.ui.is.open.loadingModal,
-    isFetchingProfessor: isFetchingProfessor,
-  };
+    const isCreating = state.ui.is.creating.professor;
+    return {
+        professor,
+        isFetchingProfessor,
+        isCreating,
+        isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
+        isDeleting: state.ui.is.deleting.professor,
+    };
 };
 
 const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfessorContainerProps): IProfessorFormDispatchProps => ({
-  onSubmit: function (professor: IProfessor) {
-    return dispatch(professorActions.createProfessor(professor));
-  },
+    onCreate: function (professor: IProfessor) {
+        return dispatch(professorActions.createProfessor(professor));
+    },
 
-  onCancel() {
-    props.history.push('/');
-  },
+    onCancel() {
+        props.history.push('/professors');
+    },
 
-  onSave() {
-    props.history.push('/professors');
-  },
+    onEdit: function (professor: IProfessor) {
+        return dispatch(professorActions.updateProfessor(professor));
+    },
 
-  onEdit: function (professor: IProfessor) {
-    dispatch(professorActions.editProfessor(professor));
-  },
+    onClickDelete(professor: IProfessor) {
+        dispatch(uiActions.openDeleteConfirmationModal(professor.id));
+    },
 
-  onClickDelete(professor: IProfessor) {
-    dispatch(uiActions.openDeleteConfirmationModal(professor));
-  },
+    onCloseDelete() {
+        dispatch(uiActions.closeDeleteConfirmationModal());
+    },
 
-  onCloseDelete() {
-    dispatch(uiActions.closeDeleteConfirmationModal());
-  },
+    onConfirmDelete(professor: IProfessor) {
+        return dispatch(professorActions.deleteProfessor(professor));
+    },
 
-  onConfirmDelete(professor: IProfessor) {
-    dispatch(professorActions.deleteProfessor(professor));
-  },
-
-  onLoading(professor: IProfessor) {
-    dispatch(uiActions.openLoadingModal(professor));
-  },
-
-  onFetchProfessor(professorId: string) {
-    dispatch(professorActions.fetchProfessor(professorId));
-  },
+    onFetchProfessor(professorId: string) {
+        dispatch(professorActions.fetchProfessor(professorId));
+    },
 
 });
 
