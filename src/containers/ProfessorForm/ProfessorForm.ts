@@ -12,39 +12,36 @@ import { IProfessor } from "../../../globals";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IProfessorFormValueProps => {
   const { id } = ownProps.match.params;
+
   const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
 
   const isFetchingProfessor = state.ui.is.fetching.professor[id];
 
-  console.log({ isFetchingProfessor });
-
+  const isCreating = state.ui.is.creating.professor;
   return {
     professor,
+    isFetchingProfessor,
+    isCreating,
     isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
-    isLoadingOpen: state.ui.is.open.loadingModal,
-    isFetchingProfessor: isFetchingProfessor,
+    isDeleting: state.ui.is.deleting.professor,
   };
 };
 
 const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfessorContainerProps): IProfessorFormDispatchProps => ({
-  onSubmit: function (professor: IProfessor) {
+  onCreate: function (professor: IProfessor) {
     return dispatch(professorActions.createProfessor(professor));
   },
 
   onCancel() {
-    props.history.push('/');
-  },
-
-  onSave() {
     props.history.push('/professors');
   },
 
   onEdit: function (professor: IProfessor) {
-    dispatch(professorActions.editProfessor(professor));
+    return dispatch(professorActions.updateProfessor(professor));
   },
 
   onClickDelete(professor: IProfessor) {
-    dispatch(uiActions.openDeleteConfirmationModal(professor));
+    dispatch(uiActions.openDeleteConfirmationModal(professor.id));
   },
 
   onCloseDelete() {
@@ -52,11 +49,7 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
   },
 
   onConfirmDelete(professor: IProfessor) {
-    dispatch(professorActions.deleteProfessor(professor));
-  },
-
-  onLoading(professor: IProfessor) {
-    dispatch(uiActions.openLoadingModal(professor));
+    return dispatch(professorActions.deleteProfessor(professor));
   },
 
   onFetchProfessor(professorId: string) {

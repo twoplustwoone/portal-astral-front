@@ -1,4 +1,4 @@
-import {RemoteData} from "@devexperts/remote-data-ts";
+import { RemoteData } from "@devexperts/remote-data-ts";
 
 declare interface IAction {
   type: string;
@@ -10,8 +10,8 @@ declare interface IUser {
   lastName: string;
   email: string;
   id: string;
-  file:string;
-  password?: string;
+  password: string;
+  file?: string;
 }
 
 declare interface IProfessor extends IUser {
@@ -25,12 +25,12 @@ declare interface IStudent extends IUser {
   identificationType: string;
   identification: string;
   address?: string;
-  career: ICareer;
+  career?: ICareer;
 }
 
 type HttpError = string
 type WebData<A> = RemoteData<HttpError, A>
 
 declare interface ICareer {
-
+  id: string;
 }
