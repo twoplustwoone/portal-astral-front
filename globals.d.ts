@@ -11,6 +11,7 @@ declare interface IUser {
   email: string;
   id: string;
   password: string;
+  userType: UserType;
   file?: string;
 }
 
@@ -33,4 +34,8 @@ type WebData<A> = RemoteData<HttpError, A>
 
 declare interface ICareer {
   id: string;
+}
+
+declare enum UserType {
+    PROFESSOR, ADMINISTRATOR, STUDENT
 }

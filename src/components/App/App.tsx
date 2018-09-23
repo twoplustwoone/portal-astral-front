@@ -3,12 +3,14 @@ import { IProps, IState } from './types';
 import './App.css';
 import { Route } from 'react-router-dom'
 import { Home } from 'src/components';
-import { ProfessorForm, ProfessorTable, StudentForm } from 'src/containers';
+import { ProfessorForm, ProfessorTable } from 'src/containers';
 import Topbar from "../layout/topbar/Topbar";
 import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
 import StudentTable from "../../containers/Student/StudentTable";
+import StudentForm from "../StudentForm/StudentForm";
+import {UserType} from "../../../globals";
 
 const styles = (theme: any) => ({
     root: {
@@ -39,7 +41,7 @@ class App extends React.Component<IProps, IState> {
       return (
         <div className={classes.root}>
             <Topbar userName="Sebas Belaustegui"/>
-            <Sidebar history={history}/>
+            <Sidebar history={history} userType={UserType.ADMINISTRATOR}/>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Route path={'/'} component={Home} />
