@@ -11,7 +11,7 @@ declare interface IUser {
   email: string;
   id: string;
   password: string;
-  userType: UserType;
+  userType?: UserType;
   file?: string;
 }
 

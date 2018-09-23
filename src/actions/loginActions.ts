@@ -10,6 +10,10 @@ namespace loginAction {
         ERROR = '@ASTRAL.FETCH_ERROR',
     }
 
+    declare enum UserType {
+        PROFESSOR, ADMINISTRATOR, STUDENT,
+    }
+
     export const fetchRequest = (email: string, password: string): IAction => ({
         type: FetchStates.REQUEST,
         payload: {
@@ -45,6 +49,14 @@ namespace loginAction {
             .catch(error => dispatch(fetchError(error)));
     };
 
+    export const loggedUser = {
+        name: "Sebas",
+        lastName: "Belaustegui",
+        email: "sebas@mail.com",
+        id: "AA22",
+        password: "password",
+        userType: UserType.ADMINISTRATOR,
+    }
     // export const logOut = ():
 }
 

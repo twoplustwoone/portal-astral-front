@@ -10,7 +10,7 @@ import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
 import StudentTable from "../../containers/Student/StudentTable";
 import StudentForm from "../StudentForm/StudentForm";
-import {UserType} from "../../../globals";
+import LoginActions from 'src/actions/loginActions'
 
 const styles = (theme: any) => ({
     root: {
@@ -41,7 +41,7 @@ class App extends React.Component<IProps, IState> {
       return (
         <div className={classes.root}>
             <Topbar userName="Sebas Belaustegui"/>
-            <Sidebar history={history} userType={UserType.ADMINISTRATOR}/>
+            <Sidebar history={history} userType={LoginActions.loggedUser.userType}/>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Route path={'/'} component={Home} />

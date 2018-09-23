@@ -10,7 +10,6 @@ import SchoolIcon from '@material-ui/icons/School';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText/ListItemText';
-import {UserType} from "../../../../globals";
 
 const drawerWidth = 240;
 
@@ -30,6 +29,10 @@ const styles = (theme: any) => ({
         padding: theme.spacing.unit * 3,
     },
 });
+
+declare enum UserType {
+    PROFESSOR, ADMINISTRATOR, STUDENT,
+}
 
 class Sidebar  extends React.Component<any, any> {
     state = {
