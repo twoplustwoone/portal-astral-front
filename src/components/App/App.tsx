@@ -3,13 +3,15 @@ import { IProps, IState } from './types';
 import './App.css';
 import { Route } from 'react-router-dom'
 import {Home, StudentTable} from 'src/components';
-import { ProfessorForm, ProfessorTable, StudentForm } from 'src/containers';
+import { ProfessorForm, ProfessorTable } from 'src/containers';
 import Topbar from "../layout/topbar/Topbar";
 import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
 import {Redirect} from "react-router";
 import loginAction from "../../actions/loginActions";
+import StudentForm from "../StudentForm/StudentForm";
+import LoginActions from 'src/actions/loginActions';
 
 const styles = (theme: any) => ({
     root: {
@@ -58,7 +60,7 @@ class App extends React.Component<IProps, IState> {
       return (
         <div className={classes.root}>
             <Topbar userName="Sebas Belaustegui"/>
-            <Sidebar history={history}/>
+            <Sidebar history={history} userType={LoginActions.loggedUser.userType}/>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Route path={'/'} component={Home} />
