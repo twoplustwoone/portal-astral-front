@@ -6,7 +6,7 @@ const styles = require('./Home.pcss');
 
 class Home extends React.Component<IProps, IState> {
   render() {
-    return <div className={styles.home} />;
+      return <div className={styles.home} >Home!</div>;
   }
 }
 

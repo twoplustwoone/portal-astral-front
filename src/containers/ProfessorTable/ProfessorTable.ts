@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { IStore } from '../../reducers';
 import {
-    ProfessorTable,
     IProfessorTableDispatchProps,
     IProfessorTableValueProps,
     IProfessorTableContainerProps,
@@ -10,6 +9,7 @@ import { professorActions, uiActions } from "../../actions";
 import { withRouter } from "react-router";
 import { IProfessor } from "../../../globals";
 import { objectToArray } from "../../helpers/objectToArray";
+import ProfessorTable from "../../components/ProfessorTable/ProfessorTable";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorTableContainerProps): IProfessorTableValueProps => {
   const professors: IProfessor[] = objectToArray(state.professors);
