@@ -47,15 +47,6 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
     onConfirmDelete(professor: IProfessor) {
         dispatch(professorActions.deleteProfessor(professor));
     },
-
-  onCloseDelete() {
-    dispatch(uiActions.closeDeleteConfirmationModal());
-  },
-
-  onConfirmDelete(professor: IProfessor) {
-    dispatch(professorActions.deleteProfessor(professor));
-  },
-
 });
 
 export default withRouter((connect(mapStateToProps, mapDispatchToProps) as any)(ProfessorTable)) as typeof ProfessorTable;
