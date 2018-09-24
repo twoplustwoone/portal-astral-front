@@ -1,5 +1,4 @@
-///<reference path="../actions/loginAction.ts"/>
-import {IAction} from "../../globals";
+import {IAction, IUser} from "../../globals";
 import loginAction from "../actions/loginAction";
 
 export interface IState {
@@ -8,6 +7,7 @@ export interface IState {
         success: boolean;
         error: boolean;
     };
+    user?: IUser;
 }
 
 const initialState: IState = {
@@ -33,7 +33,9 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
                 ...state,
                 login: {
                     ...state.login,
+                    success: false,
                     isLoading: true,
+                    error: false,
                 },
             };
         case SUCCESS:
@@ -42,13 +44,18 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
                 login: {
                     ...state.login,
                     success: true,
+                    isLoading: false,
+                    error: false,
                 },
+                user: payload.user,
             };
         case ERROR:
             return {
                 ...state,
                 login: {
                     ...state.login,
+                    success: false,
+                    isLoading: false,
                     error: true,
                 },
             };

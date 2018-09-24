@@ -23,10 +23,6 @@ namespace loginAction {
 
     export const fetchRequest = (email: string, password: string): IAction => ({
         type: FetchStates.REQUEST,
-        payload: {
-            email,
-            password,
-        },
     });
 
     export const fetchSuccess = (user: IUser): IAction => ({
@@ -43,11 +39,15 @@ namespace loginAction {
         },
     });
 
-    export const logIn = (user: IUser) => (dispatch, getState: () => IStore) => {
-        dispatch(fetchRequest(user.email,user.password));
+    export const logIn = (email : string, password: string) => (dispatch, getState: () => IStore) => {
+        dispatch(fetchRequest(email,password));
 
-        return fetch('http://localhost:9000/login/'+user, {
-            method: 'GET',
+        return fetch('http://localhost:9000/login/', {
+            method: 'POST',
+            body: JSON.stringify({
+                email : email,
+                password: password
+            }),
         }) //Review path route
             .then(handleResponseError)
             .then(userLogged => {

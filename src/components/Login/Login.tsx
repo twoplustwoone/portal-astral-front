@@ -232,7 +232,9 @@ class Login extends React.Component<IProps, IState> {
                 autoHideDuration={6000}
                 onClose={this.handleClose}
             >
+                <div>
                 SNACK BAR
+                </div>
             </Snackbar>
 
         </div>
