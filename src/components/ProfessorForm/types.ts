@@ -13,6 +13,8 @@ export interface IDispatchProps {
   onCloseDelete: () => any;
   onConfirmDelete: (professor: IProfessor) => any;
   onFetchProfessor: (professorId: string) => any;
+  onSave: () => any;
+  onLoading: (professor: IProfessor) => any;
 }
 
 /* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */

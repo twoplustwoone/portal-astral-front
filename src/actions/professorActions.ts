@@ -134,9 +134,6 @@ namespace ProfessorActions {
               dispatch(uiActions.closeLoadingModal())
           }
         return response.json()
-      }).then(function (body) {
-        console.log(body);
-        return response.json();
       })
       .then(function (body) {
         return body;
@@ -156,7 +153,7 @@ namespace ProfessorActions {
       .then(function (response) {
         return response.json()
       }).then(function (body) {
-        return dispatch(deleteProfessorSuccess());
+        return dispatch(deleteProfessorSuccess(professor.id));
       })
       .catch(error => {
         dispatch(deleteProfessorError(error));

@@ -13,12 +13,22 @@ import { default as Topbar } from "../../components/layout/topbar/Topbar";
 const mapStateToProps = (state: IStore, ownProps: ITopbarContainerProps): ITopbarValueProps => {
   return {
     isLogOutOpen: state.ui.is.open.logOutModal,
+    // user: state.authReducer.user,
+      user: {
+          name: "Flor",
+          lastName: "Vimberg",
+          email: "flor@gmai.com",
+          id: "123asdqweasd3123",
+          file:"sapo",
+          password: "perrito23",
+      },
   };
 };
 
 const mapDispatchToProps = (dispatch: (action: any) => any | void, props?: ITopbarContainerProps): ITopbarDispatchProps => ({
 
   onClickLogOut() {
+      console.log("topbar.ts");
     dispatch(uiActions.openLogOutModal());
   },
 

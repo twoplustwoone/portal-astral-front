@@ -106,18 +106,19 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   handleSubmit = () => {
-    if (this.validateAll()) {
-        this.handleLoading();
-      if (!this.state.isNew) {
-        this.props.onEdit(this.state.fields);
-        this.handleCancel();
-      if (!this.state.isNew) {
-        this.props.onEdit(this.state.fields).then(() => this.props.history.push('/professors'));
+      if (this.validateAll()) {
+          this.handleLoading();
+          if (!this.state.isNew) {
+              this.props.onEdit(this.state.fields);
+              this.handleCancel();
+              if (!this.state.isNew) {
+                  this.props.onEdit(this.state.fields).then(() => this.props.history.push('/professors'));
+              }
+              else {
+                  this.props.onCreate(this.state.fields).then(() => this.props.history.push('/professors'));
+              }
+          }
       }
-      else {
-        this.props.onCreate(this.state.fields).then(() => this.props.history.push('/professors'));
-      }
-    }
   };
 
   validateAll = () => {

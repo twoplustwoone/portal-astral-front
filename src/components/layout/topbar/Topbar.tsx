@@ -11,8 +11,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { IProps, IState } from './types';
 import Dialog from "@material-ui/core/es/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/es/DialogTitle/DialogTitle";
-import DialogContentText from "@material-ui/core/es/DialogContentText/DialogContentText";
-import DialogContent from "@material-ui/core/es/DialogContent/DialogContent";
 import Button from "@material-ui/core/es/Button/Button";
 import DialogActions from "@material-ui/core/es/DialogActions/DialogActions";
 
@@ -60,9 +58,7 @@ class Topbar  extends React.Component<IProps, IState> {
     };
 
     handleLogOut = () => {
-        console.log("hasta aca llegue");
         this.props.onClickLogOut();
-        console.log("estoy abriendo el modal...");
         this.setState({ anchorEl: undefined });
     };
 
@@ -76,69 +72,80 @@ class Topbar  extends React.Component<IProps, IState> {
 
     render() {
         const {classes}: any = this.props;
-        const userName = "chabon";
+        const user = this.props.user;
         const { anchorEl } = this.state;
         const { isLogOutOpen } = this.props;
 
-        {
-            isLogOutOpen &&
-            <Dialog open={true}>
-                <DialogTitle>Confirm delete "{"Sapo"}"</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Are you sure you want to log out?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleCloseLogOut } color="primary">
-                        Cancel
-                    </Button>
-                    {/*<Button onClick={this.handleConfirmLogOut()} color="secondary" variant='contained'>*/}
-                        {/*Confirm*/}
-                    {/*</Button>*/}
-                </DialogActions>
-            </Dialog>
-        }
-
         return (
-            <div>
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton
-                            color='inherit'
-                            aria-label='Open drawer'
-                            onClick={this.handleDrawerToggle}
-                            className={classes.navIconHide}
-                        >
-                            <MenuIcon/>
-                        </IconButton>
-                        <Typography variant='title' color='inherit' noWrap>
-                            {"PORTAL ASTRAL"}
-                        </Typography>
-                        <Typography className={classes.accountBtn} variant='title' color='inherit' noWrap>
-                            {userName}
-                        </Typography>
-                        <IconButton
-                            color="inherit"
-                            aria-owns={anchorEl ? 'simple-menu' : undefined}
-                            aria-haspopup="true"
-                            onClick={this.handleClick}
+            <div className={styles.name}>
+                {
+                    <Dialog open={isLogOutOpen} disableEnforceFocus>
+                        <DialogTitle>Are you sure you want to log out?</DialogTitle>
+                        <DialogActions>
+                            <Button onClick={this.handleCloseLogOut} color="primary">
+                                Cancel
+                            </Button>
+                            <Button color="secondary" variant='contained'>
+                            {/*<Button onClick={this.handleConfirmLogOut()} color="secondary" variant='contained'>*/}
+                                Confirm
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                }
+
+                <div>
+                    <AppBar className={classes.appBar}>
+                        <Toolbar>
+                            <IconButton
+                                color='inherit'
+                                aria-label='Open drawer'
+                                onClick={this.handleDrawerToggle}
+                                className={classes.navIconHide}
                             >
-                            <AccountCircle/>
-                        </IconButton>
-                        <Menu
-                            id="simple-menu"
-                            anchorEl={anchorEl}
-                            open={Boolean(anchorEl)}
-                            onClose={this.handleClose}
-                        >
-                            <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
-                        </Menu>
-                    </Toolbar>
-                </AppBar>
+                                <MenuIcon/>
+                            </IconButton>
+                            <Typography variant='title' color='inherit' noWrap>
+                                {"PORTAL ASTRAL"}
+                            </Typography>
+                            {
+                                user !== undefined
+                                ? <Typography className={classes.accountBtn} variant='title' color='inherit' noWrap>
+                                        {user.name.concat(" ").concat(user.lastName)}
+                                    </Typography>
+                                : null
+                            }
+                            {
+                                user !== undefined
+                                    ? <IconButton
+                                        color="inherit"
+                                        aria-owns={anchorEl ? 'simple-menu' : undefined}
+                                        aria-haspopup="true"
+                                        onClick={this.handleClick}
+                                    >
+                                        <AccountCircle/>
+                                    </IconButton>
+                                    : null
+                            }
+                            {
+                                user !== undefined
+                                    ? <Menu
+                                        id="simple-menu"
+                                        anchorEl={anchorEl}
+                                        open={Boolean(anchorEl)}
+                                        onClose={this.handleClose}
+                                    >
+                                        <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                                        <MenuItem onClick={this.handleLogOut}>Logout</MenuItem>
+                                    </Menu>
+                                    : null
+                            }
+                        </Toolbar>
+                    </AppBar>
+                </div>
             </div>
         );
+
+
     }
 }
 

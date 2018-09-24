@@ -11,7 +11,6 @@ namespace UIActions {
     export const OPEN_LOG_OUT_MODAL = '@AOPEN_LOG_OUT_MODAL ';
     export const CLOSE_LOG_OUT_MODAL  = '@ASTRAL.CLOSE_LOG_OUT_MODAL';
 
-    export const openDeleteConfirmationModal = (user: IUser): IAction => ({
     export const openDeleteConfirmationModal = (userId: string): IAction => ({
         type: OPEN_DELETE_CONFIRMATION_MODAL,
         payload: {

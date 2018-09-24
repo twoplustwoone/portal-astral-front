@@ -4,15 +4,12 @@ import './App.css';
 import { Route } from 'react-router-dom'
 import { Home } from 'src/components';
 import { ProfessorForm, ProfessorTable, StudentForm } from 'src/containers';
-import Topbar from "../layout/topbar/Topbar";
-import { ProfessorForm, ProfessorTable } from 'src/containers';
 import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
-import StudentListPage from "../student/StudentListPage";
-import Topbar from "../../containers/Topbar/Topbar";
 import StudentTable from "../../containers/Student/StudentTable";
 import Login from "../Login/Login";
+import Topbar from "../../containers/Topbar/Topbar";
 
 const styles = (theme: any) => ({
     root: {

@@ -36,12 +36,20 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
     props.history.push('/professors');
   },
 
+  onSave() {
+      props.history.push('/');
+  },
+
   onEdit: function (professor: IProfessor) {
     return dispatch(professorActions.updateProfessor(professor));
   },
 
   onClickDelete(professor: IProfessor) {
     dispatch(uiActions.openDeleteConfirmationModal(professor.id));
+  },
+
+  onLoading(professor: IProfessor){
+    dispatch(uiActions.openLoadingModal(professor));
   },
 
   onCloseDelete() {
