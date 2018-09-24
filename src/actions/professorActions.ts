@@ -43,8 +43,11 @@ namespace ProfessorActions {
     type: DELETE_PROFESSOR_REQUEST,
   });
 
-  export const deleteProfessorSuccess = (): IAction => ({
+  export const deleteProfessorSuccess = (professorId: string): IAction => ({
     type: DELETE_PROFESSOR_SUCCESS,
+    payload: {
+      professorId,
+    },
   });
 
   export const deleteProfessorError = (error): IAction => ({
@@ -109,16 +112,17 @@ namespace ProfessorActions {
       headers: { 'content-type': 'application/json' },
     })
       .then(function (response) {
-        return response
-      }).then(function (body) {
-        console.log(body);
+        return response.json();
+      })
+      .then(function (body) {
+        return body;
       })
       .catch(error => {
         dispatch(createProfessorError(error));
       });
   };
 
-  export const editProfessor = (professor: IProfessor) => (dispatch, getState: () => IStore) => {
+  export const updateProfessor = (professor: IProfessor) => (dispatch, getState: () => IStore) => {
     dispatch(editProfessorRequest());
     return fetch('http://localhost:9000/professor/' + professor.id, {
       method: 'PUT',
@@ -132,6 +136,10 @@ namespace ProfessorActions {
         return response.json()
       }).then(function (body) {
         console.log(body);
+        return response.json();
+      })
+      .then(function (body) {
+        return body;
       })
       .catch(error => {
         dispatch(editProfessorError(error));

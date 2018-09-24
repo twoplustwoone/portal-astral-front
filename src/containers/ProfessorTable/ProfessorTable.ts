@@ -14,8 +14,6 @@ import { objectToArray } from "../../helpers/objectToArray";
 const mapStateToProps = (state: IStore, ownProps: IProfessorTableContainerProps): IProfessorTableValueProps => {
   const professors: IProfessor[] = objectToArray(state.professors);
 
-  console.log(ownProps.match.params.id);
-
   return {
     professors,
     isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
@@ -30,8 +28,8 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
     props.history.push('/new-professor');
   },
 
-  onClickDeleteProfessor(professor: IProfessor) {
-    dispatch(uiActions.openDeleteConfirmationModal(professor));
+  onClickDeleteProfessor(professorId: string) {
+    dispatch(uiActions.openDeleteConfirmationModal(professorId));
   },
 
   onClickEditProfessor(professorId: string) {
@@ -40,6 +38,14 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
 
   onFetchProfessors() {
     dispatch(professorActions.fetchProfessors());
+  },
+
+  onCloseDelete() {
+    dispatch(uiActions.closeDeleteConfirmationModal());
+  },
+
+  onConfirmDelete(professor: IProfessor) {
+    dispatch(professorActions.deleteProfessor(professor));
   },
 
 });

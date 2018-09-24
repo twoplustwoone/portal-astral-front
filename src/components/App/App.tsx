@@ -3,12 +3,16 @@ import { IProps, IState } from './types';
 import './App.css';
 import { Route } from 'react-router-dom'
 import { Home } from 'src/components';
+import { ProfessorForm, ProfessorTable, StudentForm } from 'src/containers';
+import Topbar from "../layout/topbar/Topbar";
 import { ProfessorForm, ProfessorTable } from 'src/containers';
 import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
 import StudentListPage from "../student/StudentListPage";
 import Topbar from "../../containers/Topbar/Topbar";
+import StudentTable from "../../containers/Student/StudentTable";
+import Login from "../Login/Login";
 
 const styles = (theme: any) => ({
     root: {
@@ -33,17 +37,6 @@ class App extends React.Component<IProps, IState> {
   /* Initial state for the component */
   state: IState = {};
 
-  // topBarProps: IProps = {
-  //     isLogOutOpen: false,
-  //     // "onClickLogOut" | "onCloseLogOut" | "onConfirmLogOut" | "professor" | "isLogOutOpen" | "match" | "history">,
-  //
-  // };
-
-  // componentDidMount() {
-  //     const { professor, match } = this.props;
-  //     this.props.onFetchProfessor(match.params.id);
-  // }
-
   render() {
       const { classes, history}: any = this.props;
 
@@ -55,9 +48,12 @@ class App extends React.Component<IProps, IState> {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Route path={'/'} component={Home} />
+                <Route path={'/login'} component={Login} />
                 <Route path={'/new-professor'} component={ProfessorForm} />
+                <Route path={'/new-student'} component={StudentForm} />
                 <Route path={'/admin'} component={AdminForm} />
-                <Route path={'/students'} component={StudentListPage} />
+                <Route path={'/students'} component={StudentTable} />
+                <Route path={'/student/:id'} component={StudentForm} />
                 <Route path={'/professors'} component={ProfessorTable} />
                 <Route path={'/professor/:id'} component={ProfessorForm} />
             </main>

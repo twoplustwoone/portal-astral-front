@@ -1,25 +1,25 @@
 /* Totality of props received. Usually left empty */
-import {IProfessor} from "../../../globals";
+import { IStudent } from "../../../globals";
 
 export interface IProps extends IDispatchProps, IValueProps, IContainerProps {
 }
 
 /* These are all the functions the component will receive as props from the parent container */
 export interface IDispatchProps {
-  onCreate: (professor: IProfessor) => any;
-  onEdit: (professor: IProfessor) => any;
+  onCreate: (student: IStudent) => any;
+  onEdit: (student: IStudent) => any;
   onCancel: () => any;
-  onClickDelete: (professor: IProfessor) => any;
+  onClickDelete: (student: IStudent) => any;
   onCloseDelete: () => any;
-  onConfirmDelete: (professor: IProfessor) => any;
-  onFetchProfessor: (professorId: string) => any;
+  onConfirmDelete: (student: IStudent) => any;
+  onFetchStudent: (studentId: string) => any;
 }
 
 /* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */
 export interface IValueProps {
-  professor?: IProfessor;
+  student?: IStudent;
   isDeleteConfirmationOpen: boolean;
-  isFetchingProfessor: boolean;
+  isFetchingStudent: boolean;
   isCreating: boolean;
   isDeleting: boolean;
 }
@@ -49,6 +49,11 @@ export interface IFields {
   password: string;
   id: string;
   file?: string;
+  birthday: string;
+  identificationType: string;
+  identification: string;
+  address?: string;
+  careerId: string;
 }
 
 export type IErrors = {

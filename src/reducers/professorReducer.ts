@@ -11,13 +11,16 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
   // @ts-ignore
   const { type, payload } = action;
 
-  const { FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_SUCCESS } = professorActions;
+  const { FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_SUCCESS, DELETE_PROFESSOR_SUCCESS } = professorActions;
 
   switch (type) {
 
+    case DELETE_PROFESSOR_SUCCESS:
+      const { [payload.professorId]: deleted, ...rest } = state;
+      return rest;
+
     case FETCH_PROFESSORS_SUCCESS:
       return {
-        ...state,
         ...payload.professors.reduce((acc, professor) => ({ ...acc, [professor.id]: professor }), {}),
       };
 
