@@ -1,52 +1,59 @@
 import { connect } from 'react-redux';
 import { IStore } from '../../reducers';
 import {
-  ProfessorForm,
-  IProfessorFormDispatchProps,
-  IProfessorFormValueProps,
-  IProfessorContainerProps,
+    ProfessorForm,
+    IProfessorFormDispatchProps,
+    IProfessorFormValueProps,
+    IProfessorContainerProps,
 } from '../../components';
 import { professorActions, uiActions } from "../../actions";
 import { withRouter } from "react-router";
-import {IProfessor} from "../../../globals";
+import { IProfessor } from "../../../globals";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorContainerProps): IProfessorFormValueProps => {
   const { id } = ownProps.match.params;
-  const professor: IProfessor | undefined = {
-    email: 'dffadsfasd@gmail.com',
-    name: 'Francisco',
-    id,
-    lastName: 'Di Giandomenico',
-    password: 'fasfdasf',
-  };
-  // const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
+  const professor: IProfessor | undefined = id ? state.professors[id] : undefined;
+    const isFetchingProfessor = state.ui.is.fetching.professor[id];
 
-  return {
-    professor,
-    isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
-  };
+    const isCreating = state.ui.is.creating.professor;
+    return {
+        professor,
+        isFetchingProfessor,
+        isCreating,
+        isDeleteConfirmationOpen: state.ui.is.open.deleteConfirmationModal,
+        isDeleting: state.ui.is.deleting.professor,
+    };
 };
 
 const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfessorContainerProps): IProfessorFormDispatchProps => ({
-  onSubmit: function (professor: IProfessor) {
-    dispatch(professorActions.createProfessor(professor));
-  },
+    onCreate: function (professor: IProfessor) {
+        return dispatch(professorActions.createProfessor(professor));
+    },
 
-  onCancel() {
-    props.history.push('/');
-  },
+    onCancel() {
+        props.history.push('/professors');
+    },
 
-  onClickDelete(professor: IProfessor) {
-    dispatch(uiActions.openDeleteConfirmationModal(professor));
-  },
+    onEdit: function (professor: IProfessor) {
+        return dispatch(professorActions.updateProfessor(professor));
+    },
 
-  onCloseDelete() {
-    dispatch(uiActions.closeDeleteConfirmationModal());
-  },
+    onClickDelete(professor: IProfessor) {
+        dispatch(uiActions.openDeleteConfirmationModal(professor.id));
+    },
 
-  onConfirmDelete(professor: IProfessor) {
-    dispatch(professorActions.deleteProfessor(professor));
-  },
+    onCloseDelete() {
+        dispatch(uiActions.closeDeleteConfirmationModal());
+    },
+
+    onConfirmDelete(professor: IProfessor) {
+        return dispatch(professorActions.deleteProfessor(professor));
+    },
+  
+    onFetchProfessor(professorId: string) {
+        dispatch(professorActions.fetchProfessor(professorId));
+    },
+
 });
 
 export default withRouter((connect(mapStateToProps, mapDispatchToProps) as any)(ProfessorForm)) as typeof ProfessorForm;

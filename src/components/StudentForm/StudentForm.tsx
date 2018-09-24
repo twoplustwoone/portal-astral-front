@@ -17,12 +17,13 @@ import {
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-import { IProfessor } from "../../../globals";
+import { IStudent } from "../../../globals";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
+import { mapCareer } from "../../helpers/careerMapper";
 
-const styles = require('./ProfessorForm.pcss');
+const styles = require('./StudentForm.pcss');
 
-class ProfessorForm extends React.Component<IProps, IState> {
+class StudentForm extends React.Component<IProps, IState> {
 
 
   state: IState = {
@@ -33,6 +34,11 @@ class ProfessorForm extends React.Component<IProps, IState> {
       password: '',
       file: '',
       id: '',
+      birthday: '',
+      address: '',
+      careerId: '',
+      identification: '',
+      identificationType: '',
     },
     showPassword: false,
     errors: {
@@ -48,37 +54,41 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
 
   componentDidMount() {
-    const { professor, match } = this.props;
+    const { student, match } = this.props;
 
-    /* If professor was passed as a prop, then set the information for the professor into the fields */
-    if (professor) {
-
-      this.setProfessor();
+    /* If student was passed as a prop, then set the information for the student into the fields */
+    if (student) {
+      this.setStudent();
     } else {
       if (match.params.id) {
-        this.props.onFetchProfessor(match.params.id);
+        this.props.onFetchStudent(match.params.id);
       }
     }
   }
 
   componentDidUpdate(prevProps: IProps) {
-    if (this.props.professor && !prevProps.professor) {
-      this.setProfessor();
+    if (this.props.student && !prevProps.student) {
+      this.setStudent();
     }
   }
 
-  setProfessor = () => {
-    const { email, name, lastName, id, password, file } = this.props.professor as IProfessor;
+  setStudent = () => {
+    const { email, name, lastName, id, identificationType, identification, address, career, birthday, file, password } = this.props.student as IStudent;
     this.setState({
       ...this.state,
       fields: {
         ...this.state.fields,
         email,
         name,
-        id,
         lastName,
-        password,
+        id,
+        identification,
+        identificationType,
+        address,
+        careerId: career ? career.id : '',
+        birthday,
         file,
+        password,
       },
       isNew: false,
       isEditing: false,
@@ -105,11 +115,26 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   handleSubmit = () => {
     if (this.validateAll()) {
+      const { identificationType, identification, lastName, name, file, id, email, password, address, birthday, careerId } = this.state.fields;
+      const student: IStudent = {
+        address,
+        identification,
+        identificationType,
+        id,
+        birthday,
+        lastName,
+        name,
+        file,
+        email,
+        password,
+        career: mapCareer(careerId),
+      };
+
       if (!this.state.isNew) {
-        this.props.onEdit(this.state.fields).then(() => this.props.history.push('/professors'));
+        this.props.onEdit(student).then(() => this.props.history.push('/students'));
       }
       else {
-        this.props.onCreate(this.state.fields).then(() => this.props.history.push('/professors'));
+        this.props.onCreate(student).then(() => this.props.history.push('/students'));
       }
     }
   };
@@ -194,20 +219,20 @@ class ProfessorForm extends React.Component<IProps, IState> {
     if (this.state.isNew) {
       this.props.onCancel();
     } else {
-      this.setState({ ...this.state, isEditing: false }, this.setProfessor);
+      this.setState({ ...this.state, isEditing: false }, this.setStudent);
     }
   };
 
   getHeader = () => {
     if (this.state.isNew) {
-      return 'Create professor';
+      return 'Create student';
     } else {
-      return 'Edit professor';
+      return 'Edit student';
     }
   };
 
   handleDeleteClick = () => {
-    this.props.onClickDelete(this.props.professor as IProfessor);
+    this.props.onClickDelete(this.props.student as IStudent);
   };
 
   handleCloseDelete = () => {
@@ -215,7 +240,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   handleConfirmDelete = () => {
-    this.props.onConfirmDelete(this.props.professor as IProfessor).then(() => this.props.history.push('/professors'));
+    this.props.onConfirmDelete(this.props.student as IStudent).then(() => this.props.history.push('/students'));
   };
 
   renderTitle = () => {
@@ -243,76 +268,95 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     const { isDeleteConfirmationOpen } = this.props;
 
-    const { isFetchingProfessor, isDeleting, isCreating } = this.props;
+    const { isFetchingStudent, isDeleting, isCreating } = this.props;
 
-    if (isFetchingProfessor || isDeleting || isCreating) {
+    if (isFetchingStudent || isDeleting || isCreating) {
       return <div><CircularProgress /></div>
     }
 
     const readOnly = this.areInputsReadOnly();
 
     return (
-      <div className={styles.NewProfessor}>
+      <div className={styles.NewStudent}>
 
         {
           isDeleteConfirmationOpen &&
           <DeleteConfirmationDialog
             isLoading={isDeleting}
-            userType={'professor'}
+            userType={'student'}
             name={`${fields.name} ${fields.lastName}`}
             handleCloseDelete={this.handleCloseDelete}
             handleConfirmDelete={this.handleConfirmDelete}
           />
         }
 
-        <Typography className={styles['New-Professor-title']} color='textSecondary'>
+        <Typography className={styles['New-Student-title']} color='textSecondary'>
           {
             this.getHeader()
           }
         </Typography>
-        <Card className={styles['New-Professor-box']}>
+        <Card className={styles['New-Student-box']}>
           <CardHeader title={this.renderTitle()} className={styles.displayName} />
           <CardContent>
-            <form className={styles['New-Professor-form']}>
-              <FormControl className={styles['professor-form-control']} error={errors.name}>
-                <InputLabel required htmlFor='professor-name'>First name</InputLabel>
-                <Input id='professor-name'
+            <form className={styles['New-Student-form']}>
+              <FormControl className={styles['student-form-control']} error={errors.name}>
+                <InputLabel required htmlFor='student-name'>First name</InputLabel>
+                <Input id='student-name'
                        value={fields.name}
                        onChange={this.handleChange('name')}
                        readOnly={readOnly}
                 />
               </FormControl>
-              <FormControl className={styles['professor-form-control']} error={errors.lastName}>
-                <InputLabel required htmlFor='professor-surname'>Last name</InputLabel>
-                <Input id='professor-surname'
+              <FormControl className={styles['student-form-control']} error={errors.lastName}>
+                <InputLabel required htmlFor='student-surname'>Last name</InputLabel>
+                <Input id='student-surname'
                        value={fields.lastName}
                        onChange={this.handleChange('lastName')}
                        readOnly={readOnly}
                 />
               </FormControl>
-              <FormControl className={styles['professor-form-control']} error={errors.email}>
-                <InputLabel required htmlFor='professor-email'>E-mail</InputLabel>
-                <Input id='professor-email'
+              <FormControl className={styles['student-form-control']} error={errors.email}>
+                <InputLabel required htmlFor='student-email'>E-mail</InputLabel>
+                <Input id='student-email'
                        value={fields.email}
                        onChange={this.handleChange('email')}
                        readOnly={readOnly}
                 />
               </FormControl>
-              {/*todo*/}
-              <FormControl className={styles['professor-form-control']} error={errors.file}>
-                <InputLabel required htmlFor='professor-email'>File</InputLabel>
-                <Input id='professor-file'
+              <FormControl className={styles['student-form-control']} error={errors.file}>
+                <InputLabel required htmlFor='student-email'>File</InputLabel>
+                <Input id='student-file'
                        value={fields.file}
                        onChange={this.handleChange('file')}
                        readOnly={readOnly}
                 />
               </FormControl>
-              <FormControl className={styles['professor-form-control']} error={errors.password}>
+              <FormControl className={styles['student-form-control']} error={errors.birthday}>
+                <InputLabel required htmlFor='student-birthday'>Birthday</InputLabel>
+                <Input
+                  id='student-birthday'
+                  value={fields.birthday}
+                  onChange={this.handleChange('birthday')}
+                  readOnly={readOnly}
+                  type={'date'}
+                />
+              </FormControl>
+              <FormControl className={styles['student-form-control']} error={errors.address}>
+                <InputLabel required htmlFor='student-address'>Address</InputLabel>
+                <Input
+                  id='student-address'
+                  value={fields.address}
+                  onChange={this.handleChange('address')}
+                  readOnly={readOnly}
+                  type={'text'}
+                />
+              </FormControl>
+              <FormControl className={styles['student-form-control']} error={errors.password}>
                 <InputLabel required htmlFor='adornment-password'>Password</InputLabel>
                 <Input
                   id='adornment-password'
                   type={showPassword ? 'text' : 'password'}
-                  value={this.state.isEditing ? fields.password : ""}
+                  value={fields.password}
                   onChange={this.handleChange('password')}
                   endAdornment={
                     <InputAdornment position='end'>
@@ -341,7 +385,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
                   ? <Button
                     variant='contained'
                     color='primary'
-                    className={styles['create-professor-button']}
+                    className={styles['create-student-button']}
                     onClick={this.handleEdit}
                   >
                     EDIT
@@ -349,7 +393,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
                   : <div className={styles.submitCancelButtons}>
                     <Button
                       variant='outlined'
-                      className={styles['create-professor-button']}
+                      className={styles['create-student-button']}
                       onClick={this.handleCancel}
                     >
                       CANCEL
@@ -357,7 +401,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
                     <Button
                       variant='contained'
                       color='primary'
-                      className={styles['create-professor-button']}
+                      className={styles['create-student-button']}
                       onClick={this.handleSubmit}
                     >
                       SAVE
@@ -374,4 +418,4 @@ class ProfessorForm extends React.Component<IProps, IState> {
   }
 }
 
-export default ProfessorForm;
+export default StudentForm;

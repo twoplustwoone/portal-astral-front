@@ -26,6 +26,7 @@ class AdminForm extends React.Component<IProps, IState> {
       lastName: '',
       email: '',
       password: '',
+      file: '',
       id: '',
     },
     showPassword: false,
@@ -34,12 +35,12 @@ class AdminForm extends React.Component<IProps, IState> {
       lastName: false,
       email: false,
       password: false,
+      file: false,
     },
   };
 
   constructor(props) {
     super(props);
-    console.log({ props });
   }
 
   handleChange = (prop: string) => (event: any) => {
@@ -90,9 +91,9 @@ class AdminForm extends React.Component<IProps, IState> {
 
   validate = (field: string, value: any): boolean => {
     switch (field) {
-      case 'firstName':
+      case 'name':
         return (
-          this.validateFirstName(value)
+          this.validatename(value)
         );
       case 'lastName':
         return (
@@ -106,12 +107,13 @@ class AdminForm extends React.Component<IProps, IState> {
         return (
           this.validatePassword(value)
         );
+        // todo validate file?
       default:
         return true;
     }
   };
 
-  validateFirstName = (value: any): boolean => {
+  validatename = (value: any): boolean => {
     return value !== '';
   };
 
@@ -129,7 +131,7 @@ class AdminForm extends React.Component<IProps, IState> {
 
   render() {
     return (
-      <div className={styles.NewAdmin}>
+          <div className={styles.NewAdmin}>
         <Typography className={styles['New-Admin-title']} color='textSecondary'>
           Create Admin
         </Typography>
@@ -142,7 +144,7 @@ class AdminForm extends React.Component<IProps, IState> {
                 <InputLabel required htmlFor='Admin-name'>First name</InputLabel>
                 <Input id='Admin-name'
                        value={this.state.fields.name}
-                       onChange={this.handleChange('firstName')} />
+                       onChange={this.handleChange('name')} />
               </FormControl>
               <FormControl className={styles['Admin-form-control']} error={this.state.errors.lastName}>
                 <InputLabel required htmlFor='Admin-surname'>Last name</InputLabel>
