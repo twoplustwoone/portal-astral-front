@@ -13,6 +13,10 @@ import ListItemText from '@material-ui/core/ListItemText/ListItemText';
 
 const drawerWidth = 240;
 
+export const enum UserType {
+    PROFESSOR, ADMINISTRATOR, STUDENT,
+}
+
 const styles = (theme: any) => ({
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
@@ -29,10 +33,6 @@ const styles = (theme: any) => ({
         padding: theme.spacing.unit * 3,
     },
 });
-
-declare enum UserType {
-    PROFESSOR, ADMINISTRATOR, STUDENT,
-}
 
 class Sidebar  extends React.Component<any, any> {
     state = {

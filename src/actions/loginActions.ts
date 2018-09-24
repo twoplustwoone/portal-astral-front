@@ -10,7 +10,7 @@ namespace loginAction {
         ERROR = '@ASTRAL.FETCH_ERROR',
     }
 
-    declare enum UserType {
+    export const enum UserType {
         PROFESSOR, ADMINISTRATOR, STUDENT,
     }
 
