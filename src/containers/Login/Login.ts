@@ -1,7 +1,7 @@
 import {
     Login,
     ILoginValueProps,
-    ILoginDispatchProps
+    ILoginDispatchProps,
 } from "../../components";
 import loginAction from "../../actions/loginAction";
 import {IStore} from "../../reducers";
@@ -18,7 +18,7 @@ const mapStateToProps = (state: IStore): ILoginValueProps => {
     };
 };
 
-const mapDispatchToProps = (dispatch: (action: any) => any | void, props: ILoginContainerProps): ILoginDispatchProps => ({
+const mapDispatchToProps = (dispatch: (action: any) => any | void): ILoginDispatchProps => ({
 
     logIn: function (email: string, password: string) {
         return dispatch(loginAction.logIn(email, password));

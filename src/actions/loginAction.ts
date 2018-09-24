@@ -46,7 +46,7 @@ namespace loginAction {
             method: 'POST',
             body: JSON.stringify({
                 email : email,
-                password: password
+                password: password,
             }),
         }) //Review path route
             .then(handleResponseError)

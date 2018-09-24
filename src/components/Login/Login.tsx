@@ -103,8 +103,7 @@ class Login extends React.Component<IProps, IState> {
 
     login = () => {
         if (this.validateFormsControl()) {
-            // const {email,password} = this.state.fields;
-            // this.props.onFetchUser(email,password);
+            this.props.logIn(this.state.fields.email,this.state.fields.password);
         }
     };
 
