@@ -1,7 +1,7 @@
 import {IProfessor} from "../../../../globals";
+import { RouteComponentProps } from "react-router";
 
-export interface IProps extends IDispatchProps, IValueProps {
-}
+export type IProps = RouteComponentProps<IRouterProps> & IDispatchProps & IValueProps & IContainerProps;
 
 export interface IDispatchProps {
     onClickLogOut: () => any;
@@ -15,10 +15,14 @@ export interface IValueProps extends IContainerProps {
 }
 
 export interface IContainerProps {
-    history?: any;
 }
 
 export interface IState {
     anchorEl: any,
     mobileOpen: boolean,
+}
+
+/* Esta interfaz tiene que llevar los parametros que esperas recibir en la URL. Si no esperas recibir nada, dejar vacia */
+interface IRouterProps {
+
 }

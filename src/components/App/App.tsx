@@ -50,7 +50,7 @@ class App extends React.Component<IProps, IState> {
       return (
         <div className={classes.root}>
             {/*<Topbar onClickLogOut={professor} isLogOutOpen={false} match={{ params: { id: "sapo" }}} history={history} />*/}
-            <Topbar/>
+            <Topbar />
             <Sidebar history={history}/>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
