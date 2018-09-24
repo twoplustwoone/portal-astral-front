@@ -57,6 +57,9 @@ namespace loginAction {
         password: "password",
         userType: UserType.ADMINISTRATOR,
     }
+
+    export const isAuthenticated = true;    //TODO implement method
+
     // export const logOut = ():
 }
 
