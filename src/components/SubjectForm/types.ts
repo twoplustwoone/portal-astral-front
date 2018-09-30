@@ -43,8 +43,9 @@ export interface IState {
     isNew: boolean;
     isEditing: boolean;
     subjects: {
-        all_subjects: Map<string, ISubject>;
-        required_subjects: Map<string, ISubject>; // Array.from ..  For handleSubmit
+        all: Map<string, ISubject>;
+        selected: string[];
+        required: Map<string, ISubject>; // Array.from ..  For handleSubmit
     };
 }
 
