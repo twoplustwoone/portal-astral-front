@@ -12,6 +12,7 @@ export interface IState {
       professor: { [professorId: string]: boolean; };
       student: { [studentId: string]: boolean; };
       admin: { [adminId: string]: boolean; };
+      user: { [userId: string]: boolean};
     }
     creating: {
       professor: boolean;
@@ -39,6 +40,7 @@ const initialState: IState = {
       professor: {},
       student: {},
       admin: {},
+      user: {},
     },
     creating: {
       professor: false,

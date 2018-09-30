@@ -25,7 +25,7 @@ const mapStateToProps = (state: IStore, ownProps: IProfessorTableContainerProps)
 const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfessorTableContainerProps): IProfessorTableDispatchProps => ({
 
     onClickAddNewProfessor() {
-        props.history.push('/new-professor');
+        props.history.push('/new-user');
     },
 
     onClickDeleteProfessor(professorId: string) {
@@ -33,7 +33,7 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfe
     },
 
     onClickEditProfessor(professorId: string) {
-        props.history.push('/professor/' + professorId);
+        props.history.push('/user/' + professorId);
     },
 
     onFetchProfessors() {

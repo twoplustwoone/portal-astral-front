@@ -4,6 +4,7 @@ import uiReducer, { IState as IUIState } from './uiReducer';
 import professorReducer, { IState as IProfessorState } from './professorReducer';
 import studentReducer, { IState as IStudentState } from './studentReducer';
 import adminReducer, {IState as IAdminState} from './adminReducer'
+import profileReducer, {IState as IUser} from './profileReducer'
 
 export interface IStore {
   routing: any;
@@ -11,6 +12,7 @@ export interface IStore {
   professors: IProfessorState;
   students: IStudentState;
   adminsState: IAdminState;
+  user: IUser;
 }
 
 const reducers = {
@@ -19,5 +21,6 @@ const reducers = {
   professors: professorReducer,
   students: studentReducer,
   adminsState: adminReducer,
+  profile: profileReducer,
 };
 export default combineReducers(reducers);

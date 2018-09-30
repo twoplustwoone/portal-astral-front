@@ -42,3 +42,11 @@ export {
   IDispatchProps as IAdminFormDispatchProps,
   IValueProps as IAdminFormValueProps,
 } from './AdminForm/types'
+
+/* ProfileForm */
+export { default as ProfileForm } from './ProfileForm/ProfileForm';
+export {
+    IDispatchProps as IProfileDispatchProps,
+    IValueProps as IProfileFormValueProps,
+    IContainerProps as IProfileContainerProps,
+} from './ProfileForm/types'
