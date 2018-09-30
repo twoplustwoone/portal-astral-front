@@ -45,8 +45,7 @@ class SubjectForm extends React.Component<IProps, IState> {
       this.setSubject();
     } else {
       if (match.params.id) {
-          debugger;
-        //this.props.onFetchSubject(match.params.id);
+        this.props.onFetchSubject(match.params.id);
       }
     }
   }

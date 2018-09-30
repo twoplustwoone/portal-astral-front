@@ -52,12 +52,10 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
     /* If professor was passed as a prop, then set the information for the professor into the fields */
     if (professor) {
-        debugger;
 
       this.setProfessor();
     } else {
       if (match.params.id) {
-          debugger;
         this.props.onFetchProfessor(match.params.id);
       }
     }
