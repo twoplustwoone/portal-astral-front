@@ -134,10 +134,23 @@ namespace ProfileActions {
             .catch(error => dispatch(fetchUsersError(error)));
     };
 
-    export const fetchUser = (userId: string) => (dispatch, getState: () => IStore) => {
+    export const fetchProfessor = (userId: string) => (dispatch, getState: () => IStore) => {
         dispatch(fetchUserRequest(userId));
 
-        return fetch('http://localhost:9000/profile/' + userId, {
+        return fetch('http://localhost:9000/professor/' + userId, {
+            method: 'GET',
+        })
+            .then(handleResponseError)
+            .then(user => {
+                dispatch(fetchUserSuccess(user));
+            })
+            .catch(error => dispatch(fetchUserError(userId, error)));
+    };
+
+    export const fetchStudent = (userId: string) => (dispatch, getState: () => IStore) => {
+        dispatch(fetchUserRequest(userId));
+
+        return fetch('http://localhost:9000/student/' + userId, {
             method: 'GET',
         })
             .then(handleResponseError)

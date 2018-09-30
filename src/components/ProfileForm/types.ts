@@ -11,7 +11,8 @@ export interface IDispatchProps {
     onClickDelete: (User: IUser) => any;
     onCloseDelete: () => any;
     onConfirmDelete: (User: IUser) => any;
-    onFetchUser: (userId: string) => any;
+    onFetchStudent: (userId: string) => any;
+    onFetchProfessor: (userId: string) => any;
 }
 
 /* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */

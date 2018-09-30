@@ -18,12 +18,17 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
-import {IUser, UserType} from "src/globals";
-import {IStudent} from "src/globals";
+import {IStudent, IUser} from "../../globals";
 
 const styles = require('./ProfileForm.pcss');
 
+export const enum UserType {
+    PROFESSOR, ADMINISTRATOR, STUDENT,
+}
+
 class ProfileForm extends React.Component<IProps, IState> {
+
+    userType = UserType.PROFESSOR;
 
 
     state: IState = {
@@ -48,18 +53,20 @@ class ProfileForm extends React.Component<IProps, IState> {
             password: false,
             file: false,
         },
-        isEditing: true,
-        isNew: false,
+        isEditing: false,
+        isNew: true,
         userType: '',
-
     };
 
+    user = (this.userType.toString() === UserType.STUDENT.toString()) ? this.props.onFetchStudent(this.state.fields.id) : this.props.onFetchProfessor(this.state.fields.id);
 
     componentDidMount() {
         const { user } = this.props;
 
-        if(user !== undefined){
-            this.props.onFetchUser(user.id);
+        if(user !== undefined && user.userType !== undefined && user.userType.toString() === UserType.STUDENT.toString()){
+            this.props.onFetchStudent(user.id);
+        } else if (user !== undefined) {
+            this.props.onFetchProfessor(user.id);
         }
 
         /* If user was passed as a prop, then set the information for the user into the fields */
@@ -90,13 +97,13 @@ class ProfileForm extends React.Component<IProps, IState> {
                 lastName,
                 password,
                 file,
-                userType,
             },
             isEditing: false,
             isNew: false,
+            userType: this.state.userType,
         });
         if (userType &&
-            (userType == UserType.STUDENT)) {
+            (userType.toString() == UserType.STUDENT.toString())) {
                 const { birthday, address} = this.props.user as IStudent;
                 this.setState({
                     ...this.state,
@@ -104,7 +111,7 @@ class ProfileForm extends React.Component<IProps, IState> {
                         ...this.state.fields,
                         birthday,
                         address,
-                    }
+                    },
                 });
         }
     };
@@ -208,7 +215,8 @@ class ProfileForm extends React.Component<IProps, IState> {
     };
 
     handleCancel = () => {
-        this.setState({ ...this.state, isEditing: false }, this.setUser);
+        this.setState({ ...this.state, isEditing: false },
+            this.setUser);
     };
 
     getHeader = () => {
@@ -254,11 +262,13 @@ class ProfileForm extends React.Component<IProps, IState> {
 
         const { isFetchingUser, isDeleting } = this.props;
 
-        const { userType } = this.state.userType;
+        const { userType}: any = this.props;
 
         if (isFetchingUser || isDeleting) {
             return <div><CircularProgress /></div>
         }
+
+        console.log(this.user.name);
 
         const readOnly = this.areInputsReadOnly();
 
@@ -318,7 +328,7 @@ class ProfileForm extends React.Component<IProps, IState> {
                                 />
                             </FormControl>
                             {
-                                userType && (userType == UserType.STUDENT) &&
+                                userType && (userType === UserType.STUDENT) &&
                                 <FormControl className={styles['user-form-control']} error={errors.birthday}>
                                     <InputLabel required htmlFor='student-birthday'>Birthday</InputLabel>
                                     <Input
@@ -358,7 +368,6 @@ class ProfileForm extends React.Component<IProps, IState> {
                             </FormControl>
                         </form>
                         </CardContent>
-                    }
 
                     <CardActions>
                         <div className={styles.buttonContainer}>

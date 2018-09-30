@@ -42,8 +42,12 @@ const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfi
         return dispatch(profileActions.deleteUser(user));
     },
 
-    onFetchUser(userId: string) {
-        dispatch(profileActions.fetchUser(userId));
+    onFetchStudent(userId: string) {
+        dispatch(profileActions.fetchStudent(userId));
+    },
+
+    onFetchProfessor(userId: string) {
+        dispatch(profileActions.fetchProfessor(userId));
     },
 
 });
