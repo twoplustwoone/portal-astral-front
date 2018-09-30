@@ -11,30 +11,45 @@ export {
   IContainerProps as IProfessorContainerProps,
 } from './ProfessorForm/types'
 
+/* ProfessorTable */
+export { default as ProfessorTable } from './ProfessorTable/ProfessorTable';
+export {
+    IDispatchProps as IProfessorTableDispatchProps,
+    IValueProps as IProfessorTableValueProps,
+    IContainerProps as IProfessorTableContainerProps,
+} from './ProfessorTable/types'
 
 /* StudentForm */
 export { default as StudentForm } from './StudentForm/StudentForm';
 export {
-    IDispatchProps as IStudentFormDispatchProps,
-    IValueProps as IStudentFormValueProps,
-    IContainerProps as IStudentContainerProps,
+IDispatchProps as IStudentFormDispatchProps,
+IValueProps as IStudentFormValueProps,
+IContainerProps as IStudentContainerProps,
 } from './StudentForm/types'
 
 /* StudentTable */
 export { default as StudentTable } from './student/all-students/StudentTable';
 export {
-    IDispatchProps as IStudentTableDispatchProps,
-    IValueProps as IStudentTableValueProps,
-    IContainerProps as IStudentTableContainerProps,
+IDispatchProps as IStudentTableDispatchProps,
+IValueProps as IStudentTableValueProps,
+IContainerProps as IStudentTableContainerProps,
 } from './student/types'
 
-/* ProfessorTable */
-export { default as ProfessorTable } from './ProfessorTable/ProfessorTable';
+/* SubjectForm */
+export { default as SubjectForm } from './SubjectForm/SubjectForm';
 export {
-  IDispatchProps as IProfessorTableDispatchProps,
-  IValueProps as IProfessorTableValueProps,
-  IContainerProps as IProfessorTableContainerProps,
-} from './ProfessorTable/types'
+    IDispatchProps as ISubjectFormDispatchProps,
+    IValueProps as ISubjectFormValueProps,
+    IContainerProps as ISubjectContainerProps,
+} from './SubjectForm/types'
+
+/* SubjectTable */
+export { default as SubjectTable } from './SubjectTable/SubjectTable';
+export {
+  IDispatchProps as ISubjectTableDispatchProps,
+  IValueProps as ISubjectTableValueProps,
+  IContainerProps as ISubjectTableContainerProps,
+} from './SubjectTable/types'
 
 /* AdminForm */
 export { default as AdminForm } from './AdminForm/AdminForm';

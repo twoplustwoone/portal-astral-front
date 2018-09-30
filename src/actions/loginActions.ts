@@ -1,6 +1,7 @@
 import {IStore} from "../reducers";
 import {IAction, IUser} from "../../globals";
 import handleResponseError from "../domains/handleResponseError";
+import {UserType} from "../components/layout/sidebar/Sidebar";
 
 namespace loginAction {
 
@@ -9,11 +10,6 @@ namespace loginAction {
         REQUEST = '@ASTRAL.FETCH_REQUEST',
         ERROR = '@ASTRAL.FETCH_ERROR',
     }
-
-    export const enum UserType {
-        PROFESSOR, ADMINISTRATOR, STUDENT,
-    }
-
     export const fetchRequest = (email: string, password: string): IAction => ({
         type: FetchStates.REQUEST,
         payload: {

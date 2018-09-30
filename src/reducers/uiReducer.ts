@@ -7,19 +7,23 @@ export interface IState {
       admins: boolean;
       students: boolean;
       professors: boolean;
+      subjects: boolean;
     };
     fetching: {
       professor: { [professorId: string]: boolean; };
       student: { [studentId: string]: boolean; };
       admin: { [adminId: string]: boolean; };
+      subject: { [subjectId: string]: boolean; };
     }
     creating: {
       professor: boolean;
       student: boolean;
+      subject: boolean;
     };
     deleting: {
       professor: boolean;
       student: boolean;
+      subject: boolean;
     };
     open: {
       deleteConfirmationModal: boolean;
@@ -34,19 +38,23 @@ const initialState: IState = {
       admins: false,
       students: false,
       professors: false,
+      subjects: false,
     },
     fetching: {
       professor: {},
       student: {},
       admin: {},
+      subject: {},
     },
     creating: {
       professor: false,
       student: false,
+      subject: false,
     },
     deleting: {
       professor: false,
       student: false,
+      subject: false,
     },
     open: {
       deleteConfirmationModal: false,

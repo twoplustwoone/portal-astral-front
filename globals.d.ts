@@ -15,6 +15,13 @@ declare interface IUser {
   file?: string;
 }
 
+declare interface ISubject {
+    id: string;
+    name: string;
+    careerYear: number;
+    requiredSubjects?: ISubject[]
+}
+
 declare interface IProfessor extends IUser {
 }
 
