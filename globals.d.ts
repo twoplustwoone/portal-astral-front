@@ -17,7 +17,7 @@ declare interface IUser {
 
 declare interface ISubject {
     id: string;
-    name: string;
+    subjectName: string;
     careerYear: number;
     requiredSubjects?: ISubject[]
 }

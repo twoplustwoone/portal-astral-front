@@ -22,14 +22,14 @@ class SubjectForm extends React.Component<IProps, IState> {
 
   state: IState = {
     fields: {
-        name: '',
+        subjectName: '',
         careerYear: 0,
         id: '',
     },
     showPassword: false,
     errors: {
         careerYear: false,
-        name: false,
+        subjectName: false,
     },
     isNew: true,
     isEditing: true,
@@ -45,7 +45,8 @@ class SubjectForm extends React.Component<IProps, IState> {
       this.setSubject();
     } else {
       if (match.params.id) {
-        this.props.onFetchSubject(match.params.id);
+          debugger;
+        //this.props.onFetchSubject(match.params.id);
       }
     }
   }
@@ -57,12 +58,12 @@ class SubjectForm extends React.Component<IProps, IState> {
   }
 
   setSubject = () => {
-    const { name, careerYear, id} = this.props.subject as ISubject;
+    const { subjectName, careerYear, id} = this.props.subject as ISubject;
     this.setState({
       ...this.state,
       fields: {
         ...this.state.fields,
-          name,
+          subjectName,
           careerYear,
           id,
       },
@@ -116,7 +117,7 @@ class SubjectForm extends React.Component<IProps, IState> {
 
   validate = (field: string, value: any): boolean => {
     switch (field) {
-      case 'name':
+      case 'subjectName':
         return (
           this.validateName(value)
         );
@@ -176,7 +177,7 @@ class SubjectForm extends React.Component<IProps, IState> {
 
   renderTitle = () => {
     const { isNew } = this.state;
-    const { name } = this.state.fields;
+    const { subjectName } = this.state.fields;
     return <div>
       {
         !isNew &&
@@ -190,7 +191,7 @@ class SubjectForm extends React.Component<IProps, IState> {
           </Button>
         </div>
       }
-      <div className={styles.displayNameDiv}>{`${name ? Object.assign({}, name) : 'New Subject'}`}</div>
+      <div className={styles.displayNameDiv}>{`${subjectName ? Object.assign({}, subjectName) : 'New Subject'}`}</div>
     </div>
   };
 
@@ -215,7 +216,7 @@ class SubjectForm extends React.Component<IProps, IState> {
           <DeleteConfirmationDialog
             isLoading={isDeleting}
             userType={'subject'}
-            name={`${fields.name} ${fields.careerYear}`}
+            name={`${fields.subjectName} ${fields.careerYear}`}
             handleCloseDelete={this.handleCloseDelete}
             handleConfirmDelete={this.handleConfirmDelete}
           />
@@ -230,11 +231,11 @@ class SubjectForm extends React.Component<IProps, IState> {
           <CardHeader title={this.renderTitle()} className={styles.displayName} />
           <CardContent>
             <form className={styles['New-Subject-form']}>
-              <FormControl className={styles['subject-form-control']} error={errors.name}>
+              <FormControl className={styles['subject-form-control']} error={errors.subjectName}>
                 <InputLabel required htmlFor='subject-name'>Name</InputLabel>
                 <Input id='subject-name'
-                       value={fields.name}
-                       onChange={this.handleChange('name')}
+                       value={fields.subjectName}
+                       onChange={this.handleChange('subjectName')}
                        readOnly={readOnly}
                 />
               </FormControl>

@@ -43,7 +43,7 @@ export interface IState {
 }
 
 export interface IFields {
-    name: string;
+    subjectName: string;
     careerYear: number;
     id: string;
 }

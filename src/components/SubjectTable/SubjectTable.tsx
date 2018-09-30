@@ -48,7 +48,7 @@ class SubjectTable extends React.Component<IProps, IState> {
     const { subjects = [], isDeleteConfirmationOpen, isDeletingSubject } = this.props;
     const { subjectBeingDeleted } = this.state;
 
-    const name = subjectBeingDeleted ? `${subjectBeingDeleted.name} ${subjectBeingDeleted.careerYear}` : '';
+    const name = subjectBeingDeleted ? `${subjectBeingDeleted.subjectName} ${subjectBeingDeleted.careerYear}` : '';
 
     return (
       <div>
@@ -89,7 +89,7 @@ class SubjectTable extends React.Component<IProps, IState> {
                   subjects.map(row => {
                     return (
                       <TableRow key={row.id}>
-                        <TableCell>{row.name}</TableCell>
+                        <TableCell>{row.subjectName}</TableCell>
                         <TableCell>{row.careerYear}</TableCell>
                           {this.userType === UserType.ADMINISTRATOR ? <TableCell >
                           <IconButton onClick={() => this.props.history.push('/subject/' + row.id)}>
