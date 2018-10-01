@@ -28,8 +28,7 @@ export const enum UserType {
 
 class ProfileForm extends React.Component<IProps, IState> {
 
-    userType = UserType.PROFESSOR;
-
+    // user = (this.props.userType.toString() === UserType.STUDENT.toString()) ? this.props.onFetchStudent(this.state.fields.id) : this.props.onFetchProfessor(this.state.fields.id);
 
     state: IState = {
         fields: {
@@ -57,8 +56,6 @@ class ProfileForm extends React.Component<IProps, IState> {
         isNew: true,
         userType: '',
     };
-
-    user = (this.userType.toString() === UserType.STUDENT.toString()) ? this.props.onFetchStudent(this.state.fields.id) : this.props.onFetchProfessor(this.state.fields.id);
 
     componentDidMount() {
         const { user } = this.props;
@@ -268,7 +265,7 @@ class ProfileForm extends React.Component<IProps, IState> {
             return <div><CircularProgress /></div>
         }
 
-        console.log(this.user.name);
+        // console.log(this.user.name);
 
         const readOnly = this.areInputsReadOnly();
 

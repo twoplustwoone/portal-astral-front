@@ -3,7 +3,8 @@ import { routerReducer } from 'react-router-redux';
 import uiReducer, { IState as IUIState } from './uiReducer';
 import professorReducer, { IState as IProfessorState } from './professorReducer';
 import studentReducer, { IState as IStudentState } from './studentReducer';
-import adminReducer, {IState as IAdminState} from './adminReducer'
+import adminReducer, {IState as IAdminState} from './adminReducer';
+import authReducer, {IState as IAuthGuardState} from './authReducer';
 import profileReducer, {IState as IUser} from './profileReducer'
 
 export interface IStore {
@@ -13,6 +14,7 @@ export interface IStore {
   students: IStudentState;
   adminsState: IAdminState;
   user: IUser;
+  authGuard: IAuthGuardState;
 }
 
 const reducers = {
@@ -21,6 +23,7 @@ const reducers = {
   professors: professorReducer,
   students: studentReducer,
   adminsState: adminReducer,
-  profile: profileReducer,
+    profile: profileReducer,
+  authGuard: authReducer,
 };
 export default combineReducers(reducers);
