@@ -118,7 +118,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "/Users/yankee/projects/portal-astral/portal-astral-front/tsconfig.test.json"
+        "tsConfigFile": "~/portal-astral-front/tsconfig.test.json"
       }
     }
   },

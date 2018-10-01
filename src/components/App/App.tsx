@@ -14,6 +14,7 @@ import loginAction from "../../actions/loginActions";
 import StudentForm from "../StudentForm/StudentForm";
 import LoginActions from 'src/actions/loginActions';
 import StudentTable from "../../containers/Student/StudentTable";
+import Login from "../../containers/Login/Login";
 import ProfessorTable from "../../containers/ProfessorTable/ProfessorTable";
 
 const styles = (theme: any) => ({
@@ -69,6 +70,7 @@ class App extends React.Component<IProps, IState> {
           <Route path={'/'} component={Home} />
           <PrivateRoute path={'/new-professor'} component={ProfessorForm} />
           <PrivateRoute path={'/new-student'} component={StudentForm} />
+          <Route path={'/login'} component={Login} />
           <PrivateRoute path='/admins' component={AdminListPage} />
           <PrivateRoute path={'/admin'} component={AdminForm} />
           <PrivateRoute path={'/students'} component={StudentTable} />

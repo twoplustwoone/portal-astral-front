@@ -42,3 +42,10 @@ export {
   IDispatchProps as IAdminFormDispatchProps,
   IValueProps as IAdminFormValueProps,
 } from './AdminForm/types'
+
+// Login
+export { default as Login } from './Login/Login';
+export {
+    IDispatchProps as ILoginDispatchProps,
+    IValueProps as ILoginValueProps,
+} from './Login/types'
