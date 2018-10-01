@@ -1,4 +1,4 @@
-import { professorActions, studentActions, uiActions } from "../actions";
+import { subjectActions, professorActions, studentActions, uiActions } from "../actions";
 import { IAction } from "../../globals";
 
 export interface IState {
@@ -70,9 +70,45 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
   const { CREATE_STUDENT_REQUEST } = studentActions;
   const { CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL, OPEN_LOADING_MODAL, CLOSE_LOADING_MODAL } = uiActions;
   const { CREATE_PROFESSOR_REQUEST, FETCH_PROFESSORS_ERROR, FETCH_PROFESSORS_REQUEST, FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_ERROR, FETCH_PROFESSOR_REQUEST, FETCH_PROFESSOR_SUCCESS, DELETE_PROFESSOR_SUCCESS, DELETE_PROFESSOR_REQUEST } = professorActions;
+  const { CREATE_SUBJECT_REQUEST, FETCH_SUBJECTS_ERROR, FETCH_SUBJECTS_REQUEST, FETCH_SUBJECTS_SUCCESS, FETCH_SUBJECT_ERROR, FETCH_SUBJECT_REQUEST, FETCH_SUBJECT_SUCCESS, DELETE_SUBJECT_SUCCESS, DELETE_SUBJECT_REQUEST } = subjectActions;
 
   switch (type) {
-    case DELETE_PROFESSOR_REQUEST:
+    case DELETE_SUBJECT_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          deleting: {
+            ...state.is.deleting,
+            subject: true,
+          },
+        },
+      };
+
+    case DELETE_SUBJECT_SUCCESS:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          deleting: {
+            ...state.is.deleting,
+            subject: false,
+          },
+        },
+      };
+
+    case CREATE_SUBJECT_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          creating: {
+            ...state.is.creating,
+            subject: true,
+          },
+        },
+      };
+      case DELETE_PROFESSOR_REQUEST:
       return {
         ...state,
         is: {
@@ -244,6 +280,86 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
             professor: {
               ...state.is.fetching.professor,
               [payload.professorId]: false,
+            },
+          },
+        },
+      };
+      case FETCH_SUBJECTS_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          loading: {
+            ...state.is.loading,
+            subjects: true,
+          },
+        },
+      };
+
+    case FETCH_SUBJECTS_SUCCESS:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          loading: {
+            ...state.is.loading,
+            subjects: false,
+          },
+        },
+      };
+
+    case FETCH_SUBJECTS_ERROR:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          loading: {
+            ...state.is.loading,
+            subjects: false,
+          },
+        },
+      };
+
+    case FETCH_SUBJECT_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          fetching: {
+            ...state.is.fetching,
+            subject: {
+              ...state.is.fetching.subject,
+              [payload.subjectId]: true,
+            },
+          },
+        },
+      };
+
+    case FETCH_SUBJECT_SUCCESS:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          fetching: {
+            ...state.is.fetching,
+            subject: {
+              ...state.is.fetching.subject,
+              [payload.subject.id]: false,
+            },
+          },
+        },
+      };
+
+    case FETCH_SUBJECT_ERROR:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          fetching: {
+            ...state.is.fetching,
+            subject: {
+              ...state.is.fetching.subject,
+              [payload.subjectId]: false,
             },
           },
         },
