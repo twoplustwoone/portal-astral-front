@@ -13,6 +13,10 @@ import {IStore} from "../reducers";
 import {IAction, IUser} from "../../globals";
 import handleResponseError from "../domains/handleResponseError";
 
+export const enum UserType {
+    PROFESSOR, ADMINISTRATOR, STUDENT,
+}
+
 namespace loginAction {
 
     export const enum FetchStates {
@@ -62,6 +66,17 @@ namespace loginAction {
                 return false;
             });
     };
+
+    export const loggedUser = {
+        name: "Sebas",
+        lastName: "Belaustegui",
+        email: "sebas@mail.com",
+        id: "AA22",
+        password: "password",
+        userType: UserType.ADMINISTRATOR,
+    }
+
+    export const isAuthenticated = true;    //TODO implement method
 
     // export const logOut = ():
 

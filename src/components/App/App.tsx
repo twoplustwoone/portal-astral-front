@@ -78,7 +78,7 @@ class App extends React.Component<IProps, IState> {
           <PrivateRoute path={'/student/:id'} component={StudentForm} />
           <PrivateRoute path={'/professors'} component={ProfessorTable} />
           <PrivateRoute path={'/professor/:id'} component={ProfessorForm} />
-          <PrivateRoute path={'/profile/:id'} component={ProfileForm} userType={LoginActions.loggedUser.userType}/>
+          <PrivateRoute path={'/profile/:id'} component={ProfileForm}/>
         </main>
       </div>
     );

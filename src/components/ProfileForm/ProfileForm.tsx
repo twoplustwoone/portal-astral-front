@@ -19,6 +19,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import {IStudent, IUser} from "../../globals";
+import loginAction from "../../actions/loginActions";
 
 const styles = require('./ProfileForm.pcss');
 
@@ -29,14 +30,15 @@ export const enum UserType {
 class ProfileForm extends React.Component<IProps, IState> {
 
     // user = (this.props.userType.toString() === UserType.STUDENT.toString()) ? this.props.onFetchStudent(this.state.fields.id) : this.props.onFetchProfessor(this.state.fields.id);
+    user = loginAction.loggedUser;
 
     state: IState = {
         fields: {
-            name: '',
-            lastName: '',
-            email: '',
-            password: '',
-            id: '',
+            name: this.user.name,
+            lastName: this.user.lastName,
+            email: this.user.email,
+            password: this.user.password,
+            id: this.user.id,
             file: '',
             birthday: '',
             identificationType: '',
