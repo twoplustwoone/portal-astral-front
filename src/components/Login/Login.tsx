@@ -40,11 +40,6 @@ class Login extends React.Component<IProps, IState> {
             email: false,
             password: false,
         },
-        loggedUser: {
-            id: '',
-            name: '',
-            lastName: '',
-        },
         login: {
             isLoading: false,
             success: true,
@@ -53,9 +48,12 @@ class Login extends React.Component<IProps, IState> {
         showPassword: false,
         authenticated: false,
         anchorEl: null,
+        loggedUser: {
+          id: '',
+          lastName: '',
+          name: '',
+        },
     };
-
-    validators: Validators;
 
     handleChange = (prop: string) => (event: any) => {
         this.setState({
@@ -83,16 +81,50 @@ class Login extends React.Component<IProps, IState> {
         this.setState({anchorEl: null});
     };
 
+    validate = (field: string, value: any): boolean => {
+        switch (field) {
+            case 'email':
+                return (
+                    this.validateEmail(value)
+                );
+            case 'password':
+                return (
+                    this.validatePassword(value)
+                );
+            default:
+                return true;
+        }
+    };
+
+    validateEmail = (value: any): boolean => {
+        return value !== '' && value.includes('@');
+    };
+
+    validatePassword = (value: any): boolean => {
+        return !!(value != "" && value.length >= 6 && value.length < 20 && this.checkLetters(value));
+    };
+
+    checkBooleans = (acc: boolean, elem: boolean) => {
+        return acc && elem
+    };
+
+    checkLetters = (value: string): boolean => {
+        const words = value.match("[A-z]+");
+        const numbers = value.match("[0-9]+");
+        return words != undefined && words.length > 0 && numbers != undefined && numbers.length > 0;
+    };
+
     validateFormsControl = () => {
+        const { fields } = this.state;
         const errors: IErrors = {};
 
         /* Validate all fields and set errors */
-        const results: boolean[] = Object.keys(this.state.fields).map((field) => {
-            const isValid = this.validators.validate(field, this.state.fields[field]);
+        const results: boolean[] = Object.keys(fields).map((field) => {
+            const isValid = this.validate(field, fields[field]);
             errors[field] = !isValid;
             return isValid;
         });
-        const reduce = results.reduce(this.validators.checkBooleans, true);
+        const reduce = results.reduce(this.checkBooleans, true);
         /* Update error state */
         this.setState({
             ...this.state,
@@ -101,9 +133,11 @@ class Login extends React.Component<IProps, IState> {
         return reduce;
     };
 
-    login = () => {
+    handleLogIn = () => {
+        const { email, password } = this.state.fields;
+
         if (this.validateFormsControl()) {
-            this.props.logIn(this.state.fields.email,this.state.fields.password);
+            this.props.onLogIn( email, password);
         }
     };
 
@@ -208,7 +242,7 @@ class Login extends React.Component<IProps, IState> {
                                     variant='contained'
                                     color='primary'
                                     className={styles['login-button']}
-                                    onClick={this.login}
+                                    onClick={this.handleLogIn}
                                     disabled={login.isLoading}
                                 >
                                     LOG IN

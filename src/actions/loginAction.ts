@@ -42,7 +42,7 @@ namespace loginAction {
     export const logIn = (email : string, password: string) => (dispatch, getState: () => IStore) => {
         dispatch(fetchRequest(email,password));
 
-        return fetch('http://localhost:9000/login/', {
+        return fetch('http://localhost:9000/login', {
             method: 'POST',
             body: JSON.stringify({
                 email : email,

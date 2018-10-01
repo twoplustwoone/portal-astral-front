@@ -9,7 +9,7 @@ import Sidebar from "../layout/sidebar/Sidebar";
 import {withStyles} from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
 import StudentTable from "../../containers/Student/StudentTable";
-import Login from "../Login/Login";
+import Login from "../../containers/Login/Login";
 
 const styles = (theme: any) => ({
     root: {

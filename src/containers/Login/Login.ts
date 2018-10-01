@@ -1,5 +1,4 @@
 import {
-    Login,
     ILoginValueProps,
     ILoginDispatchProps,
 } from "../../components";
@@ -8,6 +7,7 @@ import {IStore} from "../../reducers";
 import {IUser} from "../../../globals";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
+import Login from "../../components/Login/Login";
 
 
 const mapStateToProps = (state: IStore): ILoginValueProps => {
@@ -20,9 +20,9 @@ const mapStateToProps = (state: IStore): ILoginValueProps => {
 
 const mapDispatchToProps = (dispatch: (action: any) => any | void): ILoginDispatchProps => ({
 
-    logIn: function (email: string, password: string) {
+    onLogIn: function (email: string, password: string) {
         return dispatch(loginAction.logIn(email, password));
     },
 });
 
-export default withRouter((connect(mapStateToProps, mapDispatchToProps) as any)(Login)) as typeof Login;
+export default withRouter((connect(mapStateToProps, mapDispatchToProps)(Login)));

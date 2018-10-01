@@ -1,10 +1,11 @@
 /* Totality of props received. Usually left empty */
-export interface IProps extends IDispatchProps, IValueProps {
-}
+import {RouteComponentProps} from "react-router";
+
+export type IProps = RouteComponentProps<IRouterProps> & IDispatchProps &  IValueProps
 
 /* These are all the functions the component will receive as props from the parent container */
 export interface IDispatchProps {
-    logIn: (email:string, password:string) => any;
+    onLogIn: (email:string, password:string) => any;
 }
 
 /* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */
@@ -20,6 +21,10 @@ export interface IState {
     showPassword: boolean;
     authenticated: boolean;
     anchorEl: null;
+}
+
+export interface IRouterProps {
+    history: any;
 }
 
 export interface ILoggedUser {

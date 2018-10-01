@@ -18,6 +18,6 @@ const reducers = {
     ui: uiReducer,
     professors: professorReducer,
     students: studentReducer,
-    loggedUser: authReducer,
+    authGuard: authReducer,
 };
 export default combineReducers(reducers);
