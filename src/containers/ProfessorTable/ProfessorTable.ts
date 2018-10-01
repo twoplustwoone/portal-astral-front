@@ -1,15 +1,15 @@
 import { connect } from 'react-redux';
 import { IStore } from '../../reducers';
 import {
-  ProfessorTable,
-  IProfessorTableDispatchProps,
-  IProfessorTableValueProps,
-  IProfessorTableContainerProps,
+    IProfessorTableDispatchProps,
+    IProfessorTableValueProps,
+    IProfessorTableContainerProps,
 } from '../../components';
 import { professorActions, uiActions } from "../../actions";
 import { withRouter } from "react-router";
 import { IProfessor } from "../../../globals";
 import { objectToArray } from "../../helpers/objectToArray";
+import ProfessorTable from "../../components/ProfessorTable/ProfessorTable";
 
 const mapStateToProps = (state: IStore, ownProps: IProfessorTableContainerProps): IProfessorTableValueProps => {
   const professors: IProfessor[] = objectToArray(state.professors);
@@ -24,30 +24,29 @@ const mapStateToProps = (state: IStore, ownProps: IProfessorTableContainerProps)
 
 const mapDispatchToProps = (dispatch: (action: any) => any | void, props: IProfessorTableContainerProps): IProfessorTableDispatchProps => ({
 
-  onClickAddNewProfessor() {
-    props.history.push('/new-professor');
-  },
+    onClickAddNewProfessor() {
+        props.history.push('/new-professor');
+    },
 
-  onClickDeleteProfessor(professorId: string) {
-    dispatch(uiActions.openDeleteConfirmationModal(professorId));
-  },
+    onClickDeleteProfessor(professorId: string) {
+        dispatch(uiActions.openDeleteConfirmationModal(professorId));
+    },
 
-  onClickEditProfessor(professorId: string) {
-    props.history.push('/professor/' + professorId);
-  },
+    onClickEditProfessor(professorId: string) {
+        props.history.push('/professor/' + professorId);
+    },
 
-  onFetchProfessors() {
-    dispatch(professorActions.fetchProfessors());
-  },
+    onFetchProfessors() {
+        dispatch(professorActions.fetchProfessors());
+    },
 
-  onCloseDelete() {
-    dispatch(uiActions.closeDeleteConfirmationModal());
-  },
+    onCloseDelete() {
+        dispatch(uiActions.closeDeleteConfirmationModal());
+    },
 
-  onConfirmDelete(professor: IProfessor) {
-    dispatch(professorActions.deleteProfessor(professor));
-  },
-
+    onConfirmDelete(professor: IProfessor) {
+        dispatch(professorActions.deleteProfessor(professor));
+    },
 });
 
 export default withRouter((connect(mapStateToProps, mapDispatchToProps) as any)(ProfessorTable)) as typeof ProfessorTable;

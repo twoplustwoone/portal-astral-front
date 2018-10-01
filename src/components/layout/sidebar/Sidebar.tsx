@@ -13,6 +13,10 @@ import ListItemText from '@material-ui/core/ListItemText/ListItemText';
 
 const drawerWidth = 240;
 
+export const enum UserType {
+    PROFESSOR, ADMINISTRATOR, STUDENT,
+}
+
 const styles = (theme: any) => ({
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
@@ -41,25 +45,24 @@ class Sidebar  extends React.Component<any, any> {
     };
 
     render() {
-        const { classes, theme, history}: any = this.props;
-
+        const { classes, theme, history, userType}: any = this.props;
         const drawer = (
             <div>
                 <div className={classes.toolbar} />
                 <Divider />
                 <List>
-                    <ListItem button>
+                    {userType === UserType.ADMINISTRATOR ? <ListItem button onClick={() => history.push('/admins')}>
                         <ListItemIcon>
                             <SupervisorAccountOutlinedIcon/>
                         </ListItemIcon>
                         <ListItemText primary='Administradores' />
-                    </ListItem>
-                    <ListItem button onClick={() => history.push('/professors')}>
+                    </ListItem> : undefined}
+                    {userType === UserType.ADMINISTRATOR || userType === UserType.PROFESSOR ? <ListItem button onClick={() => history.push('/professors')}>
                         <ListItemIcon>
                             <AccountBalanceIcon />
                         </ListItemIcon>
                         <ListItemText primary='Profesores' />
-                    </ListItem>
+                    </ListItem> : undefined}
                     <ListItem button onClick={() => history.push('/students')}>
                         <ListItemIcon>
                             <SchoolIcon />
