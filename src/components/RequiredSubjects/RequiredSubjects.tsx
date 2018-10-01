@@ -4,24 +4,25 @@ import {ISubject} from "../../../globals";
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
-import AddIcon from '@material-ui/icons/Add';
+// import AddIcon from '@material-ui/icons/Add';
 import Chip from "@material-ui/core/Chip";
+import Grid from "@material-ui/core/Grid";
+import RequiredSubjectTest from "./RequiredSubjectTest";
 
 
-const styles = require('./SubjectForm.pcss');
+const styles = require('./RequiredSubjects.pcss');
 
 class RequiredSubjects extends React.Component<IProps, IState> {
 
     state: IState = {
         fields: {
-            id: '',
-            name: '',
-            careerYear: 0,
+            id: '4',
+            name: 'AM 4',
+            careerYear: 2,
             required_subjects: [],
         },
         subjects: {
@@ -36,14 +37,20 @@ class RequiredSubjects extends React.Component<IProps, IState> {
     };
 
 
+    subjectsTest: RequiredSubjectTest[] = [
+        new RequiredSubjectTest(1, "1", "AM 1", []),
+        new RequiredSubjectTest(1, "2", "AM 2", []),
+        new RequiredSubjectTest(2, "3", "AM 3", []),
+    ];
+
 //METHODS
 
     componentDidMount() {
         // this.state.all = onFetchSubjects;
+        this.setArraySubjectsToMap(this.subjectsTest, this.state.subjects.all);
     }
 
-
-    UpdatetAllSubjects = (requiredSubjects: Map<string, ISubject>): Map<string, ISubject> => {
+    updatetAllSubjects = (requiredSubjects: Map<string, ISubject>): Map<string, ISubject> => {
 
         let result: Map<string, ISubject> = new Map<string, ISubject>();
 
@@ -55,12 +62,10 @@ class RequiredSubjects extends React.Component<IProps, IState> {
         return result
     };
 
-    setArraySubjectsToMap = (subjects: ISubject[]) => {
-        let requiredMap: Map<string, ISubject> = new Map<string, ISubject>();
-        subjects.forEach(r => {
-            requiredMap.set(r.id, r);
+    setArraySubjectsToMap = (from: ISubject[], to: Map<string, ISubject>) => {
+        from.forEach(r => {
+            to.set(r.id, r);
         });
-        return requiredMap;
     };
 
     handleChange = (prop: string) => (event: any) => {
@@ -76,8 +81,11 @@ class RequiredSubjects extends React.Component<IProps, IState> {
     handleSelectChange = (prop: string) => (event: any) => {
         this.setState({
             ...this.state,
-            [prop]: event.target.value,
-        })
+            subjects: {
+                ...this.state.subjects,
+                [prop]: event.target.value,
+            },
+        });
     };
 
     handleAddRequiredSubject = (subjectIds: string[], allSubjects: Map<string, ISubject>, requiredSubjects: Map<string, ISubject>) => (event: any) => {
@@ -116,17 +124,21 @@ class RequiredSubjects extends React.Component<IProps, IState> {
 
     render() {
         const {subjects} = this.state;
+        this.setArraySubjectsToMap(this.subjectsTest, this.state.subjects.all);
+
         return (
             <div className={styles.RequiredSubject}>
-                <Card className={styles['Card']}>
-                    <CardContent>
-                        <FormControl className={styles.FormControl}>
-                            <div>
+                <Grid item xs={3}/>
+                <Grid item xs={6}>
+                    <Card className={styles['CardSubjects']}>
+                        <CardContent>
+                            <div className={styles.SelectButtonSubjects}>
                                 <Select
+                                    className={styles.selectSubjects}
                                     multiple
                                     value={subjects.selected}
                                     // onChange={this.handleChange()}
-                                    onChange={this.handleSelectChange('all-subjects')}
+                                    onChange={this.handleSelectChange('selected')}
                                     input={<Input id="select-multiple"/>}
                                     // MenuProps={MenuProps}
                                 >
@@ -140,35 +152,26 @@ class RequiredSubjects extends React.Component<IProps, IState> {
                                     ))}
                                 </Select>
                                 <Button
-                                    className={styles["addButton"]}
-                                    variant="fab"
+                                    variant="contained"
+                                    size="small"
                                     color="primary"
-                                    aria-label="Add"
+                                    className={styles.addButton}
                                     onClick={this.handleAddRequiredSubject(subjects.selected, subjects.all, subjects.required)}
                                 >
-                                    <AddIcon/>
+                                    ADD
                                 </Button>
                             </div>
-                        </FormControl>
-                        <div className={styles.Chips}>
-                            {
-                                this.renderRequiredChips(subjects.required, subjects.all)
-                                // Array.from(subjects.required.values()).map(subject => {
-                                //     return (
-                                //         <Chip
-                                //             key={subject.id}
-                                //             label={subject.name}
-                                //             onDelete={this.handleRemoveRequiredSubject(subject.id, subjects.all,subjects.required)}
-                                //             className={styles.chip}
-                                //         />
-                                //     );
-                                // })
-                            }
-                        </div>
-                    </CardContent>
-                    <CardActions>
-                    </CardActions>
-                </Card>
+                            <div className={styles.Chips}>
+                                {
+                                    this.renderRequiredChips(subjects.required, subjects.all)
+                                }
+                            </div>
+                        </CardContent>
+                        <CardActions>
+                        </CardActions>
+                    </Card>
+                </Grid>
+                <Grid item xs={3}/>
             </div>
 
         );
