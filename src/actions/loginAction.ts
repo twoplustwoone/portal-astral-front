@@ -43,6 +43,9 @@ namespace loginAction {
         dispatch(fetchRequest(email,password));
 
         return fetch('http://localhost:9000/login', {
+            headers:{
+              "Content-Type":"application/json",
+            },
             method: 'POST',
             body: JSON.stringify({
                 email : email,
@@ -52,8 +55,12 @@ namespace loginAction {
             .then(handleResponseError)
             .then(userLogged => {
                 dispatch(fetchSuccess(userLogged));
+                return true;
             })
-            .catch(error => dispatch(fetchError(error)));
+            .catch(error => {
+                dispatch(fetchError(error));
+                return false;
+            });
     };
 
     // export const logOut = ():
