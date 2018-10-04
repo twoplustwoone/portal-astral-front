@@ -9,7 +9,7 @@ import Topbar from "../layout/topbar/Topbar";
 import Sidebar from "../layout/sidebar/Sidebar";
 import { withStyles } from "@material-ui/core";
 import AdminForm from "../AdminForm/AdminForm";
-import { Redirect } from "react-router";
+import {Redirect} from "react-router";
 import loginAction from "../../actions/loginActions";
 import StudentForm from "../StudentForm/StudentForm";
 import LoginActions from 'src/actions/loginActions';
@@ -17,6 +17,7 @@ import StudentTable from "../../containers/Student/StudentTable";
 import Login from "../../containers/Login/Login";
 import ProfessorTable from "../../containers/ProfessorTable/ProfessorTable";
 import ProfileForm from "../ProfileForm/ProfileForm";
+import CourseForm from "../CourseForm/CourseForm";
 
 const styles = (theme: any) => ({
   root: {
@@ -79,6 +80,7 @@ class App extends React.Component<IProps, IState> {
           <PrivateRoute path={'/professors'} component={ProfessorTable} />
           <PrivateRoute path={'/professor/:id'} component={ProfessorForm} />
           <PrivateRoute path={'/profile/:id'} component={ProfileForm}/>
+          <PrivateRoute path={'/new-course'} component={CourseForm}/>
         </main>
       </div>
     );

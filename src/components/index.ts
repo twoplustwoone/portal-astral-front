@@ -57,3 +57,11 @@ export {
     IDispatchProps as ILoginDispatchProps,
     IValueProps as ILoginValueProps,
 } from './Login/types'
+
+/* CourseForm */
+export { default as CourseForm } from './CourseForm/CourseForm';
+export {
+    IDispatchProps as ICourseFormDispatchProps,
+    IValueProps as ICourseFormValueProps,
+    IContainerProps as ICourseFormContainerProps,
+} from './CourseForm/types'

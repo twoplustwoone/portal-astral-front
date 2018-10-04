@@ -6,6 +6,7 @@ import studentReducer, { IState as IStudentState } from './studentReducer';
 import adminReducer, {IState as IAdminState} from './adminReducer';
 import authReducer, {IState as IAuthGuardState} from './authReducer';
 import profileReducer, {IState as IUser} from './profileReducer'
+import {ISubject} from "../../globals";
 
 export interface IStore {
   routing: any;
@@ -15,6 +16,7 @@ export interface IStore {
   adminsState: IAdminState;
   user: IUser;
   authGuard: IAuthGuardState;
+  subjects: ISubject;
 }
 
 const reducers = {

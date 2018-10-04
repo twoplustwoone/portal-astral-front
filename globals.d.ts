@@ -29,6 +29,13 @@ declare interface IStudent extends IUser {
   career?: ICareer;
 }
 
+declare interface ISubject {
+    subjectName: string;
+    careerYear: number;
+    requiredSubjects: any;
+    students: any;
+}
+
 type HttpError = string
 type WebData<A> = RemoteData<HttpError, A>
 
