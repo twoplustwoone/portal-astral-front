@@ -49,3 +49,12 @@ export {
     IDispatchProps as ILoginDispatchProps,
     IValueProps as ILoginValueProps,
 } from './Login/types'
+
+
+/* CoursesTable */
+export { default as CoursesTable } from './ProfessorTable/ProfessorTable';
+export {
+    IDispatchProps as ICoursesTableDispatchProps,
+    IValueProps as ICoursesTableValueProps,
+    IContainerProps as ICoursesTableContainerProps,
+} from './PastCoursesTable/types'
