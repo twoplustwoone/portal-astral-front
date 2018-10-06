@@ -37,7 +37,7 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
                     isLoading: true,
                     error: false,
                 },
-                courses: []
+                courses: [],
             };
         case SUCCESS_FETCH_ALL_PAST:
             return {

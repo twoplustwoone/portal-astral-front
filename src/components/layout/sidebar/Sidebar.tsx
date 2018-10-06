@@ -69,6 +69,12 @@ class Sidebar  extends React.Component<any, any> {
                         </ListItemIcon>
                         <ListItemText primary='Alumnos'/>
                     </ListItem>
+                    <ListItem button onClick={() => history.push('/past-courses')}>
+                        <ListItemIcon>
+                            <SchoolIcon />
+                        </ListItemIcon>
+                        <ListItemText primary='Cursadas Pasadas'/>
+                    </ListItem>
                 </List>
                 <Divider />
             </div>

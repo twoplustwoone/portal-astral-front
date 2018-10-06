@@ -20,7 +20,7 @@ namespace coursesActions {
     export const fetchAllPastCoursesRequest = (id: string): IAction => ({
         type: CourseTypes.REQUEST_FETCH_ALL_PAST,
         payload: {
-            id
+            id,
         },
     });
 

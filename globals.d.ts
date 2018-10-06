@@ -38,8 +38,8 @@ declare interface ICareer {
 
 declare interface ICourse {
     id: string;
-    startTime: Date;
-    endTime: Date;
+    startUp: Date;
+    dueDate: Date;
     subject: ISubject;
     schedule: IDictationHours[]
 }
@@ -52,7 +52,7 @@ declare interface IDictationHours {
 }
 
 declare interface ISubject {
-  
+  name: string
 }
 
 declare enum UserType {
