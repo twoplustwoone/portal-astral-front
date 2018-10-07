@@ -38,11 +38,7 @@ declare interface ISubject {
   requiredSubjects: string[];
 }
 
-declare type UserType = {
-  PROFESSOR: 'Professor',
-  ADMINISTRATOR: 'Admin',
-  STUDENT: 'Student',
-}
+declare type UserType = 'Professor' | 'Admin' | 'Student';
 
 declare interface ILogin {
   email: string;

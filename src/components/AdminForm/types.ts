@@ -1,21 +1,25 @@
-/* Totality of props received. Usually left empty */
-export interface IProps extends IDispatchProps, IValueProps {
-}
+import * as H from "history";
+import { match } from "react-router";
 
-/* These are all the functions the component will receive as props from the parent container */
-export interface IDispatchProps {
-  onSubmit: (professor: IProfessor) => any;
-}
-
-/* These are all the values the component will receive as props from the parent container (strings, booleans, numbers, etc) */
-export interface IValueProps {
-}
+export interface IProps {
+  history: H.History;
+  location: H.Location<any>;
+  match: match<any>;
+};
 
 /* Internal state. Usually left empty except for forms and other small exceptions */
 export interface IState {
   fields: IFields;
-  showPassword: boolean;
   errors: IErrors;
+  showPassword: boolean;
+  isNew: boolean;
+  isEditing: boolean;
+  isFetching: boolean;
+  isDeleting: boolean;
+  isCreating: boolean;
+  redirect?: string;
+  admin?: IAdmin;
+  isDeleteModalOpen: boolean;
 }
 
 export interface IFields {
@@ -24,7 +28,7 @@ export interface IFields {
   email: string;
   password: string;
   id: string;
-  file: string;
+  file?: string;
 }
 
 export type IErrors = {

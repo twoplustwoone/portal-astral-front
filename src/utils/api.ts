@@ -1,224 +1,246 @@
-const getBody = (response: Response) => response.json();
-
 /* Admin endpoints */
-export const createAdmin = (admin: IAdmin): Promise<IAdmin[]> => {
-  const url = 'http://localhost:3000/administrator';
+export const createAdmin = (admin: IAdmin): Promise<Response> => {
+  const url = 'http://localhost:9000/administrator';
   const init: RequestInit = {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(admin),
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const getAllAdmins = (): Promise<IAdmin[]> => {
-  const url = 'http://localhost:3000/administrator';
+export const getAllAdmins = (): Promise<Response> => {
+  const url = 'http://localhost:9000/administrator';
   const init: RequestInit = {
     method: 'GET',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const getAdminById = (id: string): Promise<IAdmin[]> => {
-  const url = `http://localhost:3000/administrator/${id}`;
+export const getAdminById = (id: string): Promise<Response> => {
+  const url = `http://localhost:9000/administrator/${id}`;
   const init: RequestInit = {
     method: 'GET',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const updateAdmin = (admin: IAdmin): Promise<IAdmin> => {
-  const url = `http://localhost:3000/administrator/${admin.id}`;
+export const updateAdmin = (admin: IAdmin): Promise<Response> => {
+  const url = `http://localhost:9000/administrator/${admin.id}`;
   const init: RequestInit = {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(admin),
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const deleteAdmin = (id: string): Promise<string> => {
-  const url = `http://localhost:3000/administrator/${id}`;
+export const deleteAdmin = (id: string): Promise<Response> => {
+  const url = `http://localhost:9000/administrator/${id}`;
   const init: RequestInit = {
     method: 'DELETE',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
 /* Professor endpoints */
-export const createProfessor = (professor: IProfessor): Promise<IProfessor[]> => {
-  const url = 'http://localhost:3000/professor';
+export const createProfessor = (professor: IProfessor): Promise<Response> => {
+  const url = 'http://localhost:9000/professor';
   const init: RequestInit = {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(professor),
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const getAllProfessors = (): Promise<IProfessor[]> => {
-  const url = 'http://localhost:3000/professor';
+export const getAllProfessors = (): Promise<Response> => {
+  const url = 'http://localhost:9000/professor';
   const init: RequestInit = {
     method: 'GET',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const getProfessorById = (id: string): Promise<IProfessor[]> => {
-  const url = `http://localhost:3000/professor/${id}`;
+export const getProfessorById = (id: string): Promise<Response> => {
+  const url = `http://localhost:9000/professor/${id}`;
   const init: RequestInit = {
     method: 'GET',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const updateProfessor = (professor: IProfessor): Promise<IProfessor> => {
-  const url = `http://localhost:3000/professor/${professor.id}`;
+export const updateProfessor = (professor: IProfessor): Promise<Response> => {
+  const url = `http://localhost:9000/professor/${professor.id}`;
   const init: RequestInit = {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(professor),
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const deleteProfessor = (id: string): Promise<string> => {
-  const url = `http://localhost:3000/professor/${id}`;
+export const deleteProfessor = (id: string): Promise<Response> => {
+  const url = `http://localhost:9000/professor/${id}`;
   const init: RequestInit = {
     method: 'DELETE',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
 /* Student endpoints */
-export const createStudent = (student: IStudent): Promise<IStudent[]> => {
-  const url = 'http://localhost:3000/student';
+export const createStudent = (student: IStudent): Promise<Response> => {
+  const url = 'http://localhost:9000/student';
   const init: RequestInit = {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(student),
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const getAllStudents = (): Promise<IStudent[]> => {
-  const url = 'http://localhost:3000/student';
+export const getAllStudents = (): Promise<Response> => {
+  const url = 'http://localhost:9000/student';
   const init: RequestInit = {
     method: 'GET',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const getStudentById = (id: string): Promise<IStudent[]> => {
-  const url = `http://localhost:3000/student/${id}`;
+export const getStudentById = (id: string): Promise<Response> => {
+  const url = `http://localhost:9000/student/${id}`;
   const init: RequestInit = {
     method: 'GET',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const updateStudent = (student: IStudent): Promise<IStudent> => {
-  const url = `http://localhost:3000/student/${student.id}`;
+export const updateStudent = (student: IStudent): Promise<Response> => {
+  const url = `http://localhost:9000/student/${student.id}`;
   const init: RequestInit = {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(student),
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const deleteStudent = (id: string): Promise<string> => {
-  const url = `http://localhost:3000/student/${id}`;
+export const deleteStudent = (id: string): Promise<Response> => {
+  const url = `http://localhost:9000/student/${id}`;
   const init: RequestInit = {
     method: 'DELETE',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
 /* Subject endpoints */
-export const createSubject = (subject: ISubject): Promise<ISubject[]> => {
-  const url = 'http://localhost:3000/subject';
+export const createSubject = (subject: ISubject): Promise<Response> => {
+  const url = 'http://localhost:9000/subject';
   const init: RequestInit = {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(subject),
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const getAllSubjects = (): Promise<ISubject[]> => {
-  const url = 'http://localhost:3000/subject';
+export const getAllSubjects = (): Promise<Response> => {
+  const url = 'http://localhost:9000/subject';
   const init: RequestInit = {
     method: 'GET',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const getSubjectById = (id: string): Promise<ISubject[]> => {
-  const url = `http://localhost:3000/subject/${id}`;
+export const getSubjectById = (id: string): Promise<Response> => {
+  const url = `http://localhost:9000/subject/${id}`;
   const init: RequestInit = {
     method: 'GET',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const updateSubject = (subject: ISubject): Promise<ISubject> => {
-  const url = `http://localhost:3000/subject/${subject.id}`;
+export const updateSubject = (subject: ISubject): Promise<Response> => {
+  const url = `http://localhost:9000/subject/${subject.id}`;
   const init: RequestInit = {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(subject),
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const deleteSubject = (id: string): Promise<string> => {
-  const url = `http://localhost:3000/subject/${id}`;
+export const deleteSubject = (id: string): Promise<Response> => {
+  const url = `http://localhost:9000/subject/${id}`;
   const init: RequestInit = {
     method: 'DELETE',
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
 /* Authentication endpoints */
 
-export const login = (credentials: ILogin): Promise<ILoginResponse> => {
-  const url = `http://localhost:3000/login`;
+export const login = (credentials: ILogin): Promise<Response> => {
+  const url = `http://localhost:9000/login`;
   const body = { ...credentials };
 
-  const headers = new Headers();
-  headers.append('Content-Type', 'application/json');
   const init: RequestInit = {
     method: 'POST',
-    headers,
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   };
 
-  return fetch(url, init).then(getBody);
+  return fetch(url, init);
 };
 
-export const logout = (): Promise<string | null> => {
+export const logout = (): Promise<Response | null> => {
   const maybeUserAsString: string | null = window.sessionStorage.getItem('user');
 
   if (maybeUserAsString) {
     const user: IUser = JSON.parse(maybeUserAsString);
-    const url = `http://localhost:3000/logout/${user.id}`;
+    const url = `http://localhost:9000/logout/${user.id}`;
     const init: RequestInit = {
       method: 'GET',
     };
-    return fetch(url, init).then(getBody);
+    return fetch(url, init);
   }
 
   return Promise.resolve(null);

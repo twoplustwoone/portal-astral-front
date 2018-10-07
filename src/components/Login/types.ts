@@ -22,6 +22,7 @@ export interface IState {
     authenticated: boolean;
     anchorEl: null;
     redirect?: string;
+    errorMessage?: string;
 }
 
 export interface IRouterProps {

@@ -3,12 +3,9 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
-// import { AccountCircle } from '@material-ui/icons';
-// import Menu from '@material-ui/core/Menu';
-// import MenuItem from '@material-ui/core/MenuItem';
-import { Button } from "@material-ui/core";
+import { Button, IconButton, Menu, MenuItem } from "@material-ui/core";
+import session from "../../../utils/session";
+import { AccountCircle } from "@material-ui/icons";
 
 
 const drawerWidth = 240;
@@ -31,14 +28,62 @@ const _styles = (theme: any) => ({
   },
 });
 
+type ProfileButtonProps = {
+  classes: any,
+  handleMenu: (event: any) => void,
+  anchorEl: any,
+  handleClose: () => void,
+};
+
+function ProfileButton(props: ProfileButtonProps) {
+  const user = session.getUser() as IUser;
+  const { name, lastName } = user;
+
+  const isOpen = Boolean(props.anchorEl);
+
+  return <div className={styles.profileButton}>
+
+    <div className={styles.wrapper}>
+      <Typography variant='title' color='inherit' noWrap>
+        {`${name} ${lastName}`}
+      </Typography>
+
+      <IconButton
+        aria-owns={isOpen ? "menu-appbar" : undefined}
+        className={props.classes.accountBtn}
+        aria-haspopup="true"
+        onClick={props.handleMenu}
+        color="inherit"
+      >
+        <AccountCircle />
+
+      </IconButton>
+    </div>
+    <Menu
+      id="menu-appbar"
+      anchorEl={props.anchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isOpen}
+      onClose={props.handleClose}
+    >
+      <MenuItem onClick={props.handleClose}>Profile</MenuItem>
+      <MenuItem onClick={props.handleClose}>My account</MenuItem>
+
+    </Menu>
+  </div>;
+}
+
 class Topbar extends React.Component<any, any> {
   state = {
     mobileOpen: false,
     anchorEl: null,
-  };
-
-  handleDrawerToggle = () => {
-    this.setState((state: any) => ({ mobileOpen: !state.mobileOpen }));
   };
 
   handleMenu = (event: any) => {
@@ -51,60 +96,31 @@ class Topbar extends React.Component<any, any> {
 
   render() {
     const { classes }: any = this.props;
-    // const open = Boolean(anchorEl);
+    const { anchorEl } = this.state;
 
+    const isLogged = session.isLogged();
     return (
       <div className={styles.container}>
-        {/*<AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              color='inherit'
-              aria-label='Open drawer'
-              onClick={this.handleDrawerToggle}
-              className={classes.navIconHide}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant='title' color='inherit' noWrap>
-              {userName}
-            </Typography>
-            <IconButton
-              aria-owns={open ? 'menu-appbar' : undefined}
-              className={classes.accountBtn}
-              aria-haspopup="true"
-              onClick={this.handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={open}
-              onClose={this.handleClose}
-            >
-              <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-              <MenuItem onClick={this.handleClose}>My account</MenuItem>
-            </Menu>
-          </Toolbar>
-        </AppBar>*/}
         <AppBar position="static">
           <Toolbar className={styles.toolbar}>
-            {/*<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>*/}
-            <Typography variant="title" color="inherit" className={classes.grow}>
-              Portal Astral
-            </Typography>
-            <Button color="inherit">Login</Button>
+
+            <div className={styles.left}>
+              <Typography variant="title" color="inherit" className={classes.grow}>
+                Portal Astral
+              </Typography>
+            </div>
+
+            {
+              !isLogged
+                ? <Button color="inherit">Login</Button>
+                : <ProfileButton
+                  classes={classes}
+                  handleMenu={this.handleMenu}
+                  anchorEl={anchorEl}
+                  handleClose={this.handleClose}
+                />
+            }
+
           </Toolbar>
         </AppBar>
       </div>

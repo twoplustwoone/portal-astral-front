@@ -3,7 +3,6 @@ import { StyleRules, Theme, withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Hidden from '@material-ui/core/Hidden';
-import Divider from '@material-ui/core/Divider';
 import SupervisorAccountOutlinedIcon from '@material-ui/icons/SupervisorAccountOutlined';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import SchoolIcon from '@material-ui/icons/School';
@@ -11,7 +10,7 @@ import ListItem from '@material-ui/core/ListItem/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText/ListItemText';
 import { Props, State } from "./types";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -22,7 +21,7 @@ export const enum UserType {
 const styles = require('./Sidebar.pcss')
 
 const _styles = (theme: Theme): StyleRules => ({
-  toolbar: theme.mixins.toolbar,
+  // toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
     height: '100%',
@@ -38,9 +37,9 @@ const _styles = (theme: Theme): StyleRules => ({
   },
 });
 
-function AdminItem() {
-  return <Link to={"/admins"}>
-    <ListItem>
+function AdminItem(props: { pathname: string }) {
+  return <Link to={"/admins"} className={styles.link}>
+    <ListItem className={styles.listItem} selected={props.pathname === '/admins'}>
       <ListItemIcon>
         <SupervisorAccountOutlinedIcon />
       </ListItemIcon>
@@ -49,9 +48,9 @@ function AdminItem() {
   </Link>;
 }
 
-function ProfessorItem() {
-  return <Link to={"/professors"}>
-    <ListItem>
+function ProfessorItem(props: { pathname: string }) {
+  return <Link to={"/professors"} className={styles.link}>
+    <ListItem className={styles.listItem} selected={props.pathname === '/professors'}>
       <ListItemIcon>
         <AccountBalanceIcon />
       </ListItemIcon>
@@ -60,9 +59,9 @@ function ProfessorItem() {
   </Link>;
 }
 
-function StudentItem() {
-  return <Link to={"/students"}>
-    <ListItem>
+function StudentItem(props: { pathname: string }) {
+  return <Link to={"/students"} className={styles.link}>
+    <ListItem className={styles.listItem} selected={props.pathname === '/students'}>
       <ListItemIcon>
         <SchoolIcon />
       </ListItemIcon>
@@ -93,27 +92,27 @@ class Sidebar extends React.Component<Props, State> {
       return null;
     }
 
+    const { pathname } = this.props.location;
+
     const drawerContent = (
       <div>
-        <div className={classes.toolbar} />
-        <Divider />
+        {/*<div className={classes.toolbar} />*/}
         <List>
 
-          <AdminItem />
+          <AdminItem pathname={pathname} />
 
-          <ProfessorItem />
+          <ProfessorItem pathname={pathname} />
 
-          <StudentItem />
+          <StudentItem pathname={pathname} />
 
         </List>
-        <Divider />
       </div>
     );
 
     return (
       <div className={styles.container}>
 
-        <Hidden mdUp>
+        <Hidden mdUp className={styles.drawerContainer}>
           <Drawer
             variant='temporary'
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
@@ -130,13 +129,14 @@ class Sidebar extends React.Component<Props, State> {
           </Drawer>
         </Hidden>
 
-        <Hidden smDown implementation='css'>
+        <Hidden smDown implementation='css' className={styles.drawerContainer}>
           <Drawer
             variant='permanent'
             open
             classes={{
               paper: classes.drawerPaper,
             }}
+            className={styles.drawer}
           >
             {drawerContent}
           </Drawer>
@@ -147,4 +147,4 @@ class Sidebar extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(_styles, { withTheme: true })(Sidebar);
+export default withRouter(withStyles(_styles, { withTheme: true })(Sidebar));

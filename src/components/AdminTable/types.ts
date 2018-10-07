@@ -2,7 +2,7 @@ export interface IProps {
 }
 
 export interface IState {
-  professorBeingDeleted: IProfessor | null;
-  professors: IProfessor[];
+  adminBeingDeleted: IAdmin | null;
+  admins: IAdmin[];
   isDeleting: boolean;
 }

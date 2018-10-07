@@ -4,75 +4,79 @@ import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, IconBu
 import { DeleteOutline, Edit } from "@material-ui/icons";
 import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
-import { deleteProfessor, getAllProfessors } from "../../utils/api";
+import { deleteAdmin, getAllAdmins } from "../../utils/api";
 import { Link } from "react-router-dom";
 
-// const styles = require('./ProfessorTable.pcss');
+// const styles = require('./AdminTable.pcss');
 
-class ProfessorTable extends React.Component<IProps, IState> {
+class AdminTable extends React.Component<IProps, IState> {
 
   state: IState = {
-    professorBeingDeleted: null,
-    professors: [],
+    adminBeingDeleted: null,
+    admins: [],
     isDeleting: false,
   };
 
   componentDidMount() {
-    this.fetchProfessors();
+    this.fetchAdmins();
   }
 
-  fetchProfessors = () => {
-    getAllProfessors().then(this.handleResponse).then(this.receiveProfessors);
+  fetchAdmins = () => {
+    getAllAdmins().then(this.handleResponse).then(this.receiveAdmins);
   };
 
-  handleResponse = (response: Response) => {
+  handleResponse = (response: Response): Promise<IAdmin[]> => {
+    if (response.status !== 200) {
+      throw Error('Error fetching admins');
+    }
+
     return response.json();
   };
 
   handleDeleteClick = (id: string) => {
-    const professors = this.state.professors;
+    const admins = this.state.admins;
 
-    const professorBeingDeleted = professors.find(professor => professor.id === id);
-    if (!professorBeingDeleted) {
+    const adminBeingDeleted = admins.find(admin => admin.id === id);
+    if (!adminBeingDeleted) {
       return;
     }
 
-    this.setState({ professorBeingDeleted });
+    this.setState({ adminBeingDeleted });
   };
 
   handleCloseDelete = () => {
-    this.setState({ isDeleting: false, professorBeingDeleted: null });
+    this.setState({ isDeleting: false, adminBeingDeleted: null });
   };
 
   handleConfirmDelete = () => {
-    const { professorBeingDeleted } = this.state;
+    const { adminBeingDeleted } = this.state;
 
-    if (!professorBeingDeleted) {
+    if (!adminBeingDeleted) {
       return;
     }
 
     this.setState({ isDeleting: true });
-    deleteProfessor(professorBeingDeleted.id).then(() => {
+    deleteAdmin(adminBeingDeleted.id).then(() => {
       this.handleCloseDelete();
-      this.fetchProfessors();
+      this.fetchAdmins();
     });
   };
 
-  receiveProfessors = (professors: IProfessor[]) => {
-    this.setState({ professors })
+  receiveAdmins = (admins: IAdmin[]) => {
+    this.setState({ admins })
   };
 
   render() {
-    const { professorBeingDeleted, isDeleting, professors } = this.state;
+    const { adminBeingDeleted, isDeleting, admins } = this.state;
 
-    const name = professorBeingDeleted ? `${professorBeingDeleted.name} ${professorBeingDeleted.lastName}` : '';
+    const name = adminBeingDeleted ? `${adminBeingDeleted.name} ${adminBeingDeleted.lastName}` : '';
 
     return (
       <div>
         {
-          professorBeingDeleted &&
+          adminBeingDeleted &&
           <DeleteConfirmationDialog
-            userType={'professor'}
+            userType={'admin'}
             name={name}
             handleCloseDelete={this.handleCloseDelete}
             handleConfirmDelete={this.handleConfirmDelete}
@@ -80,7 +84,7 @@ class ProfessorTable extends React.Component<IProps, IState> {
           />
         }
         <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <Link to={'/new-professor'}>
+          <Link to={'/new-admin'}>
             <Button
               variant="fab"
               color="primary"
@@ -105,14 +109,14 @@ class ProfessorTable extends React.Component<IProps, IState> {
               <TableBody>
 
                 {
-                  professors.map(row => {
+                  admins.map(row => {
                     return (
                       <TableRow key={row.id}>
                         <TableCell>{row.name}</TableCell>
                         <TableCell>{row.lastName}</TableCell>
                         <TableCell>{row.email}</TableCell>
                         <TableCell>
-                          <Link to={`/professor/${row.id}`}>
+                          <Link to={`/admin/${row.id}`}>
                             <IconButton>
                               <Edit />
                             </IconButton>
@@ -135,4 +139,4 @@ class ProfessorTable extends React.Component<IProps, IState> {
   }
 }
 
-export default ProfessorTable;
+export default AdminTable;

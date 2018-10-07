@@ -11,10 +11,14 @@ import Login from "../Login/Login";
 // import StudentTable from "../student/all-students/StudentTable";
 // import ProfessorTable from "../ProfessorTable/ProfessorTable";
 import Home from "../Home/Home";
-// import { PrivateRoute } from "./PrivateRoute";
 import { StyleRules } from "@material-ui/core/styles";
 import { PrivateRoute } from "./PrivateRoute";
-// import AdminsTableView from "../AdminsTable/AdminsTableView";
+import AdminTable from "../AdminTable/AdminTable";
+import ProfessorForm from "../ProfessorForm/ProfessorForm";
+import ProfessorTable from "../ProfessorTable/ProfessorTable";
+import AdminForm from "../AdminForm/AdminForm";
+import StudentForm from "../StudentForm/StudentForm";
+import StudentTable from "../student/all-students/StudentTable";
 
 const styles = require('./App.pcss')
 
@@ -38,17 +42,17 @@ const _styles = (theme: Theme): StyleRules => ({
 
 function Content(props: { classes: any }) {
   return <main className={props.classes.content}>
-    <div className={props.classes.toolbar} />
     <Route path={"/login"} component={Login} />
     <PrivateRoute exact path={"/"} component={Home} />
-    {/*<PrivateRoute path={'/new-professor'} component={ProfessorForm} />*/}
-    {/*<PrivateRoute path={'/new-student'} component={StudentForm} />*/}
-    {/*<PrivateRoute path='/admins' component={AdminsTableView} />*/}
-    {/*<PrivateRoute path={'/admin'} component={AdminForm} />*/}
-    {/*<PrivateRoute path={'/students'} component={StudentTable} />*/}
-    {/*<PrivateRoute path={'/student/:id'} component={StudentForm} />*/}
-    {/*<PrivateRoute path={'/professors'} component={ProfessorTable} />*/}
-    {/*<PrivateRoute path={'/professor/:id'} component={ProfessorForm} />*/}
+    <PrivateRoute path='/admins' component={AdminTable} />
+    <PrivateRoute path={'/admin/:id'} component={AdminForm} />
+    <PrivateRoute path={'/new-admin'} component={AdminForm} />
+    <PrivateRoute path={'/students'} component={StudentTable} />
+    <PrivateRoute path={'/student/:id'} component={StudentForm} />
+    <PrivateRoute path={'/new-student'} component={StudentForm} />
+    <PrivateRoute path={'/professors'} component={ProfessorTable} />
+    <PrivateRoute path={'/professor/:id'} component={ProfessorForm} />
+    <PrivateRoute path={'/new-professor'} component={ProfessorForm} />
   </main>;
 }
 
@@ -65,9 +69,13 @@ class App extends React.Component<Props, {}> {
 
       <div className={styles.bottom}>
 
-        <Sidebar />
+        <div className={styles.sidebar}>
+          <Sidebar />
+        </div>
 
-        <Content classes={classes} />
+        <div className={styles.content}>
+          <Content classes={classes} />
+        </div>
 
       </div>
     </div>;

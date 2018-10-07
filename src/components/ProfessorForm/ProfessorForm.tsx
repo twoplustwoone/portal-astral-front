@@ -18,6 +18,8 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
+import { Redirect, withRouter } from "react-router";
+import { createProfessor, deleteProfessor, getProfessorById, updateProfessor } from "../../utils/api";
 
 const styles = require('./ProfessorForm.pcss');
 
@@ -43,31 +45,49 @@ class ProfessorForm extends React.Component<IProps, IState> {
     },
     isNew: true,
     isEditing: true,
+    isFetching: false,
+    isCreating: false,
+    isDeleting: false,
+    isDeleteModalOpen: false,
   };
 
 
   componentDidMount() {
-    const { professor, match } = this.props;
+    const { match } = this.props;
 
-    /* If professor was passed as a prop, then set the information for the professor into the fields */
-    if (professor) {
-
-      this.setProfessor();
+    if (match.params.id) {
+      getProfessorById(match.params.id).then(this.handleResponse).then(this.setProfessor).catch(this.redirect);
+      this.setState({ isNew: false, isFetching: true });
     } else {
-      if (match.params.id) {
-        this.props.onFetchProfessor(match.params.id);
-      }
+      this.setState({ isNew: true });
     }
+
   }
 
-  componentDidUpdate(prevProps: IProps) {
-    if (this.props.professor && !prevProps.professor) {
-      this.setProfessor();
-    }
-  }
+  redirect = () => {
+    this.setState({ redirect: '/professors' });
+  };
 
-  setProfessor = () => {
-    const { email, name, lastName, id, password, file } = this.props.professor as IProfessor;
+  handleResponse = (response: Response): Promise<IProfessor> => {
+    if (response.status === 404) {
+      throw Error('Professor not found');
+    }
+
+    return response.json();
+  };
+
+  setProfessor = (professor: IProfessor) => {
+    this.setState({ professor, isNew: false, isEditing: false, isFetching: false }, this.mapProfessor);
+  };
+
+  mapProfessor = () => {
+    const { professor } = this.state;
+
+    if (!professor) {
+      return;
+    }
+
+    const { email, name, lastName, id, password, file } = professor;
     this.setState({
       ...this.state,
       fields: {
@@ -79,8 +99,6 @@ class ProfessorForm extends React.Component<IProps, IState> {
         password,
         file,
       },
-      isNew: false,
-      isEditing: false,
     });
   };
 
@@ -105,10 +123,10 @@ class ProfessorForm extends React.Component<IProps, IState> {
   handleSubmit = () => {
     if (this.validateAll()) {
       if (!this.state.isNew) {
-        this.props.onEdit(this.state.fields).then(() => this.props.history.push('/professors'));
+        updateProfessor(this.state.fields).then(() => this.setState({ redirect: '/professors' }));
       }
       else {
-        this.props.onCreate(this.state.fields).then(() => this.props.history.push('/professors'));
+        createProfessor(this.state.fields).then(() => this.setState({ redirect: '/professors' }));
       }
     }
   };
@@ -191,9 +209,9 @@ class ProfessorForm extends React.Component<IProps, IState> {
 
   handleCancel = () => {
     if (this.state.isNew) {
-      this.props.onCancel();
+      this.setState({ redirect: '/professors' });
     } else {
-      this.setState({ ...this.state, isEditing: false }, this.setProfessor);
+      this.setState({ isEditing: false }, this.mapProfessor);
     }
   };
 
@@ -206,15 +224,24 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   handleDeleteClick = () => {
-    this.props.onClickDelete(this.props.professor as IProfessor);
+    // this.props.onClickDelete(this.props.professor as IProfessor);
+    this.setState({ isDeleteModalOpen: true });
   };
 
   handleCloseDelete = () => {
-    this.props.onCloseDelete();
+    // this.props.onCloseDelete();
+    this.setState({ isDeleteModalOpen: false });
   };
 
   handleConfirmDelete = () => {
-    this.props.onConfirmDelete(this.props.professor as IProfessor).then(() => this.props.history.push('/professors'));
+    // this.props.onConfirmDelete(this.props.professor as IProfessor).then(() => this.props.history.push('/professors'));
+    const professor = this.state.professor;
+
+    if (!professor) {
+      return;
+    }
+
+    deleteProfessor(professor.id).then(() => this.setState({ redirect: '/professors' }));
   };
 
   renderTitle = () => {
@@ -238,13 +265,13 @@ class ProfessorForm extends React.Component<IProps, IState> {
   };
 
   render() {
-    const { fields, showPassword, errors } = this.state;
+    const { fields, showPassword, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
 
-    const { isDeleteConfirmationOpen } = this.props;
+    if (redirect) {
+      return <Redirect to={redirect} />;
+    }
 
-    const { isFetchingProfessor, isDeleting, isCreating } = this.props;
-
-    if (isFetchingProfessor || isDeleting || isCreating) {
+    if (isFetching || isDeleting || isCreating) {
       return <div><CircularProgress /></div>
     }
 
@@ -254,7 +281,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
       <div className={styles.NewProfessor}>
 
         {
-          isDeleteConfirmationOpen &&
+          isDeleteModalOpen &&
           <DeleteConfirmationDialog
             isLoading={isDeleting}
             userType={'professor'}
@@ -297,7 +324,6 @@ class ProfessorForm extends React.Component<IProps, IState> {
                        readOnly={readOnly}
                 />
               </FormControl>
-              {/*todo*/}
               <FormControl className={styles['professor-form-control']} error={errors.file}>
                 <InputLabel required htmlFor='professor-email'>File</InputLabel>
                 <Input id='professor-file'
@@ -373,4 +399,4 @@ class ProfessorForm extends React.Component<IProps, IState> {
   }
 }
 
-export default ProfessorForm;
+export default withRouter(ProfessorForm);
