@@ -7,6 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import SupervisorAccountOutlinedIcon from '@material-ui/icons/SupervisorAccountOutlined';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import SchoolIcon from '@material-ui/icons/School';
+import HistoryIcon from '@material-ui/icons/History';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText/ListItemText';
@@ -71,7 +72,7 @@ class Sidebar  extends React.Component<any, any> {
                     </ListItem>
                     <ListItem button onClick={() => history.push('/past-courses')}>
                         <ListItemIcon>
-                            <SchoolIcon />
+                            <HistoryIcon />
                         </ListItemIcon>
                         <ListItemText primary='Cursadas Pasadas'/>
                     </ListItem>

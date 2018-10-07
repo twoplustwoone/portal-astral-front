@@ -12,8 +12,9 @@ import TableBody from "@material-ui/core/TableBody";
 import IconButton from "@material-ui/core/IconButton";
 import CoursesExample from "./CoursesExample";
 import SubjectCourseExample from "./SubjectCourseExample";
+import CircularProgress from "@material-ui/core/es/CircularProgress";
 
-// const styles = require('./PastCoursesTable.pcss');
+const styles = require('./CoursesTable.pcss');
 
 class CoursesTable extends React.Component<IProps, IState> {
 
@@ -50,7 +51,8 @@ class CoursesTable extends React.Component<IProps, IState> {
     };
 
     render() {
-        const {courses = [], isDeleteConfirmationOpen, isDeletingCourse} = this.props;
+        const {courses = [], isDeleteConfirmationOpen, isDeletingCourse, isLoading} = this.props;
+        // const {courses = [], isDeleteConfirmationOpen, isDeletingCourse} = this.props;
 
         const {courseBeingDeleted} = this.state;
 
@@ -68,50 +70,57 @@ class CoursesTable extends React.Component<IProps, IState> {
                         isLoading={isDeletingCourse}
                     />
                 }
-                <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+                <div className={styles.CourseTable}>
 
                 </div>
-                <Paper>
-                    <div>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Materia</TableCell>
-                                    <TableCell>Fecha de Inicio</TableCell>
-                                    <TableCell>Fecha de Finalización</TableCell>
-                                    <TableCell>Editar</TableCell>
-                                    <TableCell>Remover</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-
-                                {
-                                    courses.map(row => {
-                                        return (
-                                            <TableRow key={row.id}>
-                                                <TableCell>{row.subject.name}</TableCell>
-                                                <TableCell>{row.startUp}</TableCell>
-                                                <TableCell>{row.dueDate}</TableCell>
-                                                <TableCell>
-                                                    <IconButton
-                                                        onClick={() => this.props.history.push('/past-course/' + row.id)}>
-                                                        <Edit/>
-                                                    </IconButton>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <IconButton onClick={() => this.handleDeleteClick(row.id)}>
-                                                        <DeleteOutline/>
-                                                    </IconButton>
-                                                </TableCell>
+                <div>
+                    {
+                        isLoading ?
+                            <CircularProgress className={styles.Loader} size={50} />
+                            :
+                            <Paper>
+                                <div>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Materia</TableCell>
+                                                <TableCell>Fecha de Inicio</TableCell>
+                                                <TableCell>Fecha de Finalización</TableCell>
+                                                <TableCell>Editar</TableCell>
+                                                <TableCell>Remover</TableCell>
                                             </TableRow>
-                                        );
-                                    })
-                                }
+                                        </TableHead>
+                                        <TableBody>
 
-                            </TableBody>
-                        </Table>
-                    </div>
-                </Paper>
+                                            {
+                                                courses.map(row => {
+                                                    return (
+                                                        <TableRow key={row.id}>
+                                                            <TableCell>{row.subject.name}</TableCell>
+                                                            <TableCell>{row.startUp}</TableCell>
+                                                            <TableCell>{row.dueDate}</TableCell>
+                                                            <TableCell>
+                                                                <IconButton
+                                                                    onClick={() => this.props.history.push('/past-course/' + row.id)}>
+                                                                    <Edit/>
+                                                                </IconButton>
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                <IconButton onClick={() => this.handleDeleteClick(row.id)}>
+                                                                    <DeleteOutline/>
+                                                                </IconButton>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                })
+                                            }
+
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </Paper>
+                    }
+                </div>
             </div>
         );
     }
