@@ -10,6 +10,7 @@ import SchoolIcon from '@material-ui/icons/School';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText/ListItemText';
+import {Edit} from "@material-ui/icons";
 
 const drawerWidth = 240;
 
@@ -68,6 +69,12 @@ class Sidebar  extends React.Component<any, any> {
                             <SchoolIcon />
                         </ListItemIcon>
                         <ListItemText primary='Alumnos'/>
+                    </ListItem>
+                    <ListItem button onClick={() => history.push('/courses')}>
+                        <ListItemIcon>
+                            <Edit />
+                        </ListItemIcon>
+                        <ListItemText primary='Cursadas'/>
                     </ListItem>
                 </List>
                 <Divider />

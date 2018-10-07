@@ -15,6 +15,22 @@ declare interface IUser {
   file?: string;
 }
 
+declare interface ICourse {
+    name: string;
+    startTime: string;
+    endTime: string;
+    id: string;
+    subject: ISubject;
+    schedule?: any[];
+}
+
+declare interface ISubject {
+    id: string;
+    subjectName: string;
+    careerYear: number;
+    requiredSubjects?: ISubject[]
+}
+
 declare interface IProfessor extends IUser {
 }
 

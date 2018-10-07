@@ -1,4 +1,4 @@
-import { professorActions, studentActions, uiActions } from "../actions";
+import { professorActions, studentActions, uiActions, courseActions } from "../actions";
 import { IAction } from "../../globals";
 
 export interface IState {
@@ -6,19 +6,23 @@ export interface IState {
     loading: {
       admins: boolean;
       students: boolean;
+      courses: boolean;
       professors: boolean;
     };
     fetching: {
       professor: { [professorId: string]: boolean; };
       student: { [studentId: string]: boolean; };
+      course: { [courseId: string]: boolean; };
       admin: { [adminId: string]: boolean; };
     }
     creating: {
       professor: boolean;
+      course: boolean;
       student: boolean;
     };
     deleting: {
       professor: boolean;
+      course: boolean;
       student: boolean;
     };
     open: {
@@ -33,19 +37,23 @@ const initialState: IState = {
     loading: {
       admins: false,
       students: false,
+      courses: false,
       professors: false,
     },
     fetching: {
       professor: {},
       student: {},
+      course: {},
       admin: {},
     },
     creating: {
       professor: false,
+      course: false,
       student: false,
     },
     deleting: {
       professor: false,
+      course: false,
       student: false,
     },
     open: {
@@ -62,6 +70,7 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
   const { CREATE_STUDENT_REQUEST } = studentActions;
   const { CLOSE_DELETE_CONFIRMATION_MODAL, OPEN_DELETE_CONFIRMATION_MODAL, OPEN_LOADING_MODAL, CLOSE_LOADING_MODAL } = uiActions;
   const { CREATE_PROFESSOR_REQUEST, FETCH_PROFESSORS_ERROR, FETCH_PROFESSORS_REQUEST, FETCH_PROFESSORS_SUCCESS, FETCH_PROFESSOR_ERROR, FETCH_PROFESSOR_REQUEST, FETCH_PROFESSOR_SUCCESS, DELETE_PROFESSOR_SUCCESS, DELETE_PROFESSOR_REQUEST } = professorActions;
+  const { CREATE_COURSE_REQUEST, FETCH_COURSES_ERROR, FETCH_COURSES_REQUEST, FETCH_COURSES_SUCCESS, FETCH_COURSE_ERROR, FETCH_COURSE_REQUEST, FETCH_COURSE_SUCCESS, DELETE_COURSE_SUCCESS, DELETE_COURSE_REQUEST } = courseActions;
 
   switch (type) {
     case DELETE_PROFESSOR_REQUEST:
@@ -96,6 +105,42 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
           creating: {
             ...state.is.creating,
             professor: true,
+          },
+        },
+      };
+
+      case DELETE_COURSE_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          deleting: {
+            ...state.is.deleting,
+            course: true,
+          },
+        },
+      };
+
+    case DELETE_COURSE_SUCCESS:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          deleting: {
+            ...state.is.deleting,
+            course: false,
+          },
+        },
+      };
+
+    case CREATE_COURSE_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          creating: {
+            ...state.is.creating,
+            course: true,
           },
         },
       };
@@ -236,6 +281,86 @@ const reducer = (state: IState = initialState, action: IAction): IState => {
             professor: {
               ...state.is.fetching.professor,
               [payload.professorId]: false,
+            },
+          },
+        },
+      };
+      case FETCH_COURSES_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          loading: {
+            ...state.is.loading,
+            courses: true,
+          },
+        },
+      };
+
+    case FETCH_COURSES_SUCCESS:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          loading: {
+            ...state.is.loading,
+            courses: false,
+          },
+        },
+      };
+
+    case FETCH_COURSES_ERROR:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          loading: {
+            ...state.is.loading,
+            courses: false,
+          },
+        },
+      };
+
+    case FETCH_COURSE_REQUEST:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          fetching: {
+            ...state.is.fetching,
+            course: {
+              ...state.is.fetching.course,
+              [payload.courseId]: true,
+            },
+          },
+        },
+      };
+
+    case FETCH_COURSE_SUCCESS:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          fetching: {
+            ...state.is.fetching,
+            course: {
+              ...state.is.fetching.course,
+              [payload.course.id]: false,
+            },
+          },
+        },
+      };
+
+    case FETCH_COURSE_ERROR:
+      return {
+        ...state,
+        is: {
+          ...state.is,
+          fetching: {
+            ...state.is.fetching,
+            course: {
+              ...state.is.fetching.course,
+              [payload.courseId]: false,
             },
           },
         },

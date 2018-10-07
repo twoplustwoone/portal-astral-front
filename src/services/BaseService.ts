@@ -17,7 +17,7 @@ export default class BaseService {
     }
 
     return this._store.dispatch(action);
-  }
+  };
 
   getState = () => {
     if (!this._store) {

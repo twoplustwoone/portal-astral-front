@@ -36,6 +36,14 @@ export {
   IContainerProps as IProfessorTableContainerProps,
 } from './ProfessorTable/types'
 
+/* CourseTable */
+export { default as CourseTable } from './CourseTable/CourseTable';
+export {
+  IDispatchProps as ICourseTableDispatchProps,
+  IValueProps as ICourseTableValueProps,
+  IContainerProps as ICourseTableContainerProps,
+} from './CourseTable/types'
+
 /* AdminForm */
 export { default as AdminForm } from './AdminForm/AdminForm';
 export {

@@ -15,6 +15,7 @@ import StudentForm from "../StudentForm/StudentForm";
 import LoginActions from 'src/actions/loginActions';
 import StudentTable from "../../containers/Student/StudentTable";
 import Login from "../../containers/Login/Login";
+import CourseTable from "../../containers/CourseTable/CourseTable";
 import ProfessorTable from "../../containers/ProfessorTable/ProfessorTable";
 
 const styles = (theme: any) => ({
@@ -60,11 +61,12 @@ class App extends React.Component<IProps, IState> {
 
   render() {
     const { classes, history }: any = this.props;
+    const userType = LoginActions.loggedUser.userType;
 
     return (
       <div className={classes.root}>
         <Topbar userName="Sebas Belaustegui" />
-        <Sidebar history={history} userType={LoginActions.loggedUser.userType} />
+        <Sidebar history={history} userType={userType} />
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Route path={'/'} component={Home} />
@@ -77,6 +79,7 @@ class App extends React.Component<IProps, IState> {
           <PrivateRoute path={'/student/:id'} component={StudentForm} />
           <PrivateRoute path={'/professors'} component={ProfessorTable} />
           <PrivateRoute path={'/professor/:id'} component={ProfessorForm} />
+          <PrivateRoute path={'/courses'} userType={userType} component={CourseTable} />
         </main>
       </div>
     );
