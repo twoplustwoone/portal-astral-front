@@ -1,6 +1,4 @@
 /* Totality of props received. Usually left empty */
-import { IStudent } from "../../../globals";
-
 export interface IProps extends IDispatchProps, IValueProps, IContainerProps {
 }
 

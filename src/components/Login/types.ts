@@ -21,6 +21,7 @@ export interface IState {
     showPassword: boolean;
     authenticated: boolean;
     anchorEl: null;
+    redirect?: string;
 }
 
 export interface IRouterProps {

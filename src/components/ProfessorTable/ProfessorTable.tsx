@@ -4,7 +4,6 @@ import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, IconBu
 import { DeleteOutline, Edit } from "@material-ui/icons";
 import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
-import { IProfessor } from "../../../globals";
 
 // const styles = require('./ProfessorTable.pcss');
 

@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import { BrowserRouter as Router } from 'react-router-dom';
-
-import reducers from '../src/reducers';
+import { BrowserRouter } from 'react-router-dom'
 
 declare var module, process;
 
@@ -40,22 +35,15 @@ if (process.env.NODE_ENV === 'production') {
 
 const rootEl = document.getElementById('root');
 
-const store = createStore(reducers,
-  applyMiddleware(thunk),
+const withRouter = (Parent) => (
+  <BrowserRouter>
+    <Parent />
+  </BrowserRouter>
 );
-
-export const getState = store.getState.bind(store);
-
-const withRedux = (Parent) =>
-  <Provider store={store}>
-    <Router>
-      <Parent />
-    </Router>
-  </Provider>;
 
 function renderApp() {
   const Parent = require('./Parent').default;
-  render(withRedux(Parent), rootEl);
+  render(withRouter(Parent), rootEl);
 }
 
 if (module.hot) {

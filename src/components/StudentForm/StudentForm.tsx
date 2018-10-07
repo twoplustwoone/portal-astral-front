@@ -17,9 +17,8 @@ import {
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-import { IStudent } from "../../../globals";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
-import { mapCareer } from "../../helpers/careerMapper";
+import { mapCareer } from "../../utils/careerMapper";
 
 const styles = require('./StudentForm.pcss');
 
