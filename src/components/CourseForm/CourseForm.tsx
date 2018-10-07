@@ -12,18 +12,16 @@ import {
     Typography,
 } from '@material-ui/core';
 // import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-// import Dialog from "@material-ui/core/es/Dialog/Dialog";
-// import DialogTitle from "@material-ui/core/es/DialogTitle/DialogTitle";
-// import List from "@material-ui/core/es/List/List";
-// import ListItem from "@material-ui/core/es/ListItem/ListItem";
-// import ListItemAvatar from "@material-ui/core/es/ListItemAvatar/ListItemAvatar";
-// import ListItemText from "@material-ui/core/es/ListItemText/ListItemText";
-// import {ISubject} from "../../../globals";
+import Dialog from "@material-ui/core/es/Dialog/Dialog";
+import DialogTitle from "@material-ui/core/es/DialogTitle/DialogTitle";
+import List from "@material-ui/core/es/List/List";
+import ListItem from "@material-ui/core/es/ListItem/ListItem";
+import ListItemAvatar from "@material-ui/core/es/ListItemAvatar/ListItemAvatar";
+import ListItemText from "@material-ui/core/es/ListItemText/ListItemText";
 import CardContent from "@material-ui/core/es/CardContent/CardContent";
 import FormControl from "@material-ui/core/es/FormControl/FormControl";
-import InputLabel from "@material-ui/core/es/InputLabel/InputLabel";
 import Input from "@material-ui/core/es/Input/Input";
-import DialogTitle from "@material-ui/core/es/DialogTitle/DialogTitle";
+import FormHelperText from "@material-ui/core/es/FormHelperText/FormHelperText";
 
 const styles = require('./CourseForm.pcss');
 
@@ -125,84 +123,86 @@ class CourseForm extends React.Component<IProps, IState> {
         this.setState({ selectedValue: value, mobileOpen: false });
     };
 
-    getHeader = () => {
-        if (this.state.isNew) {
-            return 'Create professor';
-        } else {
-            return 'Edit professor';
-        }
-    };
-
-    // private subjects: ISubject[];
-
     render() {
 
-        // this.subjects = this.props.subjects;
+        const { subjects = [] } = this.props;
+        // const subjects = [{subjectName: "matematica"}, {subjectName: "lengua"}, {subjectName: "cs sociales"}];
+        console.log(subjects[0]);
 
         return (
-            <div className={styles.NewProfessor}>
+            <div className={styles.NewCourse}>
 
-                <Typography className={styles['New-Professor-title']} color='textSecondary'>
+                <Typography className={styles['New-course-title']} color='textSecondary'>
                     Create course
                 </Typography>
-                <Card className={styles['New-Professor-box']}>
+                <Card className={styles['New-course-box']}>
 
-                    <DialogTitle> Here you choose the subject </DialogTitle>
+                    {/*<DialogTitle> Here you choose the subject </DialogTitle>*/}
 
-                    {/*<div className={styles['subject-name']}>*/}
-                        {/*<div>*/}
+                    <div className={styles['subject-name']}>
 
-                            {/*<Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={!this.state.mobileOpen} >*/}
-                                {/*<DialogTitle id="simple-dialog-title">Select subject</DialogTitle>*/}
-                                {/*<div>*/}
-                                    {/*<List>*/}
-                                        {/*{this.subjects.map(subject => (*/}
-                                            {/*<ListItem button onClick={() => this.handleListItemClick(subject)} key={subject.subjectName}>*/}
+                        <Button onClick={this.handleClickOpen}>Select subject</Button>
+                        <Dialog
+                            open={this.state.mobileOpen}
+                            onClose={this.handleClose}
+                        />
+
+
+                        <div>
+
+                            <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={this.state.mobileOpen} >
+                                <DialogTitle id="simple-dialog-title">Subjects</DialogTitle>
+                                <div>
+                                    <List>
+                                        {subjects.map(subject => (
+                                            <ListItem button onClick={() => this.handleListItemClick(subject)} key={subject.subjectName}>
+                                                <ListItemAvatar>
+                                                </ListItemAvatar>
+                                                <ListItemText primary={subject.subjectName} />
+                                            </ListItem>
+                                        ))}
+
+                                        {/*{emails.map(email => (*/}
+                                            {/*<ListItem button onClick={() => this.handleListItemClick(email)} key={email}>*/}
                                                 {/*<ListItemAvatar>*/}
+                                                    {/*<Avatar className={classes.avatar}>*/}
+                                                        {/*<PersonIcon />*/}
+                                                    {/*</Avatar>*/}
                                                 {/*</ListItemAvatar>*/}
-                                                {/*<ListItemText primary={subject} />*/}
+                                                {/*<ListItemText primary={email} />*/}
                                             {/*</ListItem>*/}
                                         {/*))}*/}
-                                    {/*</List>*/}
-                                {/*</div>*/}
-                            {/*</Dialog>*/}
-                        {/*</div>*/}
+                                    </List>
+                                </div>
+                            </Dialog>
+                        </div>
 
-                    {/*</div>*/}
+                    </div>
 
 
                     <CardContent>
                         <form className={styles['New-Subject-form']}>
-                            {/*<FormControl className={styles['professor-form-control']} error={this.state.errors.startDate}>*/}
-                                {/*<InputLabel required htmlFor='professor-surname'>Last name</InputLabel>*/}
-                                {/*<Input id='professor-surname'*/}
-                                       {/*onChange={this.handleChange('lastName')}*/}
-                                {/*/>*/}
-                            {/*</FormControl>*/}
-                            {/*<FormControl className={styles['professor-form-control']} error={this.state.errors.endDate}>*/}
-                                {/*<InputLabel required htmlFor='professor-email'>E-mail</InputLabel>*/}
-                                {/*<Input id='professor-email'*/}
-                                       {/*onChange={this.handleChange('email')}*/}
-                                {/*/>*/}
-                            {/*</FormControl>*/}
-
-                            <FormControl className={styles['professor-form-control']} error={this.state.errors.startDate}>
-                                <InputLabel required htmlFor='course-start-date'>Start date</InputLabel>
+                            <FormControl className={styles['course-form-control']} error={this.state.errors.startDate}>
                                 <Input
                                     id='course-start-date'
                                     value={this.state.fields.startDate}
                                     onChange={this.handleChange('startDate')}
                                     type={'date'}
                                 />
+                                <FormHelperText className={styles['password-helper-text']} id='date-helper-text'>
+                                    Start date
+                                </FormHelperText>
                             </FormControl>
-                            <FormControl className={styles['professor-form-control']} error={this.state.errors.endDate}>
-                                <InputLabel required htmlFor='course-end-date'>End date</InputLabel>
+                            <FormControl className={styles['course-form-control']} error={this.state.errors.endDate}>
                                 <Input
                                     id='course-end-date'
                                     value={this.state.fields.endDate}
                                     onChange={this.handleChange('endDate')}
                                     type={'date'}
                                 />
+                                <FormHelperText className={styles['password-helper-text']} id='date-helper-text'>
+                                    End date
+                                </FormHelperText>
                             </FormControl>
                         </form>
                     </CardContent>
@@ -212,7 +212,7 @@ class CourseForm extends React.Component<IProps, IState> {
                             <div className={styles.submitCancelButtons}>
                                 <Button
                                     variant='outlined'
-                                    className={styles['create-professor-button']}
+                                    className={styles['create-course-button']}
                                     // onClick={this.handleCancel}
                                 >
                                     CANCEL
@@ -220,7 +220,7 @@ class CourseForm extends React.Component<IProps, IState> {
                                 <Button
                                     variant='contained'
                                     color='primary'
-                                    className={styles['create-professor-button']}
+                                    className={styles['create-course-button']}
                                     // onClick={this.handleSubmit}
                                 >
                                     SAVE
