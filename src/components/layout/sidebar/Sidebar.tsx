@@ -11,6 +11,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText/ListItemText';
 import { Props, State } from "./types";
 import { Link, withRouter } from "react-router-dom";
+import session from "../../../utils/session";
 
 const drawerWidth = 240;
 
@@ -92,6 +93,8 @@ class Sidebar extends React.Component<Props, State> {
       return null;
     }
 
+    const userType = session.getUserType();
+
     const { pathname } = this.props.location;
 
     const drawerContent = (
@@ -99,9 +102,9 @@ class Sidebar extends React.Component<Props, State> {
         {/*<div className={classes.toolbar} />*/}
         <List>
 
-          <AdminItem pathname={pathname} />
+          {userType === 'Admin' && <AdminItem pathname={pathname} />}
 
-          <ProfessorItem pathname={pathname} />
+          {userType === 'Professor' || userType === 'Admin' && <ProfessorItem pathname={pathname} />}
 
           <StudentItem pathname={pathname} />
 
