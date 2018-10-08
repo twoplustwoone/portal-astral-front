@@ -6,6 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { deleteStudent, getAllStudents } from "../../utils/api";
 import { Link } from "react-router-dom";
+import session from "../../utils/session";
 
 // const styles = require('./StudentTable.pcss');
 
@@ -67,6 +68,8 @@ class StudentTable extends React.Component<IProps, IState> {
 
     const name = studentBeingDeleted ? `${studentBeingDeleted.name} ${studentBeingDeleted.lastName}` : '';
 
+    const userType = session.getUserType();
+
     return (
       <div>
         {
@@ -111,16 +114,18 @@ class StudentTable extends React.Component<IProps, IState> {
                         <TableCell>{row.name}</TableCell>
                         <TableCell>{row.lastName}</TableCell>
                         <TableCell>{row.email}</TableCell>
-                        <TableCell>
-                          <Link to={`/student/${row.id}`}>
-                            <IconButton>
-                              <Edit />
+                        {
+                          userType === 'Admin' && <TableCell>
+                            <Link to={`/student/${row.id}`}>
+                              <IconButton>
+                                <Edit />
+                              </IconButton>
+                            </Link>
+                            <IconButton onClick={() => this.handleDeleteClick(row.id)}>
+                              <DeleteOutline />
                             </IconButton>
-                          </Link>
-                          <IconButton onClick={() => this.handleDeleteClick(row.id)}>
-                            <DeleteOutline />
-                          </IconButton>
-                        </TableCell>
+                          </TableCell>
+                        }
                       </TableRow>
                     );
                   })

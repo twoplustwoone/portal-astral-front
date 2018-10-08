@@ -6,6 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { deleteProfessor, getAllProfessors } from "../../utils/api";
 import { Link } from "react-router-dom";
+import session from "../../utils/session";
 
 // const styles = require('./ProfessorTable.pcss');
 
@@ -67,6 +68,8 @@ class ProfessorTable extends React.Component<IProps, IState> {
 
     const name = professorBeingDeleted ? `${professorBeingDeleted.name} ${professorBeingDeleted.lastName}` : '';
 
+    const userType = session.getUserType();
+
     return (
       <div>
         {
@@ -111,16 +114,19 @@ class ProfessorTable extends React.Component<IProps, IState> {
                         <TableCell>{row.name}</TableCell>
                         <TableCell>{row.lastName}</TableCell>
                         <TableCell>{row.email}</TableCell>
-                        <TableCell>
-                          <Link to={`/professor/${row.id}`}>
-                            <IconButton>
-                              <Edit />
+                        {
+                          userType === 'Admin' &&
+                          <TableCell>
+                            <Link to={`/professor/${row.id}`}>
+                              <IconButton>
+                                <Edit />
+                              </IconButton>
+                            </Link>
+                            <IconButton onClick={() => this.handleDeleteClick(row.id)}>
+                              <DeleteOutline />
                             </IconButton>
-                          </Link>
-                          <IconButton onClick={() => this.handleDeleteClick(row.id)}>
-                            <DeleteOutline />
-                          </IconButton>
-                        </TableCell>
+                          </TableCell>
+                        }
                       </TableRow>
                     );
                   })
