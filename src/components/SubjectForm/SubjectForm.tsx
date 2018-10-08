@@ -14,7 +14,7 @@ import {
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { Redirect, withRouter } from "react-router";
-import { createSubject, deleteSubject, getSubjectById, updateSubject } from "../../utils/api";
+import { createSubject, deleteSubject, getAllSubjects, getSubjectById, updateSubject } from "../../utils/api";
 import session from "../../utils/session";
 
 const styles = require('./SubjectForm.pcss');
@@ -51,7 +51,16 @@ class SubjectForm extends React.Component<IProps, IState> {
       this.setState({ isNew: true });
     }
 
+    getAllSubjects().then(this.handleFetchAllSubjects).then(this.setAllSubjects);
   }
+
+  handleFetchAllSubjects = (response: Response) => {
+    return response.json();
+  };
+
+  setAllSubjects = (subjects: ISubject[]) => {
+    this.setState({ allSubjects: subjects });
+  };
 
   redirect = () => {
     this.setState({ redirect: '/subjects' });
@@ -318,7 +327,6 @@ class SubjectForm extends React.Component<IProps, IState> {
               <FormControl className={styles['subject-form-control']} error={errors.requiredSubjects}>
                 <InputLabel required htmlFor='subject-requiredSubjects'>Correlativas</InputLabel>
                 {
-                  !readOnly &&
                   <Select
                     value={undefined}
                     onChange={this.handleAddChip}
@@ -326,11 +334,16 @@ class SubjectForm extends React.Component<IProps, IState> {
                       name: 'Correlativas',
                       id: 'subject-requiredSubjects',
                     }}
+                    disabled={readOnly}
                   >
-                    {this.state.allSubjects.map(s => <MenuItem value={s.id}>{s.subjectName}</MenuItem>)}
+                    {
+                      this.state.allSubjects
+                        .filter(s => s.id !== fields.id && fields.requiredSubjects.indexOf(s.id) < 0)
+                        .map(s => <MenuItem value={s.id}>{s.subjectName}</MenuItem>)
+                    }
                   </Select>
                 }
-                <div>
+                <div style={{ display: 'flex' }}>
                   {
                     fields.requiredSubjects.map((val: string, i) => {
 
