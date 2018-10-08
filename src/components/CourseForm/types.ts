@@ -1,6 +1,5 @@
 import * as H from "history";
 import {match} from "react-router";
-import {IErrors} from "../ProfessorForm/types";
 
 export interface IProps {
     history: H.History;
@@ -21,7 +20,7 @@ export interface IState {
     redirect?: string;
     course?: ICourse;
     isDeleteModalOpen: boolean;
-    availableSubjects: ISubject[],
+    allSubjects: ISubject[],
 }
 
 export interface IFields {
@@ -30,6 +29,7 @@ export interface IFields {
     endTime: string;
     id: string;
     schedule: string[];
+    requiredSubjects: string[];
 }
 
 export type IErrors = {

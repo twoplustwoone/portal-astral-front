@@ -67,7 +67,7 @@ class CourseTable extends React.Component<IProps, IState> {
     render() {
         const { courseBeingDeleted, isDeleting, courses } = this.state;
 
-        const name = courseBeingDeleted ? `${courseBeingDeleted.subject} ${courseBeingDeleted.startTime} - ${courseBeingDeleted.endTime}` : '';
+        const name = courseBeingDeleted ? `${courseBeingDeleted.subject.subjectName}` : '';
 
         const userType = session.getUserType();
 
@@ -117,7 +117,7 @@ class CourseTable extends React.Component<IProps, IState> {
                                     courses.map(row => {
                                         return (
                                             <TableRow key={row.id}>
-                                                <TableCell>{row.subject}</TableCell>
+                                                <TableCell>{row.subject.subjectName}</TableCell>
                                                 <TableCell>{row.startTime}</TableCell>
                                                 <TableCell>{row.endTime}</TableCell>
                                                 <TableCell>{row.schedule}</TableCell>

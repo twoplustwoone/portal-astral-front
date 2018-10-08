@@ -5,16 +5,15 @@ import {
     Card,
     CardActions,
     CardContent,
-    CardHeader,
     FormControl,
     Input,
-    InputLabel,
+    InputLabel, MenuItem, Select,
     Typography,
 } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { Redirect, withRouter } from "react-router";
-import { deleteCourse, getCourseById, updateCourse , getAllSubjects} from "../../utils/api";
+import { createCourse, deleteCourse, getCourseById, updateCourse , getAllSubjects} from "../../utils/api";
 import session from "../../utils/session";
 
 const styles = require('./CourseForm.pcss');
@@ -26,7 +25,7 @@ class CourseForm extends React.Component<IProps, IState> {
             subject: {
                 id: '',
                 subjectName: '',
-                careerYear: 2018,
+                careerYear: 1,
                 requiredSubjects: [],
                 students: [],
             },
@@ -34,30 +33,23 @@ class CourseForm extends React.Component<IProps, IState> {
             endTime: '',
             schedule: [],
             id: '',
+            requiredSubjects: [],
         },
         showPassword: false,
-        errors: {
-            name: false,
-            lastName: false,
-            email: false,
-            password: false,
-            file: false,
-        },
+        errors: {},
         isNew: true,
         isEditing: true,
         isFetching: false,
         isCreating: false,
         isDeleting: false,
         isDeleteModalOpen: false,
-        availableSubjects: [],
+        allSubjects: [],
     };
 
 
     componentDidMount() {
         const { match } = this.props;
 
-        console.log("AAAA");
-        getAllSubjects().then(this.handleSubjectsResponse).then(this.setAvailableSubjects).catch(this.redirect);
         if (match.params.id) {
             getCourseById(match.params.id).then(this.handleResponse).then(this.setCourse).catch(this.redirect);
             this.setState({ isNew: false, isFetching: true });
@@ -65,8 +57,16 @@ class CourseForm extends React.Component<IProps, IState> {
             this.setState({ isNew: true });
         }
 
-
+        getAllSubjects().then(this.handleFetchAllSubjects).then(this.setAllSubjects);
     }
+
+    handleFetchAllSubjects = (response: Response) => {
+        return response.json();
+    };
+
+    setAllSubjects = (subjects: ISubject[]) => {
+        this.setState({ allSubjects: subjects });
+    };
 
     redirect = () => {
         this.setState({ redirect: '/courses' });
@@ -80,21 +80,8 @@ class CourseForm extends React.Component<IProps, IState> {
         return response.json();
     };
 
-    handleSubjectsResponse = (response: Response): Promise<ISubject[]> => {
-        if (response.status === 404) {
-            throw Error('Course not found');
-        }
-
-        return response.json();
-    };
-
     setCourse = (course: ICourse) => {
         this.setState({ course: course, isNew: false, isEditing: false, isFetching: false }, this.mapCourse);
-    };
-
-    setAvailableSubjects = (subjects: ISubject[]) => {
-        console.log(subjects);
-        this.setState({ availableSubjects: subjects, isNew: false, isEditing: false, isFetching: false }, this.mapSubjects);
     };
 
     mapCourse = () => {
@@ -118,19 +105,6 @@ class CourseForm extends React.Component<IProps, IState> {
         });
     };
 
-    mapSubjects = () => {
-        const { availableSubjects } = this.state;
-
-        if (!availableSubjects) {
-            return;
-        }
-
-        this.setState({
-            ...this.state,
-            availableSubjects,
-        });
-    };
-
     handleChange = (prop: string) => (event: any) => {
         this.setState({
             ...this.state,
@@ -141,13 +115,26 @@ class CourseForm extends React.Component<IProps, IState> {
         });
     };
 
+    handleSubjectChange = () => (event: any) => {
+        this.setState({
+            ...this.state,
+            fields: {
+                ...this.state.fields,
+                subject: {
+                    ...this.state.fields.subject,
+                    id: event.target.value,
+                },
+            },
+        });
+    };
+
     handleSubmit = () => {
         if (this.validateAll()) {
             if (!this.state.isNew) {
                 updateCourse(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
             }
             else {
-                updateCourse(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
+                createCourse(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
             }
         }
     };
@@ -180,17 +167,9 @@ class CourseForm extends React.Component<IProps, IState> {
                 return (
                     this.validatename(value)
                 );
-            case 'startTime':
-                return (
-                    this.validateLastName(value)
-                );
-            case 'endTime':
-                return (
-                    this.validateLastName(value)
-                );
             case 'schedule':
                 return (
-                    this.validateEmail(value)
+                    this.validatename(value)
                 );
             default:
                 return true;
@@ -199,14 +178,6 @@ class CourseForm extends React.Component<IProps, IState> {
 
     validatename = (value: any): boolean => {
         return value !== '';
-    };
-
-    validateLastName = (value: any): boolean => {
-        return value !== '';
-    };
-
-    validateEmail = (value: any): boolean => {
-        return value !== '' && value.includes('@');
     };
 
     areInputsReadOnly = () => {
@@ -220,7 +191,7 @@ class CourseForm extends React.Component<IProps, IState> {
 
     handleCancel = () => {
         if (this.state.isNew) {
-            this.setState({ redirect: '/course' });
+            this.setState({ redirect: '/courses' });
         } else {
             this.setState({ isEditing: false }, this.mapCourse);
         }
@@ -255,26 +226,6 @@ class CourseForm extends React.Component<IProps, IState> {
         deleteCourse(course.id).then(() => this.setState({ redirect: '/courses' }));
     };
 
-    renderTitle = () => {
-        const { isNew } = this.state;
-        const { endTime, subject, startTime } = this.state.fields;
-        return <div>
-            {
-                !isNew &&
-                <div className={styles.deleteButtonDiv}>
-                    <Button
-                        variant='contained'
-                        color='secondary'
-                        onClick={this.handleDeleteClick}
-                    >
-                        DELETE
-                    </Button>
-                </div>
-            }
-            <div className={styles.displayNameDiv}>{`${subject.subjectName} ${startTime} ${endTime}`}</div>
-        </div>
-    };
-
     render() {
         const { fields, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
 
@@ -302,7 +253,7 @@ class CourseForm extends React.Component<IProps, IState> {
                     <DeleteConfirmationDialog
                         isLoading={isDeleting}
                         userType={'admin'}
-                        name={`${fields.subject.subjectName} ${fields.startTime} ${fields.endTime}`}
+                        name={`ASDs`}
                         handleCloseDelete={this.handleCloseDelete}
                         handleConfirmDelete={this.handleConfirmDelete}
                     />
@@ -314,36 +265,50 @@ class CourseForm extends React.Component<IProps, IState> {
                     }
                 </Typography>
                 <Card className={styles['New-Course-box']}>
-                    <CardHeader title={this.renderTitle()} className={styles.displayName} />
+                    {/*<CardHeader title={this.renderTitle()} className={styles.displayName} />*/}
                     <CardContent>
                         <form className={styles['New-Course-form']}>
-                            <FormControl className={styles['course-form-control']} error={errors.name}>
-                                <InputLabel required htmlFor='course-name'>Course Name</InputLabel>
-                                <Input id='course-name'
-                                       value={fields.subject.subjectName}
-                                       onChange={this.handleChange('subjectName')}
-                                       readOnly={readOnly}
-                                />
+                            <FormControl className={styles['course-form-control']} error={errors.requiredSubjects}>
+                                <InputLabel required htmlFor='subject-requiredSubjects'>Course</InputLabel>
+                                {
+                                    <Select
+                                        value={this.state.fields.subject.id}
+                                        onChange={this.handleSubjectChange()}
+                                        inputProps={{
+                                            name: 'Course',
+                                            id: 'subject-requiredSubjects',
+                                        }}
+                                        disabled={readOnly}
+                                    >
+                                        {
+                                            this.state.allSubjects
+                                                .filter(s => s.id !== fields.id && fields.requiredSubjects.indexOf(s.id) < 0)
+                                                .map(s => <MenuItem value={s.id}>{s.subjectName}</MenuItem>)
+                                        }
+                                    </Select>
+                                }
                             </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.lastName}>
-                                <InputLabel required htmlFor='course-surname'>Start Time</InputLabel>
-                                <Input id='course-surname'
+                            <FormControl className={styles['course-form-control']} error={errors.startTime}>
+                                <InputLabel required htmlFor='course-startTime' shrink>Start Time</InputLabel>
+                                <Input id='course-startTime'
                                        value={fields.startTime}
                                        onChange={this.handleChange('startTime')}
                                        readOnly={readOnly}
+                                       type={'date'}
                                 />
                             </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.email}>
-                                <InputLabel required htmlFor='course-email'>End Time</InputLabel>
-                                <Input id='course-email'
+                            <FormControl className={styles['course-form-control']} error={errors.endTime}>
+                                <InputLabel required htmlFor='course-endtime' shrink>End Time</InputLabel>
+                                <Input id='course-endtime'
                                        value={fields.endTime}
                                        onChange={this.handleChange('endTime')}
                                        readOnly={readOnly}
+                                       type={'date'}
                                 />
                             </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.file}>
-                                <InputLabel required htmlFor='course-email'>Schedule</InputLabel>
-                                <Input id='course-file'
+                            <FormControl className={styles['course-form-control']} error={errors.schedule}>
+                                <InputLabel required htmlFor='course-schedule'>Schedule</InputLabel>
+                                <Input id='course-schedule'
                                        value={fields.schedule}
                                        onChange={this.handleChange('schedule')}
                                        readOnly={readOnly}
