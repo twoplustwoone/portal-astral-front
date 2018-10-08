@@ -6,6 +6,8 @@ import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { deleteAdmin, getAllAdmins } from "../../utils/api";
 import { Link } from "react-router-dom";
+import { Redirect } from "react-router";
+import session from "../../utils/session";
 
 // const styles = require('./AdminTable.pcss');
 
@@ -70,6 +72,12 @@ class AdminTable extends React.Component<IProps, IState> {
     const { adminBeingDeleted, isDeleting, admins } = this.state;
 
     const name = adminBeingDeleted ? `${adminBeingDeleted.name} ${adminBeingDeleted.lastName}` : '';
+
+    const userType = session.getUserType();
+
+    if (userType !== 'Admin') {
+      return <Redirect to={'/'} />;
+    }
 
     return (
       <div>

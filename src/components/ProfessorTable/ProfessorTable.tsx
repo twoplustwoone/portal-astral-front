@@ -7,6 +7,7 @@ import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConf
 import { deleteProfessor, getAllProfessors } from "../../utils/api";
 import { Link } from "react-router-dom";
 import session from "../../utils/session";
+import { Redirect } from "react-router";
 
 // const styles = require('./ProfessorTable.pcss');
 
@@ -69,6 +70,10 @@ class ProfessorTable extends React.Component<IProps, IState> {
     const name = professorBeingDeleted ? `${professorBeingDeleted.name} ${professorBeingDeleted.lastName}` : '';
 
     const userType = session.getUserType();
+
+    if (userType === 'Student') {
+      return <Redirect to={'/'} />;
+    }
 
     return (
       <div>
