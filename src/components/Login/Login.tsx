@@ -155,65 +155,67 @@ class Login extends React.Component<IProps, IState> {
       return <Redirect to={redirect} />
     }
 
-    return <div className={styles.login}>
-      <Card className={styles['card']}>
-        <CardHeader className={styles.cardHeader}>
-          Iniciar Sesión
-        </CardHeader>
-        <CardContent>
-          <FormGroup className={styles['form-group']}>
-            <FormControl className={styles['form-control']} error={errors.email}>
-              <InputLabel required htmlFor='email'>E-mail</InputLabel>
-              <Input id='email'
-                     value={fields.email}
-                     onChange={this.handleChange('email')}
-                     readOnly={login.isLoading}
-              />
-            </FormControl>
-            <FormControl className={styles['form-control']} error={errors.password}>
-              <InputLabel required htmlFor='adornment-password'>Password</InputLabel>
-              <Input
-                id='adornment-password'
-                type={showPassword ? 'text' : 'password'}
-                value={fields.password}
-                onChange={this.handleChange('password')}
-                readOnly={login.isLoading}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton
-                      aria-label='Toggle password visibility'
-                      onClick={this.handleClickShowPassword}
-                      onMouseDown={this.handleMouseDownPassword}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
+    return <div className={styles.container}>
+      <div className={styles.login}>
+        <Card className={styles['card']}>
+          <CardHeader className={styles.cardHeader}>
+            Iniciar Sesión
+          </CardHeader>
+          <CardContent>
+            <FormGroup className={styles['form-group']}>
+              <FormControl className={styles['form-control']} error={errors.email}>
+                <InputLabel required htmlFor='email'>E-mail</InputLabel>
+                <Input id='email'
+                       value={fields.email}
+                       onChange={this.handleChange('email')}
+                       readOnly={login.isLoading}
+                />
+              </FormControl>
+              <FormControl className={styles['form-control']} error={errors.password}>
+                <InputLabel required htmlFor='adornment-password'>Password</InputLabel>
+                <Input
+                  id='adornment-password'
+                  type={showPassword ? 'text' : 'password'}
+                  value={fields.password}
+                  onChange={this.handleChange('password')}
+                  readOnly={login.isLoading}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <IconButton
+                        aria-label='Toggle password visibility'
+                        onClick={this.handleClickShowPassword}
+                        onMouseDown={this.handleMouseDownPassword}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
 
-            </FormControl>
-          </FormGroup>
-        </CardContent>
-        <CardActions>
-          <div className={styles['buttons-container']}>
-            <Fade
-              in={login.isLoading}
-            >
-              <CircularProgress />
-            </Fade>
-            <Button
-              variant='contained'
-              color='primary'
-              className={styles['login-button']}
-              onClick={this.handleLogIn}
-              disabled={login.isLoading}
-            >
-              LOG IN
-            </Button>
-          </div>
-        </CardActions>
-        <div><Typography color={'error'}>{this.state.errorMessage}</Typography></div>
-      </Card>
+              </FormControl>
+            </FormGroup>
+          </CardContent>
+          <CardActions>
+            <div className={styles['buttons-container']}>
+              <Fade
+                in={login.isLoading}
+              >
+                <CircularProgress />
+              </Fade>
+              <Button
+                variant='contained'
+                color='primary'
+                className={styles['login-button']}
+                onClick={this.handleLogIn}
+                disabled={login.isLoading}
+              >
+                LOG IN
+              </Button>
+            </div>
+          </CardActions>
+          <div><Typography color={'error'}>{this.state.errorMessage}</Typography></div>
+        </Card>
+      </div>
     </div>
   }
 }

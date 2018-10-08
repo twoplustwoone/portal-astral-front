@@ -19,6 +19,7 @@ import ProfessorTable from "../ProfessorTable/ProfessorTable";
 import AdminForm from "../AdminForm/AdminForm";
 import StudentForm from "../StudentForm/StudentForm";
 import StudentTable from "../StudentTable/StudentTable";
+import session from "../../utils/session";
 
 const styles = require('./App.pcss')
 
@@ -33,7 +34,6 @@ const _styles = (theme: Theme): StyleRules => ({
     width: '100%',
   },
   content: {
-    flexGrow: 1,
     backgroundColor: 'transparent',
     padding: theme.spacing.unit * 3,
   },
@@ -41,7 +41,7 @@ const _styles = (theme: Theme): StyleRules => ({
 });
 
 function Content(props: { classes: any }) {
-  return <main className={props.classes.content}>
+  return <div className={props.classes.content}>
     <Route path={"/login"} component={Login} />
     <PrivateRoute exact path={"/"} component={Home} />
     <PrivateRoute path='/admins' component={AdminTable} />
@@ -53,13 +53,15 @@ function Content(props: { classes: any }) {
     <PrivateRoute path={'/professors'} component={ProfessorTable} />
     <PrivateRoute path={'/professor/:id'} component={ProfessorForm} />
     <PrivateRoute path={'/new-professor'} component={ProfessorForm} />
-  </main>;
+  </div>;
 }
 
 class App extends React.Component<Props, {}> {
 
   render() {
     const { classes } = this.props;
+
+    const isLogged = session.isLogged();
 
     return <div className={styles.container}>
 
@@ -69,9 +71,12 @@ class App extends React.Component<Props, {}> {
 
       <div className={styles.bottom}>
 
-        <div className={styles.sidebar}>
-          <Sidebar />
-        </div>
+        {
+          isLogged &&
+          <div className={styles.sidebar}>
+            <Sidebar />
+          </div>
+        }
 
         <div className={styles.content}>
           <Content classes={classes} />
