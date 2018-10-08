@@ -3,9 +3,17 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Button, IconButton, Menu, MenuItem } from "@material-ui/core";
+import {
+  Button,
+  Dialog, DialogActions,
+  DialogTitle,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@material-ui/core";
 import session from "../../../utils/session";
 import { AccountCircle } from "@material-ui/icons";
+import { logout } from "../../../utils/api";
 
 
 const drawerWidth = 240;
@@ -33,6 +41,7 @@ type ProfileButtonProps = {
   handleMenu: (event: any) => void,
   anchorEl: any,
   handleClose: () => void,
+  handleLogOut: () => void,
 };
 
 function ProfileButton(props: ProfileButtonProps) {
@@ -74,7 +83,7 @@ function ProfileButton(props: ProfileButtonProps) {
       onClose={props.handleClose}
     >
       <MenuItem onClick={props.handleClose}>Profile</MenuItem>
-      <MenuItem onClick={props.handleClose}>My account</MenuItem>
+      <MenuItem onClick={props.handleLogOut}>Log out</MenuItem>
 
     </Menu>
   </div>;
@@ -84,6 +93,8 @@ class Topbar extends React.Component<any, any> {
   state = {
     mobileOpen: false,
     anchorEl: null,
+    isLogOutDialogOpen: false,
+    redirect: '',
   };
 
   handleMenu = (event: any) => {
@@ -94,13 +105,41 @@ class Topbar extends React.Component<any, any> {
     this.setState({ anchorEl: null });
   };
 
+  handleClickLogOut = () => {
+    this.setState({ isLogOutDialogOpen: true });
+  };
+
+  handleCloseLogOut = () => {
+    this.setState({ isLogOutDialogOpen: false });
+  };
+
+  handleLogOut = () => {
+    logout().then(this.redirect)
+  };
+
+  redirect = () => {
+    session.logout();
+    window.location.reload(true);
+  };
+
   render() {
     const { classes }: any = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, isLogOutDialogOpen } = this.state;
 
     const isLogged = session.isLogged();
     return (
       <div className={styles.container}>
+        <Dialog open={isLogOutDialogOpen} onClose={this.handleCloseLogOut}>
+          <DialogTitle>{'Esta seguro que desea cerrar sesion?'}</DialogTitle>
+          <DialogActions>
+            <Button onClick={this.handleCloseLogOut} color="primary">
+              No
+            </Button>
+            <Button onClick={this.handleLogOut} color="primary" autoFocus>
+              Sí
+            </Button>
+          </DialogActions>
+        </Dialog>
         <AppBar position="static">
           <Toolbar className={styles.toolbar}>
 
@@ -118,6 +157,7 @@ class Topbar extends React.Component<any, any> {
                   handleMenu={this.handleMenu}
                   anchorEl={anchorEl}
                   handleClose={this.handleClose}
+                  handleLogOut={this.handleClickLogOut}
                 />
             }
 

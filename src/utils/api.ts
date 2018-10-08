@@ -1,4 +1,6 @@
 /* Admin endpoints */
+import session from "./session";
+
 export const createAdmin = (admin: IAdmin): Promise<Response> => {
   const url = 'http://localhost:9000/administrator';
   const init: RequestInit = {
@@ -232,11 +234,11 @@ export const login = (credentials: ILogin): Promise<Response> => {
 };
 
 export const logout = (): Promise<Response | null> => {
-  const maybeUserAsString: string | null = window.sessionStorage.getItem('user');
+  const maybeUser: IUser | null = session.getUser();
 
-  if (maybeUserAsString) {
-    const user: IUser = JSON.parse(maybeUserAsString);
-    const url = `http://localhost:9000/logout/${user.id}`;
+  if (maybeUser) {
+    debugger;
+    const url = `http://localhost:9000/logout/${maybeUser.id}`;
     const init: RequestInit = {
       method: 'GET',
     };
