@@ -23,7 +23,11 @@ class Session {
   getUserType = (): UserType | null => {
     const item = sessionStorage.getItem('userType');
     return item === null ? null : item as UserType;
-  }
+  };
+
+  updateUser = (user: IUser) => {
+    sessionStorage.setItem('user', JSON.stringify(user));
+  };
 }
 
 const session = new Session();

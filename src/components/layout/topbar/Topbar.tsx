@@ -14,6 +14,7 @@ import {
 import session from "../../../utils/session";
 import { AccountCircle } from "@material-ui/icons";
 import { logout } from "../../../utils/api";
+import { Link } from "react-router-dom";
 
 
 const drawerWidth = 240;
@@ -82,7 +83,7 @@ function ProfileButton(props: ProfileButtonProps) {
       open={isOpen}
       onClose={props.handleClose}
     >
-      <MenuItem onClick={props.handleClose}>Profile</MenuItem>
+      <Link to={'/profile'} style={{ textDecoration: 'none' }}><MenuItem>Profile</MenuItem></Link>
       <MenuItem onClick={props.handleLogOut}>Log out</MenuItem>
 
     </Menu>

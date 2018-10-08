@@ -22,6 +22,7 @@ import StudentTable from "../StudentTable/StudentTable";
 import session from "../../utils/session";
 import SubjectsTable from "../SubjectsTable/SubjectsTable";
 import SubjectForm from "../SubjectForm/SubjectForm";
+import Profile from "../Profile/Profile";
 
 const styles = require('./App.pcss')
 
@@ -46,6 +47,7 @@ function Content(props: { classes: any }) {
   return <div className={props.classes.content}>
     <Route path={"/login"} component={Login} />
     <PrivateRoute exact path={"/"} component={Home} />
+    <PrivateRoute path='/profile' component={Profile} />
     <PrivateRoute path='/admins' component={AdminTable} />
     <PrivateRoute path={'/admin/:id'} component={AdminForm} />
     <PrivateRoute path={'/new-admin'} component={AdminForm} />
