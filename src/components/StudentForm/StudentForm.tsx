@@ -37,7 +37,9 @@ class StudentForm extends React.Component<IProps, IState> {
       identificationType: '',
       birthday: '',
       identification: '',
+      address: '',
     },
+    careers: [],
     showPassword: false,
     errors: {},
     isNew: true,
@@ -59,10 +61,15 @@ class StudentForm extends React.Component<IProps, IState> {
       this.setState({ isNew: true });
     }
 
+    this.fetchCareers();
   }
 
   redirect = () => {
     this.setState({ redirect: '/students' });
+  };
+
+  fetchCareers = () => {
+    // TODO implement when careers is implemented
   };
 
   handleResponse = (response: Response): Promise<IStudent> => {
@@ -84,7 +91,7 @@ class StudentForm extends React.Component<IProps, IState> {
       return;
     }
 
-    const { email, name, lastName, id, password, file } = student;
+    const { email, name, lastName, id, password, file, birthday, career, address, identification, identificationType } = student;
     this.setState({
       ...this.state,
       fields: {
@@ -95,6 +102,11 @@ class StudentForm extends React.Component<IProps, IState> {
         lastName,
         password,
         file,
+        address,
+        birthday,
+        career,
+        identificationType,
+        identification,
       },
     });
   };
@@ -329,30 +341,50 @@ class StudentForm extends React.Component<IProps, IState> {
                        readOnly={readOnly}
                 />
               </FormControl>
-              <FormControl className={styles['student-form-control']} error={errors.birthday}>
-                <InputLabel required htmlFor='student-birthday'>File</InputLabel>
-                <Input id='student-birthday'
-                       value={fields.birthday}
-                       onChange={this.handleChange('birthday')}
+              <FormControl className={styles['student-form-control']} error={errors.identification}>
+                <InputLabel required htmlFor='student-identification'>Identification</InputLabel>
+                <Input id='student-identification'
+                       value={fields.identification}
+                       onChange={this.handleChange('identification')}
+                       readOnly={readOnly}
+                />
+              </FormControl>
+              <FormControl className={styles['student-form-control']} error={errors.identificationType}>
+                <InputLabel required htmlFor='student-identificationType'>Identification type</InputLabel>
+                <Input id='student-identificationType'
+                       value={fields.identificationType}
+                       onChange={this.handleChange('identificationType')}
                        readOnly={readOnly}
                 />
               </FormControl>
               <FormControl className={styles['student-form-control']} error={errors.birthday}>
-                <InputLabel required htmlFor='student-birthday'>File</InputLabel>
+                <InputLabel required htmlFor='student-birthday' shrink>Birthday</InputLabel>
                 <Input id='student-birthday'
                        value={fields.birthday}
                        onChange={this.handleChange('birthday')}
                        readOnly={readOnly}
+                       type={'date'}
                 />
               </FormControl>
-              <FormControl className={styles['student-form-control']} error={errors.birthday}>
-                <InputLabel required htmlFor='student-birthday'>File</InputLabel>
-                <Input id='student-birthday'
-                       value={fields.birthday}
-                       onChange={this.handleChange('birthday')}
+              <FormControl className={styles['student-form-control']} error={errors.address}>
+                <InputLabel required htmlFor='student-address' shrink>Address</InputLabel>
+                <Input id='student-address'
+                       value={fields.address}
+                       onChange={this.handleChange('address')}
                        readOnly={readOnly}
                 />
               </FormControl>
+              {/* TODO uncomment when careers is implemented */}
+              {/*<FormControl className={styles['student-form-control']} error={errors.career}>
+                <InputLabel required htmlFor='student-career' shrink>Career</InputLabel>
+                <Select id='student-career'
+                        value={fields.career ? fields.career.id : ''}
+                        onChange={this.handleChange('career')}
+                        readOnly={readOnly}
+                >
+
+                </Select>
+              </FormControl>*/}
               <FormControl className={styles['student-form-control']} error={errors.password}>
                 <InputLabel required htmlFor='adornment-password'>Password</InputLabel>
                 <Input

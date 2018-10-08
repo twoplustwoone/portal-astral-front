@@ -20,6 +20,7 @@ export interface IState {
   redirect?: string;
   student?: IStudent;
   isDeleteModalOpen: boolean;
+  careers: ICareer[];
 }
 
 export interface IFields {
@@ -32,6 +33,8 @@ export interface IFields {
   birthday: string;
   identificationType: string;
   identification: string;
+  career?: ICareer;
+  address?: string;
 }
 
 export type IErrors = {

@@ -18,7 +18,7 @@ import ProfessorForm from "../ProfessorForm/ProfessorForm";
 import ProfessorTable from "../ProfessorTable/ProfessorTable";
 import AdminForm from "../AdminForm/AdminForm";
 import StudentForm from "../StudentForm/StudentForm";
-import StudentTable from "../student/all-students/StudentTable";
+import StudentTable from "../StudentTable/StudentTable";
 
 const styles = require('./App.pcss')
 
