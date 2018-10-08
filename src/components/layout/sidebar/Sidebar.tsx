@@ -6,6 +6,7 @@ import Hidden from '@material-ui/core/Hidden';
 import SupervisorAccountOutlinedIcon from '@material-ui/icons/SupervisorAccountOutlined';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import SchoolIcon from '@material-ui/icons/School';
+import BookIcon from '@material-ui/icons/Book';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText/ListItemText';
@@ -71,6 +72,17 @@ function StudentItem(props: { pathname: string }) {
   </Link>;
 }
 
+function SubjectItem(props: { pathname: string }) {
+  return <Link to={"/subjects"} className={styles.link}>
+    <ListItem className={styles.listItem} selected={props.pathname === '/subjects'}>
+      <ListItemIcon>
+        <BookIcon />
+      </ListItemIcon>
+      <ListItemText primary='Materias' />
+    </ListItem>
+  </Link>;
+}
+
 class Sidebar extends React.Component<Props, State> {
 
   state: State = {
@@ -107,6 +119,8 @@ class Sidebar extends React.Component<Props, State> {
           {userType === 'Professor' || userType === 'Admin' && <ProfessorItem pathname={pathname} />}
 
           <StudentItem pathname={pathname} />
+
+          <SubjectItem pathname={pathname} />
 
         </List>
       </div>

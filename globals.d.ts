@@ -33,9 +33,10 @@ declare interface ICareer {
 
 declare interface ISubject {
   id: string;
-  name: string;
-  year: number;
+  subjectName: string;
+  careerYear: number;
   requiredSubjects: string[];
+  students: string[];
 }
 
 declare type UserType = 'Professor' | 'Admin' | 'Student';
