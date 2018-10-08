@@ -39,6 +39,14 @@ declare interface ISubject {
   students: string[];
 }
 
+declare interface ICourse {
+  id: string;
+  startTime: string;
+  endTime: string;
+  subject: ISubject;
+  schedule: string[];
+}
+
 declare type UserType = 'Professor' | 'Admin' | 'Student';
 
 declare interface ILogin {

@@ -216,6 +216,60 @@ export const deleteSubject = (id: string): Promise<Response> => {
   return fetch(url, init);
 };
 
+/* Course endpoints */
+export const createCourse = (course: ICourse): Promise<Response> => {
+    const url = 'http://localhost:9000/course';
+    const init: RequestInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(course),
+    };
+
+    return fetch(url, init);
+};
+
+export const getAllCourses = (): Promise<Response> => {
+    const url = 'http://localhost:9000/course';
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
+export const getCourseById = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/course/${id}`;
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
+export const updateCourse = (course: ICourse): Promise<Response> => {
+    const url = `http://localhost:9000/course/${course.id}`;
+    const init: RequestInit = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(course),
+    };
+
+    return fetch(url, init);
+};
+
+export const deleteCourse = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/course/${id}`;
+    const init: RequestInit = {
+        method: 'DELETE',
+    };
+
+    return fetch(url, init);
+};
+
 /* Authentication endpoints */
 
 export const login = (credentials: ILogin): Promise<Response> => {

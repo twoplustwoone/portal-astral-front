@@ -23,6 +23,8 @@ import session from "../../utils/session";
 import SubjectsTable from "../SubjectsTable/SubjectsTable";
 import SubjectForm from "../SubjectForm/SubjectForm";
 import Profile from "../Profile/Profile";
+import CourseTable from "../CourseTable/CourseTable";
+import CourseForm from "../CourseForm/CourseForm";
 
 const styles = require('./App.pcss')
 
@@ -60,6 +62,8 @@ function Content(props: { classes: any }) {
     <PrivateRoute path={'/subjects'} component={SubjectsTable} />
     <PrivateRoute path={'/subject/:id'} component={SubjectForm} />
     <PrivateRoute path={'/new-subject'} component={SubjectForm} />
+    <PrivateRoute path={'/courses'} component={CourseTable} />
+    <PrivateRoute path={'/new-course'} component={CourseForm} />
   </div>;
 }
 
