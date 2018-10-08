@@ -46,7 +46,7 @@ function AdminItem(props: { pathname: string }) {
       <ListItemIcon>
         <SupervisorAccountOutlinedIcon />
       </ListItemIcon>
-      <ListItemText primary='Administradores' />
+      <ListItemText primary='Administrators' />
     </ListItem>
   </Link>;
 }
@@ -57,7 +57,7 @@ function ProfessorItem(props: { pathname: string }) {
       <ListItemIcon>
         <AccountBalanceIcon />
       </ListItemIcon>
-      <ListItemText primary='Profesores' />
+      <ListItemText primary='Professors' />
     </ListItem>
   </Link>;
 }
@@ -68,7 +68,7 @@ function StudentItem(props: { pathname: string }) {
       <ListItemIcon>
         <SchoolIcon />
       </ListItemIcon>
-      <ListItemText primary='Alumnos' />
+      <ListItemText primary='Students' />
     </ListItem>
   </Link>;
 }
@@ -79,7 +79,7 @@ function SubjectItem(props: { pathname: string }) {
       <ListItemIcon>
         <BookIcon />
       </ListItemIcon>
-      <ListItemText primary='Materias' />
+      <ListItemText primary='Subjects' />
     </ListItem>
   </Link>;
 }
@@ -90,7 +90,7 @@ function CourseItem(props: { pathname: string }) {
       <ListItemIcon>
         <GolfCourse />
       </ListItemIcon>
-      <ListItemText primary='Cursadas' />
+      <ListItemText primary='Courses' />
     </ListItem>
   </Link>;
 }
