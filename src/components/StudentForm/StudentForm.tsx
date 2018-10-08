@@ -20,6 +20,7 @@ import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProg
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { Redirect, withRouter } from "react-router";
 import { createStudent, deleteStudent, getStudentById, updateStudent } from "../../utils/api";
+import session from "../../utils/session";
 
 const styles = require('./StudentForm.pcss');
 
@@ -276,8 +277,14 @@ class StudentForm extends React.Component<IProps, IState> {
   render() {
     const { fields, showPassword, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
 
+    const userType = session.getUserType();
+
     if (redirect) {
       return <Redirect to={redirect} />;
+    }
+
+    if (userType !== 'Admin') {
+      return <Redirect to={'/students'} />;
     }
 
     if (isFetching || isDeleting || isCreating) {

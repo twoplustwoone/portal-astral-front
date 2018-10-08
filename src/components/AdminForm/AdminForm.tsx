@@ -20,6 +20,7 @@ import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProg
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { Redirect, withRouter } from "react-router";
 import { createAdmin, deleteAdmin, getAdminById, updateAdmin } from "../../utils/api";
+import session from "../../utils/session";
 
 const styles = require('./AdminForm.pcss');
 
@@ -267,8 +268,14 @@ class AdminForm extends React.Component<IProps, IState> {
   render() {
     const { fields, showPassword, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
 
+    const userType = session.getUserType();
+
     if (redirect) {
       return <Redirect to={redirect} />;
+    }
+
+    if (userType !== 'Admin') {
+      return <Redirect to={'/admins'} />;
     }
 
     if (isFetching || isDeleting || isCreating) {
