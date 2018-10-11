@@ -26,7 +26,7 @@ export interface IFields {
     subject: ISubject;
     date: string;
     id: string;
-    requiredSubjects: string[];
+    subjects: string[];
 }
 
 export type IErrors = {

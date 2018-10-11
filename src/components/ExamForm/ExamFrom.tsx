@@ -12,14 +12,15 @@ import {
     Typography,
 } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
+import { DeleteConfirmationDialogExam } from "../DeleteConfirmationDialogExam/DeleteConfirmationDialogExam";
 import { Redirect, withRouter } from "react-router";
 import {getAllSubjects, updateExam, createExam, getExamById, deleteExam} from "../../utils/api";
 import session from "../../utils/session";
+import CardHeader from "@material-ui/core/es/CardHeader/CardHeader";
 import MenuItem from "@material-ui/core/es/MenuItem/MenuItem";
 import Select from "@material-ui/core/es/Select/Select";
 
-const styles = require('./CourseForm.pcss');
+const styles = require('./ExamForm.pcss');
 
 class ExamForm extends React.Component<IProps, IState> {
 
@@ -34,7 +35,7 @@ class ExamForm extends React.Component<IProps, IState> {
             },
             date: '',
             id: '',
-            requiredSubjects: [],
+            subjects: [],
         },
         errors: {},
         isNew: true,
@@ -206,17 +207,15 @@ class ExamForm extends React.Component<IProps, IState> {
     };
 
     handleDeleteClick = () => {
-        // this.props.onClickDelete(this.props.course as ICourse);
+        console.log("you clicked me!");
         this.setState({ isDeleteModalOpen: true });
     };
 
     handleCloseDelete = () => {
-        // this.props.onCloseDelete();
         this.setState({ isDeleteModalOpen: false });
     };
 
     handleConfirmDelete = () => {
-        // this.props.onConfirmDelete(this.props.course as ICourse).then(() => this.props.history.push('/courses'));
         const course = this.state.course;
 
         if (!course) {
@@ -226,9 +225,29 @@ class ExamForm extends React.Component<IProps, IState> {
         deleteExam(course.id).then(() => this.setState({ redirect: '/exams' }));
     };
 
+    renderTitle = () => {
+        const { isNew } = this.state;
+        const { subject } = this.state.fields;
+        return <div>
+            {
+                !isNew &&
+                <div className={styles.deleteButtonDiv}>
+                    <Button
+                        variant='contained'
+                        color='secondary'
+                        onClick={this.handleDeleteClick}
+                    >
+                        DELETE
+                    </Button>
+                </div>
+            }
+            <div className={styles.displayNameDiv}>{`${subject.subjectName}`}</div>
+        </div>
+    };
+
     render() {
         const { fields, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
-
+        console.log(fields);
         const userType = session.getUserType();
 
         if (redirect) {
@@ -236,7 +255,7 @@ class ExamForm extends React.Component<IProps, IState> {
         }
 
         if (userType !== 'Admin') {
-            return <Redirect to={'/courses'} />;
+            return <Redirect to={'/exams'} />;
         }
 
         if (isFetching || isDeleting || isCreating) {
@@ -246,52 +265,51 @@ class ExamForm extends React.Component<IProps, IState> {
         const readOnly = this.areInputsReadOnly();
 
         return (
-            <div className={styles.NewCourse}>
+            <div className={styles.NewExam}>
 
                 {
                     isDeleteModalOpen &&
-                    <DeleteConfirmationDialog
+                    <DeleteConfirmationDialogExam
                         isLoading={isDeleting}
-                        userType={'admin'}
-                        name={`ASDs`}
+                        subject={this.state.fields.subject}
                         handleCloseDelete={this.handleCloseDelete}
                         handleConfirmDelete={this.handleConfirmDelete}
                     />
                 }
 
-                <Typography className={styles['New-Course-title']} color='textSecondary'>
+                <Typography className={styles['New-exam-title']} color='textSecondary'>
                     {
                         this.getHeader()
                     }
                 </Typography>
-                <Card className={styles['New-Course-box']}>
-                    {/*<CardHeader title={this.renderTitle()} className={styles.displayName} />*/}
+                <Card className={styles['New-exam-box']}>
+                    <CardHeader title={this.renderTitle()} className={styles.displayName} />
                     <CardContent>
-                        <form className={styles['New-Course-form']}>
-                            <FormControl className={styles['course-form-control']} error={errors.requiredSubjects}>
-                                <InputLabel required htmlFor='subject-requiredSubjects'>Subject</InputLabel>
+                        <form className={styles['New-exam-form']}>
+                            <FormControl className={styles['exam-form-control']} error={errors.subjects}>
+                                <InputLabel required htmlFor='exam-subjects'>Subject</InputLabel>
                                 {
                                     <Select
                                         value={this.state.fields.subject.id}
                                         onChange={this.handleSubjectChange()}
                                         inputProps={{
-                                            name: 'Course',
+                                            name: 'Exam',
                                             id: 'subject-requiredSubjects',
                                         }}
                                         disabled={readOnly}
                                     >
                                         {
                                             this.state.allSubjects
-                                                .filter(s => s.id !== fields.id && fields.requiredSubjects.indexOf(s.id) < 0)
+                                                .filter(s => s.id !== fields.id && fields.subjects.indexOf(s.id) < 0)
                                                 .map(s => <MenuItem value={s.id}>{s.subjectName}</MenuItem>)
                                         }
                                     </Select>
                                 }
                             </FormControl>
 
-                            <FormControl className={styles['course-form-control']} error={errors.date}>
-                                <InputLabel required htmlFor='course-startTime' shrink>Start Time</InputLabel>
-                                <Input id='course-startTime'
+                            <FormControl className={styles['exam-form-control']} error={errors.date}>
+                                <InputLabel required htmlFor='exam-time' shrink>Time</InputLabel>
+                                <Input id='exam-time'
                                        value={fields.date}
                                        onChange={this.handleChange('date')}
                                        readOnly={readOnly}
@@ -308,7 +326,7 @@ class ExamForm extends React.Component<IProps, IState> {
                                     ? <Button
                                         variant='contained'
                                         color='primary'
-                                        className={styles['create-course-button']}
+                                        className={styles['create-exam-button']}
                                         onClick={this.handleEdit}
                                     >
                                         EDIT
@@ -316,7 +334,7 @@ class ExamForm extends React.Component<IProps, IState> {
                                     : <div className={styles.submitCancelButtons}>
                                         <Button
                                             variant='outlined'
-                                            className={styles['create-course-button']}
+                                            className={styles['create-exam-button']}
                                             onClick={this.handleCancel}
                                         >
                                             CANCEL
@@ -324,7 +342,7 @@ class ExamForm extends React.Component<IProps, IState> {
                                         <Button
                                             variant='contained'
                                             color='primary'
-                                            className={styles['create-course-button']}
+                                            className={styles['create-exam-button']}
                                             onClick={this.handleSubmit}
                                         >
                                             SAVE
