@@ -95,7 +95,9 @@ module.exports = {
       '.web.jsx',
       '.jsx',
     ],
-    alias,
+    alias: {
+      components: path.resolve('src/components')
+    },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
       // This often causes confusion because we only process files within src/ with babel.

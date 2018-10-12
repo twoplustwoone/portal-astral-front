@@ -1,5 +1,3 @@
-import { RemoteData } from "@devexperts/remote-data-ts";
-
 declare interface IAction {
   type: string;
   payload?: any;
@@ -29,13 +27,34 @@ declare interface IStudent extends IUser {
   career?: ICareer;
 }
 
-type HttpError = string
-type WebData<A> = RemoteData<HttpError, A>
-
 declare interface ICareer {
   id: string;
 }
 
-declare enum UserType {
-    PROFESSOR, ADMINISTRATOR, STUDENT
+declare interface ISubject {
+  id: string;
+  subjectName: string;
+  careerYear: number;
+  requiredSubjects: string[];
+  students: string[];
+}
+
+declare interface ICourse {
+  id: string;
+  startTime: string;
+  endTime: string;
+  subject: ISubject;
+  schedule: string[];
+}
+
+declare type UserType = 'Professor' | 'Admin' | 'Student';
+
+declare interface ILogin {
+  email: string;
+  password: string;
+}
+
+declare interface ILoginResponse {
+  Type: UserType,
+  User: IUser,
 }

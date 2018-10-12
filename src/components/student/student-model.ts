@@ -1,7 +1,7 @@
 export interface Student {
-    readonly id: string
-    readonly name: string
-    readonly lastName: string
-    readonly email: string
-    readonly file: string
+  readonly id: string
+  readonly name: string
+  readonly lastName: string
+  readonly email: string
+  readonly file: string
 }
