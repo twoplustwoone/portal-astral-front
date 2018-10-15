@@ -28,7 +28,7 @@ const LoadingOverlay = () => (
 
 type Props = {
     isLoading: boolean,
-    subject: ISubject,
+    course: ICourse,
     handleCloseDelete: () => void,
     handleConfirmDelete: () => void,
 };
@@ -39,7 +39,7 @@ export const DeleteConfirmationDialogExam = (props: Props) => {
         <DialogContent>
             {props.isLoading && <LoadingOverlay />}
             <DialogContentText>
-                This will permanently delete the exam for the subject {props.subject.subjectName} and cannot be undone.
+                This will permanently delete the exam for the subject {props.course.subject.subjectName} and cannot be undone.
             </DialogContentText>
         </DialogContent>
         <DialogActions>

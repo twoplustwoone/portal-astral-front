@@ -14,7 +14,7 @@ import {
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import { DeleteConfirmationDialogExam } from "../DeleteConfirmationDialogExam/DeleteConfirmationDialogExam";
 import { Redirect, withRouter } from "react-router";
-import {getAllSubjects, updateExam, createExam, getExamById, deleteExam} from "../../utils/api";
+import {updateExam, createExam, getExamById, deleteExam, getAllCourses} from "../../utils/api";
 import session from "../../utils/session";
 import CardHeader from "@material-ui/core/es/CardHeader/CardHeader";
 import MenuItem from "@material-ui/core/es/MenuItem/MenuItem";
@@ -26,16 +26,22 @@ class ExamForm extends React.Component<IProps, IState> {
 
     state: IState = {
         fields: {
-            subject: {
+            course: {
                 id: '',
-                subjectName: '',
-                careerYear: 1,
-                requiredSubjects: [],
-                students: [],
+                startTime: '',
+                endTime: '',
+                schedule: [],
+                subject: {
+                    id: '',
+                    subjectName: '',
+                    careerYear: 1,
+                    requiredSubjects: [],
+                    students: [],
+                },
             },
             date: '',
             id: '',
-            subjects: [],
+            courses: [],
         },
         errors: {},
         isNew: true,
@@ -44,7 +50,7 @@ class ExamForm extends React.Component<IProps, IState> {
         isCreating: false,
         isDeleting: false,
         isDeleteModalOpen: false,
-        allSubjects: [],
+        allCourses: [],
     };
 
 
@@ -58,15 +64,15 @@ class ExamForm extends React.Component<IProps, IState> {
             this.setState({ isNew: true });
         }
 
-        getAllSubjects().then(this.handleFetchAllSubjects).then(this.setAllSubjects);
+        getAllCourses().then(this.handleFetchAllCourses).then(this.setAllCourses);
     }
 
-    handleFetchAllSubjects = (response: Response) => {
+    handleFetchAllCourses = (response: Response) => {
         return response.json();
     };
 
-    setAllSubjects = (subjects: ISubject[]) => {
-        this.setState({ allSubjects: subjects });
+    setAllCourses = (courses: ICourse[]) => {
+        this.setState({ allCourses: courses });
     };
 
     redirect = () => {
@@ -116,13 +122,13 @@ class ExamForm extends React.Component<IProps, IState> {
         });
     };
 
-    handleSubjectChange = () => (event: any) => {
+    handleCourseChange = () => (event: any) => {
         this.setState({
             ...this.state,
             fields: {
                 ...this.state.fields,
-                subject: {
-                    ...this.state.fields.subject,
+                course: {
+                    ...this.state.fields.course,
                     id: event.target.value,
                 },
             },
@@ -132,6 +138,7 @@ class ExamForm extends React.Component<IProps, IState> {
     handleSubmit = () => {
         if (this.validateAll()) {
             if (!this.state.isNew) {
+                console.log(this.state.fields);
                 updateExam(this.state.fields).then(() => this.setState({ redirect: '/exams' }));
             }
             else {
@@ -227,7 +234,7 @@ class ExamForm extends React.Component<IProps, IState> {
 
     renderTitle = () => {
         const { isNew } = this.state;
-        const { subject } = this.state.fields;
+        // const { subject } = this.state.fields;
         return <div>
             {
                 !isNew &&
@@ -241,7 +248,7 @@ class ExamForm extends React.Component<IProps, IState> {
                     </Button>
                 </div>
             }
-            <div className={styles.displayNameDiv}>{`${subject.subjectName}`}</div>
+            {/*<div className={styles.displayNameDiv}>{`${subject.subjectName}`}</div>*/}
         </div>
     };
 
@@ -271,7 +278,7 @@ class ExamForm extends React.Component<IProps, IState> {
                     isDeleteModalOpen &&
                     <DeleteConfirmationDialogExam
                         isLoading={isDeleting}
-                        subject={this.state.fields.subject}
+                        course={this.state.fields.course}
                         handleCloseDelete={this.handleCloseDelete}
                         handleConfirmDelete={this.handleConfirmDelete}
                     />
@@ -286,22 +293,22 @@ class ExamForm extends React.Component<IProps, IState> {
                     <CardHeader title={this.renderTitle()} className={styles.displayName} />
                     <CardContent>
                         <form className={styles['New-exam-form']}>
-                            <FormControl className={styles['exam-form-control']} error={errors.subjects}>
-                                <InputLabel required htmlFor='exam-subjects'>Subject</InputLabel>
+                            <FormControl className={styles['exam-form-control']} error={errors.courses}>
+                                <InputLabel required htmlFor='exam-course'>Course</InputLabel>
                                 {
                                     <Select
-                                        value={this.state.fields.subject.id}
-                                        onChange={this.handleSubjectChange()}
+                                        value={this.state.fields.course.id}
+                                        onChange={this.handleCourseChange()}
                                         inputProps={{
-                                            name: 'Exam',
-                                            id: 'subject-requiredSubjects',
+                                            name: 'Course',
+                                            id: 'exam-course',
                                         }}
                                         disabled={readOnly}
                                     >
                                         {
-                                            this.state.allSubjects
-                                                .filter(s => s.id !== fields.id && fields.subjects.indexOf(s.id) < 0)
-                                                .map(s => <MenuItem value={s.id}>{s.subjectName}</MenuItem>)
+                                            this.state.allCourses
+                                                .filter(s => s.id !== fields.id && fields.courses.indexOf(s.id) < 0)
+                                                .map(s => <MenuItem value={s.id}>{s.id}</MenuItem>)
                                         }
                                     </Select>
                                 }

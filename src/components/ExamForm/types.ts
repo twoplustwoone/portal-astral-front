@@ -19,14 +19,14 @@ export interface IState {
     redirect?: string;
     course?: ICourse;
     isDeleteModalOpen: boolean;
-    allSubjects: ISubject[],
+    allCourses: ICourse[],
 }
 
 export interface IFields {
-    subject: ISubject;
+    course: ICourse;
     date: string;
     id: string;
-    subjects: string[];
+    courses: string[];
 }
 
 export type IErrors = {
