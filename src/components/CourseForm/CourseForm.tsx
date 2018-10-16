@@ -11,10 +11,11 @@ import {
     Typography,
 } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { Redirect, withRouter } from "react-router";
 import { createCourse, deleteCourse, getCourseById, updateCourse , getAllSubjects} from "../../utils/api";
 import session from "../../utils/session";
+import {DeleteConfirmationDialogCourse} from "../DeleteConfirmationDialogCourse/DeleteConfirmationDialogCourse";
+import CardHeader from "@material-ui/core/CardHeader/CardHeader";
 
 const styles = require('./CourseForm.pcss');
 
@@ -226,6 +227,25 @@ class CourseForm extends React.Component<IProps, IState> {
         deleteCourse(course.id).then(() => this.setState({ redirect: '/courses' }));
     };
 
+    renderTitle = () => {
+        const { isNew } = this.state;
+        return <div>
+            {
+                !isNew &&
+                <div className={styles.deleteButtonDiv}>
+                    <Button
+                        variant='contained'
+                        color='secondary'
+                        onClick={this.handleDeleteClick}
+                    >
+                        DELETE
+                    </Button>
+                </div>
+            }
+            {/*<div className={styles.displayNameDiv}>{`${this.state.fields.subject.subjectName}`}</div>*/}
+        </div>
+    };
+
     render() {
         const { fields, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
 
@@ -250,10 +270,10 @@ class CourseForm extends React.Component<IProps, IState> {
 
                 {
                     isDeleteModalOpen &&
-                    <DeleteConfirmationDialog
+                    <DeleteConfirmationDialogCourse
                         isLoading={isDeleting}
-                        userType={'admin'}
-                        name={`ASDs`}
+                        course={this.state.fields}
+                        subject={this.state.fields.subject}
                         handleCloseDelete={this.handleCloseDelete}
                         handleConfirmDelete={this.handleConfirmDelete}
                     />
@@ -265,7 +285,7 @@ class CourseForm extends React.Component<IProps, IState> {
                     }
                 </Typography>
                 <Card className={styles['New-Course-box']}>
-                    {/*<CardHeader title={this.renderTitle()} className={styles.displayName} />*/}
+                    <CardHeader title={this.renderTitle()} className={styles.displayName} />
                     <CardContent>
                         <form className={styles['New-Course-form']}>
                             <FormControl className={styles['course-form-control']} error={errors.requiredSubjects}>

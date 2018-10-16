@@ -58,7 +58,7 @@ class ExamForm extends React.Component<IProps, IState> {
         const { match } = this.props;
 
         if (match.params.id) {
-            getExamById(match.params.id).then(this.handleResponse).then(this.setCourse).catch(this.redirect);
+            getExamById(match.params.id).then(this.handleResponse).then(this.setExam).catch(this.redirect);
             this.setState({ isNew: false, isFetching: true });
         } else {
             this.setState({ isNew: true });
@@ -79,7 +79,7 @@ class ExamForm extends React.Component<IProps, IState> {
         this.setState({ redirect: '/exams' });
     };
 
-    handleResponse = (response: Response): Promise<ICourse> => {
+    handleResponse = (response: Response): Promise<IExam> => {
         if (response.status === 404) {
             throw Error('Course not found');
         }
@@ -87,27 +87,25 @@ class ExamForm extends React.Component<IProps, IState> {
         return response.json();
     };
 
-    setCourse = (course: ICourse) => {
-        this.setState({ course: course, isNew: false, isEditing: false, isFetching: false }, this.mapCourse);
+    setExam = (exam: IExam) => {
+        this.setState({ exam: exam, isNew: false, isEditing: false, isFetching: false }, this.mapExam);
     };
 
-    mapCourse = () => {
-        const { course } = this.state;
+    mapExam = () => {
+        const { exam } = this.state;
 
-        if (!course) {
+        if (!exam) {
             return;
         }
 
-        const { subject, startTime, endTime, id, schedule } = course;
+        const { course, date, id } = exam;
         this.setState({
             ...this.state,
             fields: {
                 ...this.state.fields,
-                subject,
-                startTime,
-                endTime,
+                course,
+                date,
                 id,
-                schedule,
             },
         });
     };
@@ -201,7 +199,7 @@ class ExamForm extends React.Component<IProps, IState> {
         if (this.state.isNew) {
             this.setState({ redirect: '/exams' });
         } else {
-            this.setState({ isEditing: false }, this.mapCourse);
+            this.setState({ isEditing: false }, this.mapExam);
         }
     };
 
@@ -223,13 +221,13 @@ class ExamForm extends React.Component<IProps, IState> {
     };
 
     handleConfirmDelete = () => {
-        const course = this.state.course;
+        const exam = this.state.exam;
 
-        if (!course) {
+        if (!exam) {
             return;
         }
 
-        deleteExam(course.id).then(() => this.setState({ redirect: '/exams' }));
+        deleteExam(exam.id).then(() => this.setState({ redirect: '/exams' }));
     };
 
     renderTitle = () => {
@@ -254,7 +252,6 @@ class ExamForm extends React.Component<IProps, IState> {
 
     render() {
         const { fields, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
-        console.log(fields);
         const userType = session.getUserType();
 
         if (redirect) {
@@ -308,16 +305,16 @@ class ExamForm extends React.Component<IProps, IState> {
                                         {
                                             this.state.allCourses
                                                 .filter(s => s.id !== fields.id && fields.courses.indexOf(s.id) < 0)
-                                                .map(s => <MenuItem value={s.id}>{s.id}</MenuItem>)
+                                                .map(s => <MenuItem value={s.id}>{s.subject.subjectName.concat(" ").concat(s.startTime)}</MenuItem>)
                                         }
                                     </Select>
                                 }
                             </FormControl>
 
                             <FormControl className={styles['exam-form-control']} error={errors.date}>
-                                <InputLabel required htmlFor='exam-time' shrink>Time</InputLabel>
-                                <Input id='exam-time'
-                                       value={fields.date}
+                                <InputLabel required htmlFor='exam-date' shrink>Date</InputLabel>
+                                <Input id='exam-date'
+                                       value={this.state.fields.date}
                                        onChange={this.handleChange('date')}
                                        readOnly={readOnly}
                                        type={'date'}

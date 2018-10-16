@@ -17,7 +17,7 @@ export interface IState {
     isDeleting: boolean;
     isCreating: boolean;
     redirect?: string;
-    course?: ICourse;
+    exam?: IExam;
     isDeleteModalOpen: boolean;
     allCourses: ICourse[],
 }
