@@ -41,7 +41,6 @@ class ExamForm extends React.Component<IProps, IState> {
             },
             date: '',
             id: '',
-            courses: [],
         },
         errors: {},
         isNew: true,
@@ -290,7 +289,7 @@ class ExamForm extends React.Component<IProps, IState> {
                     <CardHeader title={this.renderTitle()} className={styles.displayName} />
                     <CardContent>
                         <form className={styles['New-exam-form']}>
-                            <FormControl className={styles['exam-form-control']} error={errors.courses}>
+                            <FormControl className={styles['exam-form-control']} error={errors.course}>
                                 <InputLabel required htmlFor='exam-course'>Course</InputLabel>
                                 {
                                     <Select
@@ -304,7 +303,7 @@ class ExamForm extends React.Component<IProps, IState> {
                                     >
                                         {
                                             this.state.allCourses
-                                                .filter(s => s.id !== fields.id && fields.courses.indexOf(s.id) < 0)
+                                                .filter(s => s.id !== fields.id)
                                                 .map(s => <MenuItem value={s.id}>{s.subject.subjectName.concat(" ").concat(s.startTime)}</MenuItem>)
                                         }
                                     </Select>

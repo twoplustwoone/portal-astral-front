@@ -26,7 +26,6 @@ export interface IFields {
     course: ICourse;
     date: string;
     id: string;
-    courses: string[];
 }
 
 export type IErrors = {

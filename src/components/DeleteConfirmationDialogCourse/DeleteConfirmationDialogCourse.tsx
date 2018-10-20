@@ -8,7 +8,6 @@ import {
     DialogTitle,
 } from "@material-ui/core";
 import * as React from "react";
-import {getSubjectById} from "../../utils/api";
 
 const LoadingOverlay = () => (
     <div style={{
@@ -35,24 +34,13 @@ type Props = {
     handleConfirmDelete: () => void,
 };
 
-const handleResponse = (response: Response): Promise<ISubject> => {
-    if (response.status === 404) {
-        throw Error('Subject not found');
-    }
-
-    return response.json();
-};
-
 export const DeleteConfirmationDialogCourse = (props: Props) => {
-    let subject;
-    getSubjectById(props.course.subject.id).then(handleResponse).then(res1 => subject = res1);
     return <Dialog open={true}>
         <DialogTitle>Confirm delete course </DialogTitle>
         <DialogContent>
             {props.isLoading && <LoadingOverlay />}
             <DialogContentText>
-                This will permanently delete the course for the subject {subject ? subject.subjectName : "Loading"}
-                  with starting date {props.course.startTime} and cannot be undone.
+                This will permanently delete the course for the subject {props.subject ? props.subject.subjectName : "Loading"} with starting date {props.course.startTime} and cannot be undone.
             </DialogContentText>
         </DialogContent>
         <DialogActions>
