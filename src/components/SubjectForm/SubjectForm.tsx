@@ -63,7 +63,7 @@ class SubjectForm extends React.Component<IProps, IState> {
   };
 
   redirect = () => {
-    this.setState({ redirect: '/subjects' });
+    this.setState({ redirect: '/courses' });
   };
 
   handleResponse = (response: Response): Promise<ISubject> => {
@@ -111,10 +111,10 @@ class SubjectForm extends React.Component<IProps, IState> {
   handleSubmit = () => {
     if (this.validateAll()) {
       if (!this.state.isNew) {
-        updateSubject(this.state.fields).then(() => this.setState({ redirect: '/subjects' }));
+        updateSubject(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
       }
       else {
-        createSubject(this.state.fields).then(() => this.setState({ redirect: '/subjects' }));
+        createSubject(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
       }
     }
   };
@@ -197,7 +197,7 @@ class SubjectForm extends React.Component<IProps, IState> {
 
   handleCancel = () => {
     if (this.state.isNew) {
-      this.setState({ redirect: '/subjects' });
+      this.setState({ redirect: '/courses' });
     } else {
       this.setState({ isEditing: false }, this.mapSubject);
     }
@@ -222,14 +222,14 @@ class SubjectForm extends React.Component<IProps, IState> {
   };
 
   handleConfirmDelete = () => {
-    // this.props.onConfirmDelete(this.props.subject as ISubject).then(() => this.props.history.push('/subjects'));
+    // this.props.onConfirmDelete(this.props.subject as ISubject).then(() => this.props.history.push('/courses'));
     const subject = this.state.subject;
 
     if (!subject) {
       return;
     }
 
-    deleteSubject(subject.id).then(() => this.setState({ redirect: '/subjects' }));
+    deleteSubject(subject.id).then(() => this.setState({ redirect: '/courses' }));
   };
 
   renderTitle = () => {
@@ -275,7 +275,7 @@ class SubjectForm extends React.Component<IProps, IState> {
     }
 
     if (userType !== 'Admin') {
-      return <Redirect to={'/subjects'} />;
+      return <Redirect to={'/courses'} />;
     }
 
     if (isFetching || isDeleting || isCreating) {
