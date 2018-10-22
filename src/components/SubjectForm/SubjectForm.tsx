@@ -63,7 +63,7 @@ class SubjectForm extends React.Component<IProps, IState> {
   };
 
   redirect = () => {
-    this.setState({ redirect: '/courses' });
+    this.setState({ redirect: '/subjects' });
   };
 
   handleResponse = (response: Response): Promise<ISubject> => {
@@ -111,10 +111,10 @@ class SubjectForm extends React.Component<IProps, IState> {
   handleSubmit = () => {
     if (this.validateAll()) {
       if (!this.state.isNew) {
-        updateSubject(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
+        updateSubject(this.state.fields).then(() => this.setState({ redirect: '/subjects' }));
       }
       else {
-        createSubject(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
+        createSubject(this.state.fields).then(() => this.setState({ redirect: '/subjects' }));
       }
     }
   };
@@ -197,7 +197,7 @@ class SubjectForm extends React.Component<IProps, IState> {
 
   handleCancel = () => {
     if (this.state.isNew) {
-      this.setState({ redirect: '/courses' });
+      this.setState({ redirect: '/subjects' });
     } else {
       this.setState({ isEditing: false }, this.mapSubject);
     }
@@ -229,7 +229,7 @@ class SubjectForm extends React.Component<IProps, IState> {
       return;
     }
 
-    deleteSubject(subject.id).then(() => this.setState({ redirect: '/courses' }));
+    deleteSubject(subject.id).then(() => this.setState({ redirect: '/subjects' }));
   };
 
   renderTitle = () => {
@@ -275,7 +275,7 @@ class SubjectForm extends React.Component<IProps, IState> {
     }
 
     if (userType !== 'Admin') {
-      return <Redirect to={'/courses'} />;
+      return <Redirect to={'/subjects'} />;
     }
 
     if (isFetching || isDeleting || isCreating) {
