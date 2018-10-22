@@ -270,6 +270,24 @@ export const deleteCourse = (id: string): Promise<Response> => {
     return fetch(url, init);
 };
 
+export const deleteCareer = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/career/${id}`;
+    const init: RequestInit = {
+        method: 'DELETE',
+    };
+
+    return fetch(url, init);
+};
+
+export const getAllCareers = (): Promise<Response> => {
+    const url = 'http://localhost:9000/career';
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
 /* Authentication endpoints */
 
 export const login = (credentials: ILogin): Promise<Response> => {
