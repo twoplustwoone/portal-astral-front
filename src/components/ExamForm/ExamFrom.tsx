@@ -7,36 +7,41 @@ import {
     CardContent,
     FormControl,
     Input,
-    InputLabel, MenuItem, Select,
+    InputLabel,
+    // MenuItem, Select,
     Typography,
 } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
+import { DeleteConfirmationDialogExam } from "../DeleteConfirmationDialogExam/DeleteConfirmationDialogExam";
 import { Redirect, withRouter } from "react-router";
-import { createCourse, deleteCourse, getCourseById, updateCourse , getAllSubjects} from "../../utils/api";
+import {updateExam, createExam, getExamById, deleteExam, getAllCourses} from "../../utils/api";
 import session from "../../utils/session";
-import {DeleteConfirmationDialogCourse} from "../DeleteConfirmationDialogCourse/DeleteConfirmationDialogCourse";
-import CardHeader from "@material-ui/core/CardHeader/CardHeader";
+import CardHeader from "@material-ui/core/es/CardHeader/CardHeader";
+import MenuItem from "@material-ui/core/es/MenuItem/MenuItem";
+import Select from "@material-ui/core/es/Select/Select";
 
-const styles = require('./CourseForm.pcss');
+const styles = require('./ExamForm.pcss');
 
-class CourseForm extends React.Component<IProps, IState> {
+class ExamForm extends React.Component<IProps, IState> {
 
     state: IState = {
         fields: {
-            subject: {
+            course: {
                 id: '',
-                subjectName: '',
-                careerYear: 1,
-                requiredSubjects: [],
-                students: [],
+                startTime: '',
+                endTime: '',
+                schedule: [],
+                subject: {
+                    id: '',
+                    subjectName: '',
+                    careerYear: 1,
+                    requiredSubjects: [],
+                    students: [],
+                },
             },
-            startTime: '',
-            endTime: '',
-            schedule: [],
+            date: '',
             id: '',
-            requiredSubjects: [],
         },
-        showPassword: false,
         errors: {},
         isNew: true,
         isEditing: true,
@@ -44,7 +49,7 @@ class CourseForm extends React.Component<IProps, IState> {
         isCreating: false,
         isDeleting: false,
         isDeleteModalOpen: false,
-        allSubjects: [],
+        allCourses: [],
     };
 
 
@@ -52,28 +57,28 @@ class CourseForm extends React.Component<IProps, IState> {
         const { match } = this.props;
 
         if (match.params.id) {
-            getCourseById(match.params.id).then(this.handleResponse).then(this.setCourse).catch(this.redirect);
+            getExamById(match.params.id).then(this.handleResponse).then(this.setExam).catch(this.redirect);
             this.setState({ isNew: false, isFetching: true });
         } else {
             this.setState({ isNew: true });
         }
 
-        getAllSubjects().then(this.handleFetchAllSubjects).then(this.setAllSubjects);
+        getAllCourses().then(this.handleFetchAllCourses).then(this.setAllCourses);
     }
 
-    handleFetchAllSubjects = (response: Response) => {
+    handleFetchAllCourses = (response: Response) => {
         return response.json();
     };
 
-    setAllSubjects = (subjects: ISubject[]) => {
-        this.setState({ allSubjects: subjects });
+    setAllCourses = (courses: ICourse[]) => {
+        this.setState({ allCourses: courses });
     };
 
     redirect = () => {
-        this.setState({ redirect: '/courses' });
+        this.setState({ redirect: '/exams' });
     };
 
-    handleResponse = (response: Response): Promise<ICourse> => {
+    handleResponse = (response: Response): Promise<IExam> => {
         if (response.status === 404) {
             throw Error('Course not found');
         }
@@ -81,27 +86,25 @@ class CourseForm extends React.Component<IProps, IState> {
         return response.json();
     };
 
-    setCourse = (course: ICourse) => {
-        this.setState({ course: course, isNew: false, isEditing: false, isFetching: false }, this.mapCourse);
+    setExam = (exam: IExam) => {
+        this.setState({ exam: exam, isNew: false, isEditing: false, isFetching: false }, this.mapExam);
     };
 
-    mapCourse = () => {
-        const { course } = this.state;
+    mapExam = () => {
+        const { exam } = this.state;
 
-        if (!course) {
+        if (!exam) {
             return;
         }
 
-        const { subject, startTime, endTime, id, schedule } = course;
+        const { course, date, id } = exam;
         this.setState({
             ...this.state,
             fields: {
                 ...this.state.fields,
-                subject,
-                startTime,
-                endTime,
+                course,
+                date,
                 id,
-                schedule,
             },
         });
     };
@@ -116,13 +119,13 @@ class CourseForm extends React.Component<IProps, IState> {
         });
     };
 
-    handleSubjectChange = () => (event: any) => {
+    handleCourseChange = () => (event: any) => {
         this.setState({
             ...this.state,
             fields: {
                 ...this.state.fields,
-                subject: {
-                    ...this.state.fields.subject,
+                course: {
+                    ...this.state.fields.course,
                     id: event.target.value,
                 },
             },
@@ -132,10 +135,11 @@ class CourseForm extends React.Component<IProps, IState> {
     handleSubmit = () => {
         if (this.validateAll()) {
             if (!this.state.isNew) {
-                updateCourse(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
+                console.log(this.state.fields);
+                updateExam(this.state.fields).then(() => this.setState({ redirect: '/exams' }));
             }
             else {
-                createCourse(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
+                createExam(this.state.fields).then(() => this.setState({ redirect: '/exams' }));
             }
         }
     };
@@ -192,43 +196,42 @@ class CourseForm extends React.Component<IProps, IState> {
 
     handleCancel = () => {
         if (this.state.isNew) {
-            this.setState({ redirect: '/courses' });
+            this.setState({ redirect: '/exams' });
         } else {
-            this.setState({ isEditing: false }, this.mapCourse);
+            this.setState({ isEditing: false }, this.mapExam);
         }
     };
 
     getHeader = () => {
         if (this.state.isNew) {
-            return 'Create course';
+            return 'Create exam';
         } else {
-            return 'Edit course';
+            return 'Edit exam';
         }
     };
 
     handleDeleteClick = () => {
-        // this.props.onClickDelete(this.props.course as ICourse);
+        console.log("you clicked me!");
         this.setState({ isDeleteModalOpen: true });
     };
 
     handleCloseDelete = () => {
-        // this.props.onCloseDelete();
         this.setState({ isDeleteModalOpen: false });
     };
 
     handleConfirmDelete = () => {
-        // this.props.onConfirmDelete(this.props.course as ICourse).then(() => this.props.history.push('/courses'));
-        const course = this.state.course;
+        const exam = this.state.exam;
 
-        if (!course) {
+        if (!exam) {
             return;
         }
 
-        deleteCourse(course.id).then(() => this.setState({ redirect: '/courses' }));
+        deleteExam(exam.id).then(() => this.setState({ redirect: '/exams' }));
     };
 
     renderTitle = () => {
         const { isNew } = this.state;
+        // const { subject } = this.state.fields;
         return <div>
             {
                 !isNew &&
@@ -242,13 +245,12 @@ class CourseForm extends React.Component<IProps, IState> {
                     </Button>
                 </div>
             }
-            {/*<div className={styles.displayNameDiv}>{`${this.state.fields.subject.subjectName}`}</div>*/}
+            {/*<div className={styles.displayNameDiv}>{`${subject.subjectName}`}</div>*/}
         </div>
     };
 
     render() {
         const { fields, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
-
         const userType = session.getUserType();
 
         if (redirect) {
@@ -256,7 +258,7 @@ class CourseForm extends React.Component<IProps, IState> {
         }
 
         if (userType !== 'Admin') {
-            return <Redirect to={'/courses'} />;
+            return <Redirect to={'/exams'} />;
         }
 
         if (isFetching || isDeleting || isCreating) {
@@ -266,72 +268,55 @@ class CourseForm extends React.Component<IProps, IState> {
         const readOnly = this.areInputsReadOnly();
 
         return (
-            <div className={styles.NewCourse}>
+            <div className={styles.NewExam}>
 
                 {
                     isDeleteModalOpen &&
-                    <DeleteConfirmationDialogCourse
+                    <DeleteConfirmationDialogExam
                         isLoading={isDeleting}
-                        course={this.state.fields}
-                        subject={this.state.fields.subject}
+                        course={this.state.fields.course}
                         handleCloseDelete={this.handleCloseDelete}
                         handleConfirmDelete={this.handleConfirmDelete}
                     />
                 }
 
-                <Typography className={styles['New-Course-title']} color='textSecondary'>
+                <Typography className={styles['New-exam-title']} color='textSecondary'>
                     {
                         this.getHeader()
                     }
                 </Typography>
-                <Card className={styles['New-Course-box']}>
+                <Card className={styles['New-exam-box']}>
                     <CardHeader title={this.renderTitle()} className={styles.displayName} />
                     <CardContent>
-                        <form className={styles['New-Course-form']}>
-                            <FormControl className={styles['course-form-control']} error={errors.requiredSubjects}>
-                                <InputLabel required htmlFor='subject-requiredSubjects'>Course</InputLabel>
+                        <form className={styles['New-exam-form']}>
+                            <FormControl className={styles['exam-form-control']} error={errors.course}>
+                                <InputLabel required htmlFor='exam-course'>Course</InputLabel>
                                 {
                                     <Select
-                                        value={this.state.fields.subject.id}
-                                        onChange={this.handleSubjectChange()}
+                                        value={this.state.fields.course.id}
+                                        onChange={this.handleCourseChange()}
                                         inputProps={{
                                             name: 'Course',
-                                            id: 'subject-requiredSubjects',
+                                            id: 'exam-course',
                                         }}
                                         disabled={readOnly}
                                     >
                                         {
-                                            this.state.allSubjects
-                                                .filter(s => s.id !== fields.id && fields.requiredSubjects.indexOf(s.id) < 0)
-                                                .map(s => <MenuItem value={s.id}>{s.subjectName}</MenuItem>)
+                                            this.state.allCourses
+                                                .filter(s => s.id !== fields.id)
+                                                .map(s => <MenuItem value={s.id}>{s.subject.subjectName.concat(" ").concat(s.startTime)}</MenuItem>)
                                         }
                                     </Select>
                                 }
                             </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.startTime}>
-                                <InputLabel required htmlFor='course-startTime' shrink>Start Time</InputLabel>
-                                <Input id='course-startTime'
-                                       value={fields.startTime}
-                                       onChange={this.handleChange('startTime')}
+
+                            <FormControl className={styles['exam-form-control']} error={errors.date}>
+                                <InputLabel required htmlFor='exam-date' shrink>Date</InputLabel>
+                                <Input id='exam-date'
+                                       value={this.state.fields.date}
+                                       onChange={this.handleChange('date')}
                                        readOnly={readOnly}
                                        type={'date'}
-                                />
-                            </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.endTime}>
-                                <InputLabel required htmlFor='course-endtime' shrink>End Time</InputLabel>
-                                <Input id='course-endtime'
-                                       value={fields.endTime}
-                                       onChange={this.handleChange('endTime')}
-                                       readOnly={readOnly}
-                                       type={'date'}
-                                />
-                            </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.schedule}>
-                                <InputLabel required htmlFor='course-schedule'>Schedule</InputLabel>
-                                <Input id='course-schedule'
-                                       value={fields.schedule}
-                                       onChange={this.handleChange('schedule')}
-                                       readOnly={readOnly}
                                 />
                             </FormControl>
                         </form>
@@ -344,7 +329,7 @@ class CourseForm extends React.Component<IProps, IState> {
                                     ? <Button
                                         variant='contained'
                                         color='primary'
-                                        className={styles['create-course-button']}
+                                        className={styles['create-exam-button']}
                                         onClick={this.handleEdit}
                                     >
                                         EDIT
@@ -352,7 +337,7 @@ class CourseForm extends React.Component<IProps, IState> {
                                     : <div className={styles.submitCancelButtons}>
                                         <Button
                                             variant='outlined'
-                                            className={styles['create-course-button']}
+                                            className={styles['create-exam-button']}
                                             onClick={this.handleCancel}
                                         >
                                             CANCEL
@@ -360,7 +345,7 @@ class CourseForm extends React.Component<IProps, IState> {
                                         <Button
                                             variant='contained'
                                             color='primary'
-                                            className={styles['create-course-button']}
+                                            className={styles['create-exam-button']}
                                             onClick={this.handleSubmit}
                                         >
                                             SAVE
@@ -377,4 +362,4 @@ class CourseForm extends React.Component<IProps, IState> {
     }
 }
 
-export default withRouter(CourseForm);
+export default withRouter(ExamForm);

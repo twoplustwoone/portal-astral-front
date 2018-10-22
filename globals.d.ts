@@ -47,6 +47,12 @@ declare interface ICourse {
   schedule: string[];
 }
 
+declare interface IExam {
+    id: string;
+    date: string;
+    course: ICourse;
+}
+
 declare type UserType = 'Professor' | 'Admin' | 'Student';
 
 declare interface ILogin {
