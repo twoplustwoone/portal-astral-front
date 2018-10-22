@@ -269,6 +269,7 @@ export const deleteCourse = (id: string): Promise<Response> => {
 
     return fetch(url, init);
 };
+
 /* Exam endpoints */
 
 export const getAllExams = (): Promise<Response> => {
@@ -279,16 +280,6 @@ export const getAllExams = (): Promise<Response> => {
 
     return fetch(url, init);
 };
-
-export const deleteExam = (id: string): Promise<Response> => {
-    const url = `http://localhost:9000/exam/${id}`;
-    const init: RequestInit = {
-        method: 'DELETE',
-    };
-
-    return fetch(url, init);
-};
-
 
 export const createExam = (exam: IExam): Promise<Response> => {
     const url = 'http://localhost:9000/exam';
@@ -302,7 +293,6 @@ export const createExam = (exam: IExam): Promise<Response> => {
 
     return fetch(url, init);
 };
-
 
 export const getExamById = (id: string): Promise<Response> => {
     const url = `http://localhost:9000/exam/${id}`;
@@ -321,6 +311,15 @@ export const updateExam = (exam: IExam): Promise<Response> => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(exam),
+    };
+
+    return fetch(url, init);
+};
+
+export const deleteExam = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/exam/${id}`;
+    const init: RequestInit = {
+        method: 'DELETE',
     };
 
     return fetch(url, init);
@@ -382,7 +381,6 @@ export const updateCareer = (career: ICareer): Promise<Response> => {
 
     return fetch(url, init);
 };
-
 
 /* Authentication endpoints */
 
