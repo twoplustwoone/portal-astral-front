@@ -54,6 +54,12 @@ declare interface ICareer {
   students: IStudent;
 }
 
+declare interface IExam {
+    id: string;
+    course: ICourse;
+    date: string;
+}
+
 declare type UserType = 'Professor' | 'Admin' | 'Student';
 
 declare interface ILogin {
