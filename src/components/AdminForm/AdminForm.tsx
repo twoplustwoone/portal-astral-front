@@ -1,24 +1,31 @@
 import * as React from 'react';
 import { IErrors, IProps, IState } from './types';
 import {
-  FormControl,
-  InputLabel,
-  Input,
-  InputAdornment,
-  IconButton,
   Button,
+  Card,
   CardActions,
   CardContent,
-  Card,
+  CardHeader,
+  FormControl,
   FormHelperText,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
   Typography,
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
+import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
+import { Redirect, withRouter } from "react-router";
+import { createAdmin, deleteAdmin, getAdminById, updateAdmin } from "../../utils/api";
+import session from "../../utils/session";
 
 const styles = require('./AdminForm.pcss');
 
 class AdminForm extends React.Component<IProps, IState> {
+
 
   state: IState = {
     fields: {
@@ -37,11 +44,64 @@ class AdminForm extends React.Component<IProps, IState> {
       password: false,
       file: false,
     },
+    isNew: true,
+    isEditing: true,
+    isFetching: false,
+    isCreating: false,
+    isDeleting: false,
+    isDeleteModalOpen: false,
   };
 
-  constructor(props) {
-    super(props);
+
+  componentDidMount() {
+    const { match } = this.props;
+
+    if (match.params.id) {
+      getAdminById(match.params.id).then(this.handleResponse).then(this.setAdmin).catch(this.redirect);
+      this.setState({ isNew: false, isFetching: true });
+    } else {
+      this.setState({ isNew: true });
+    }
+
   }
+
+  redirect = () => {
+    this.setState({ redirect: '/admins' });
+  };
+
+  handleResponse = (response: Response): Promise<IAdmin> => {
+    if (response.status === 404) {
+      throw Error('Admin not found');
+    }
+
+    return response.json();
+  };
+
+  setAdmin = (admin: IAdmin) => {
+    this.setState({ admin, isNew: false, isEditing: false, isFetching: false }, this.mapAdmin);
+  };
+
+  mapAdmin = () => {
+    const { admin } = this.state;
+
+    if (!admin) {
+      return;
+    }
+
+    const { email, name, lastName, id, password, file } = admin;
+    this.setState({
+      ...this.state,
+      fields: {
+        ...this.state.fields,
+        email,
+        name,
+        id,
+        lastName,
+        password,
+        file,
+      },
+    });
+  };
 
   handleChange = (prop: string) => (event: any) => {
     this.setState({
@@ -63,7 +123,12 @@ class AdminForm extends React.Component<IProps, IState> {
 
   handleSubmit = () => {
     if (this.validateAll()) {
-      this.props.onSubmit(this.state.fields);
+      if (!this.state.isNew) {
+        updateAdmin(this.state.fields).then(() => this.setState({ redirect: '/admins' }));
+      }
+      else {
+        createAdmin(this.state.fields).then(() => this.setState({ redirect: '/admins' }));
+      }
     }
   };
 
@@ -107,7 +172,6 @@ class AdminForm extends React.Component<IProps, IState> {
         return (
           this.validatePassword(value)
         );
-        // todo validate file?
       default:
         return true;
     }
@@ -126,45 +190,161 @@ class AdminForm extends React.Component<IProps, IState> {
   };
 
   validatePassword = (value: any): boolean => {
-    return value !== '' && value.length > 6 && value.length < 20;
+    return !!(value != "" && value.length >= 6 && value.length < 20 && this.checkLetters(value));
+  };
+
+  checkLetters = (value: string): boolean => {
+    const words = value.match("[A-z]+");
+    const numbers = value.match("[0-9]+");
+    return words != undefined && words.length > 0 && numbers != undefined && numbers.length > 0;
+  };
+
+  areInputsReadOnly = () => {
+    const { isEditing } = this.state;
+    return !isEditing;
+  };
+
+  handleEdit = () => {
+    this.setState({ ...this.state, isEditing: true });
+  };
+
+  handleCancel = () => {
+    if (this.state.isNew) {
+      this.setState({ redirect: '/admins' });
+    } else {
+      this.setState({ isEditing: false }, this.mapAdmin);
+    }
+  };
+
+  getHeader = () => {
+    if (this.state.isNew) {
+      return 'Create admin';
+    } else {
+      return 'Edit admin';
+    }
+  };
+
+  handleDeleteClick = () => {
+    // this.props.onClickDelete(this.props.admin as IAdmin);
+    this.setState({ isDeleteModalOpen: true });
+  };
+
+  handleCloseDelete = () => {
+    // this.props.onCloseDelete();
+    this.setState({ isDeleteModalOpen: false });
+  };
+
+  handleConfirmDelete = () => {
+    // this.props.onConfirmDelete(this.props.admin as IAdmin).then(() => this.props.history.push('/admins'));
+    const admin = this.state.admin;
+
+    if (!admin) {
+      return;
+    }
+
+    deleteAdmin(admin.id).then(() => this.setState({ redirect: '/admins' }));
+  };
+
+  renderTitle = () => {
+    const { isNew } = this.state;
+    const { name, lastName } = this.state.fields;
+    return <div>
+      {
+        !isNew &&
+        <div className={styles.deleteButtonDiv}>
+          <Button
+            variant='contained'
+            color='secondary'
+            onClick={this.handleDeleteClick}
+          >
+            DELETE
+          </Button>
+        </div>
+      }
+      <div className={styles.displayNameDiv}>{`${name} ${lastName}`}</div>
+    </div>
   };
 
   render() {
-    return (
-          <div className={styles.NewAdmin}>
-        <Typography className={styles['New-Admin-title']} color='textSecondary'>
-          Create Admin
-        </Typography>
+    const { fields, showPassword, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
 
-        {/*<h1 className='New-Admin-title'>Create Admin</h1>*/}
+    const userType = session.getUserType();
+
+    if (redirect) {
+      return <Redirect to={redirect} />;
+    }
+
+    if (userType !== 'Admin') {
+      return <Redirect to={'/admins'} />;
+    }
+
+    if (isFetching || isDeleting || isCreating) {
+      return <div><CircularProgress /></div>
+    }
+
+    const readOnly = this.areInputsReadOnly();
+
+    return (
+      <div className={styles.NewAdmin}>
+
+        {
+          isDeleteModalOpen &&
+          <DeleteConfirmationDialog
+            isLoading={isDeleting}
+            userType={'admin'}
+            name={`${fields.name} ${fields.lastName}`}
+            handleCloseDelete={this.handleCloseDelete}
+            handleConfirmDelete={this.handleConfirmDelete}
+          />
+        }
+
+        <Typography className={styles['New-Admin-title']} color='textSecondary'>
+          {
+            this.getHeader()
+          }
+        </Typography>
         <Card className={styles['New-Admin-box']}>
+          <CardHeader title={this.renderTitle()} className={styles.displayName} />
           <CardContent>
             <form className={styles['New-Admin-form']}>
-              <FormControl className={styles['Admin-form-control']} error={this.state.errors.name}>
-                <InputLabel required htmlFor='Admin-name'>First name</InputLabel>
-                <Input id='Admin-name'
-                       value={this.state.fields.name}
-                       onChange={this.handleChange('name')} />
+              <FormControl className={styles['admin-form-control']} error={errors.name}>
+                <InputLabel required htmlFor='admin-name'>First name</InputLabel>
+                <Input id='admin-name'
+                       value={fields.name}
+                       onChange={this.handleChange('name')}
+                       readOnly={readOnly}
+                />
               </FormControl>
-              <FormControl className={styles['Admin-form-control']} error={this.state.errors.lastName}>
-                <InputLabel required htmlFor='Admin-surname'>Last name</InputLabel>
-                <Input id='Admin-surname'
-                       value={this.state.fields.lastName}
-                       onChange={this.handleChange('lastName')} />
+              <FormControl className={styles['admin-form-control']} error={errors.lastName}>
+                <InputLabel required htmlFor='admin-surname'>Last name</InputLabel>
+                <Input id='admin-surname'
+                       value={fields.lastName}
+                       onChange={this.handleChange('lastName')}
+                       readOnly={readOnly}
+                />
               </FormControl>
-              <FormControl className={styles['Admin-form-control']} error={this.state.errors.email}>
-                <InputLabel required htmlFor='Admin-email'>E-mail</InputLabel>
-                <Input id='Admin-email'
-                       value={this.state.fields.email}
-                       onChange={this.handleChange('email')} />
+              <FormControl className={styles['admin-form-control']} error={errors.email}>
+                <InputLabel required htmlFor='admin-email'>E-mail</InputLabel>
+                <Input id='admin-email'
+                       value={fields.email}
+                       onChange={this.handleChange('email')}
+                       readOnly={readOnly}
+                />
               </FormControl>
-              <FormControl className={styles['Admin-form-control']} error={this.state.errors.password}>
-                {/* LA PASSWORD -> Entre 6 y 20 caracters, una letra, un numero minimo*/}
+              <FormControl className={styles['admin-form-control']} error={errors.file}>
+                <InputLabel required htmlFor='admin-email'>File</InputLabel>
+                <Input id='admin-file'
+                       value={fields.file}
+                       onChange={this.handleChange('file')}
+                       readOnly={readOnly}
+                />
+              </FormControl>
+              <FormControl className={styles['admin-form-control']} error={errors.password}>
                 <InputLabel required htmlFor='adornment-password'>Password</InputLabel>
                 <Input
                   id='adornment-password'
-                  type={this.state.showPassword ? 'text' : 'password'}
-                  value={this.state.fields.password}
+                  type={showPassword ? 'text' : 'password'}
+                  value={this.state.isEditing ? fields.password : ""}
                   onChange={this.handleChange('password')}
                   endAdornment={
                     <InputAdornment position='end'>
@@ -173,10 +353,11 @@ class AdminForm extends React.Component<IProps, IState> {
                         onClick={this.handleClickShowPassword}
                         onMouseDown={this.handleMouseDownPassword}
                       >
-                        {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   }
+                  readOnly={readOnly}
                 />
                 <FormHelperText className={styles['password-helper-text']} id='password-helper-text'>
                   Must be between 6 and 20 characters with at least one number and one letter
@@ -186,17 +367,36 @@ class AdminForm extends React.Component<IProps, IState> {
           </CardContent>
 
           <CardActions>
-            <Button
-              variant='contained'
-              color='primary'
-              className={styles['create-Admin-button']}
-              onClick={this.handleSubmit}
-            >
-              SAVE
-            </Button>
-            <Button variant='outlined' className={styles['create-Admin-button']}>
-              CANCEL
-            </Button>
+            <div className={styles.buttonContainer}>
+              {
+                readOnly
+                  ? <Button
+                    variant='contained'
+                    color='primary'
+                    className={styles['create-admin-button']}
+                    onClick={this.handleEdit}
+                  >
+                    EDIT
+                  </Button>
+                  : <div className={styles.submitCancelButtons}>
+                    <Button
+                      variant='outlined'
+                      className={styles['create-admin-button']}
+                      onClick={this.handleCancel}
+                    >
+                      CANCEL
+                    </Button>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      className={styles['create-admin-button']}
+                      onClick={this.handleSubmit}
+                    >
+                      SAVE
+                    </Button>
+                  </div>
+              }
+            </div>
           </CardActions>
 
         </Card>
@@ -206,4 +406,4 @@ class AdminForm extends React.Component<IProps, IState> {
   }
 }
 
-export default AdminForm;
+export default withRouter(AdminForm);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { App } from './containers';
+import App from "./components/App/App";
 const Parent = () => (
   <App />
 );

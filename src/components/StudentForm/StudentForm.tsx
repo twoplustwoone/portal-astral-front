@@ -17,9 +17,10 @@ import {
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
-import { IStudent } from "../../../globals";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
-import { mapCareer } from "../../helpers/careerMapper";
+import { Redirect, withRouter } from "react-router";
+import { createStudent, deleteStudent, getStudentById, updateStudent } from "../../utils/api";
+import session from "../../utils/session";
 
 const styles = require('./StudentForm.pcss');
 
@@ -34,64 +35,80 @@ class StudentForm extends React.Component<IProps, IState> {
       password: '',
       file: '',
       id: '',
-      birthday: '',
-      address: '',
-      careerId: '',
-      identification: '',
       identificationType: '',
+      birthday: '',
+      identification: '',
+      address: '',
     },
+    careers: [],
     showPassword: false,
-    errors: {
-      name: false,
-      lastName: false,
-      email: false,
-      password: false,
-      file: false,
-    },
+    errors: {},
     isNew: true,
     isEditing: true,
+    isFetching: false,
+    isCreating: false,
+    isDeleting: false,
+    isDeleteModalOpen: false,
   };
 
 
   componentDidMount() {
-    const { student, match } = this.props;
+    const { match } = this.props;
 
-    /* If student was passed as a prop, then set the information for the student into the fields */
-    if (student) {
-      this.setStudent();
+    if (match.params.id) {
+      getStudentById(match.params.id).then(this.handleResponse).then(this.setStudent).catch(this.redirect);
+      this.setState({ isNew: false, isFetching: true });
     } else {
-      if (match.params.id) {
-        this.props.onFetchStudent(match.params.id);
-      }
+      this.setState({ isNew: true });
     }
+
+    this.fetchCareers();
   }
 
-  componentDidUpdate(prevProps: IProps) {
-    if (this.props.student && !prevProps.student) {
-      this.setStudent();
-    }
-  }
+  redirect = () => {
+    this.setState({ redirect: '/students' });
+  };
 
-  setStudent = () => {
-    const { email, name, lastName, id, identificationType, identification, address, career, birthday, file, password } = this.props.student as IStudent;
+  fetchCareers = () => {
+    // TODO implement when careers is implemented
+  };
+
+  handleResponse = (response: Response): Promise<IStudent> => {
+    if (response.status === 404) {
+      throw Error('Student not found');
+    }
+
+    return response.json();
+  };
+
+  setStudent = (student: IStudent) => {
+    this.setState({ student, isNew: false, isEditing: false, isFetching: false }, this.mapStudent);
+  };
+
+  mapStudent = () => {
+    const { student } = this.state;
+
+    if (!student) {
+      return;
+    }
+
+    const { email, name, lastName, id, password, file, birthday, career, address, identification, identificationType } = student;
     this.setState({
       ...this.state,
       fields: {
         ...this.state.fields,
         email,
         name,
-        lastName,
         id,
-        identification,
-        identificationType,
-        address,
-        careerId: career ? career.id : '',
-        birthday,
-        file,
+        lastName,
         password,
+        file,
+        address,
+        birthday,
+        career,
+        identificationType,
+        identification,
       },
-      isNew: false,
-      isEditing: false,
     });
   };
 
@@ -115,26 +132,11 @@ class StudentForm extends React.Component<IProps, IState> {
 
   handleSubmit = () => {
     if (this.validateAll()) {
-      const { identificationType, identification, lastName, name, file, id, email, password, address, birthday, careerId } = this.state.fields;
-      const student: IStudent = {
-        address,
-        identification,
-        identificationType,
-        id,
-        birthday,
-        lastName,
-        name,
-        file,
-        email,
-        password,
-        career: mapCareer(careerId),
-      };
-
       if (!this.state.isNew) {
-        this.props.onEdit(student).then(() => this.props.history.push('/students'));
+        updateStudent(this.state.fields).then(() => this.setState({ redirect: '/students' }));
       }
       else {
-        this.props.onCreate(student).then(() => this.props.history.push('/students'));
+        createStudent(this.state.fields).then(() => this.setState({ redirect: '/students' }));
       }
     }
   };
@@ -217,9 +219,9 @@ class StudentForm extends React.Component<IProps, IState> {
 
   handleCancel = () => {
     if (this.state.isNew) {
-      this.props.onCancel();
+      this.setState({ redirect: '/students' });
     } else {
-      this.setState({ ...this.state, isEditing: false }, this.setStudent);
+      this.setState({ isEditing: false }, this.mapStudent);
     }
   };
 
@@ -232,15 +234,24 @@ class StudentForm extends React.Component<IProps, IState> {
   };
 
   handleDeleteClick = () => {
-    this.props.onClickDelete(this.props.student as IStudent);
+    // this.props.onClickDelete(this.props.student as IStudent);
+    this.setState({ isDeleteModalOpen: true });
   };
 
   handleCloseDelete = () => {
-    this.props.onCloseDelete();
+    // this.props.onCloseDelete();
+    this.setState({ isDeleteModalOpen: false });
   };
 
   handleConfirmDelete = () => {
-    this.props.onConfirmDelete(this.props.student as IStudent).then(() => this.props.history.push('/students'));
+    // this.props.onConfirmDelete(this.props.student as IStudent).then(() => this.props.history.push('/students'));
+    const student = this.state.student;
+
+    if (!student) {
+      return;
+    }
+
+    deleteStudent(student.id).then(() => this.setState({ redirect: '/students' }));
   };
 
   renderTitle = () => {
@@ -264,13 +275,19 @@ class StudentForm extends React.Component<IProps, IState> {
   };
 
   render() {
-    const { fields, showPassword, errors } = this.state;
+    const { fields, showPassword, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
 
-    const { isDeleteConfirmationOpen } = this.props;
+    const userType = session.getUserType();
 
-    const { isFetchingStudent, isDeleting, isCreating } = this.props;
+    if (redirect) {
+      return <Redirect to={redirect} />;
+    }
 
-    if (isFetchingStudent || isDeleting || isCreating) {
+    if (userType !== 'Admin') {
+      return <Redirect to={'/students'} />;
+    }
+
+    if (isFetching || isDeleting || isCreating) {
       return <div><CircularProgress /></div>
     }
 
@@ -280,7 +297,7 @@ class StudentForm extends React.Component<IProps, IState> {
       <div className={styles.NewStudent}>
 
         {
-          isDeleteConfirmationOpen &&
+          isDeleteModalOpen &&
           <DeleteConfirmationDialog
             isLoading={isDeleting}
             userType={'student'}
@@ -324,39 +341,63 @@ class StudentForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['student-form-control']} error={errors.file}>
-                <InputLabel required htmlFor='student-email'>File</InputLabel>
+                <InputLabel required htmlFor='student-file'>File</InputLabel>
                 <Input id='student-file'
                        value={fields.file}
                        onChange={this.handleChange('file')}
                        readOnly={readOnly}
                 />
               </FormControl>
+              <FormControl className={styles['student-form-control']} error={errors.identification}>
+                <InputLabel required htmlFor='student-identification'>Identification</InputLabel>
+                <Input id='student-identification'
+                       value={fields.identification}
+                       onChange={this.handleChange('identification')}
+                       readOnly={readOnly}
+                />
+              </FormControl>
+              <FormControl className={styles['student-form-control']} error={errors.identificationType}>
+                <InputLabel required htmlFor='student-identificationType'>Identification type</InputLabel>
+                <Input id='student-identificationType'
+                       value={fields.identificationType}
+                       onChange={this.handleChange('identificationType')}
+                       readOnly={readOnly}
+                />
+              </FormControl>
               <FormControl className={styles['student-form-control']} error={errors.birthday}>
-                <InputLabel required htmlFor='student-birthday'>Birthday</InputLabel>
-                <Input
-                  id='student-birthday'
-                  value={fields.birthday}
-                  onChange={this.handleChange('birthday')}
-                  readOnly={readOnly}
-                  type={'date'}
+                <InputLabel required htmlFor='student-birthday' shrink>Birthday</InputLabel>
+                <Input id='student-birthday'
+                       value={fields.birthday}
+                       onChange={this.handleChange('birthday')}
+                       readOnly={readOnly}
+                       type={'date'}
                 />
               </FormControl>
               <FormControl className={styles['student-form-control']} error={errors.address}>
-                <InputLabel required htmlFor='student-address'>Address</InputLabel>
-                <Input
-                  id='student-address'
-                  value={fields.address}
-                  onChange={this.handleChange('address')}
-                  readOnly={readOnly}
-                  type={'text'}
+                <InputLabel required htmlFor='student-address' shrink>Address</InputLabel>
+                <Input id='student-address'
+                       value={fields.address}
+                       onChange={this.handleChange('address')}
+                       readOnly={readOnly}
                 />
               </FormControl>
+              {/* TODO uncomment when careers is implemented */}
+              {/*<FormControl className={styles['student-form-control']} error={errors.career}>
+                <InputLabel required htmlFor='student-career' shrink>Career</InputLabel>
+                <Select id='student-career'
+                        value={fields.career ? fields.career.id : ''}
+                        onChange={this.handleChange('career')}
+                        readOnly={readOnly}
+                >
+
+                </Select>
+              </FormControl>*/}
               <FormControl className={styles['student-form-control']} error={errors.password}>
                 <InputLabel required htmlFor='adornment-password'>Password</InputLabel>
                 <Input
                   id='adornment-password'
                   type={showPassword ? 'text' : 'password'}
-                  value={fields.password}
+                  value={this.state.isEditing ? fields.password : ""}
                   onChange={this.handleChange('password')}
                   endAdornment={
                     <InputAdornment position='end'>
@@ -418,4 +459,4 @@ class StudentForm extends React.Component<IProps, IState> {
   }
 }
 
-export default StudentForm;
+export default withRouter(StudentForm);

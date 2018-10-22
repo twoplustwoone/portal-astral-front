@@ -26,7 +26,15 @@ const LoadingOverlay = () => (
   </div>
 );
 
-export const DeleteConfirmationDialog = (props: { isLoading: boolean, userType: string, name: string, handleCloseDelete: () => void, handleConfirmDelete: () => void }) => {
+type Props = {
+  isLoading: boolean,
+  userType: string,
+  name: string,
+  handleCloseDelete: () => void,
+  handleConfirmDelete: () => void,
+};
+
+export const DeleteConfirmationDialog = (props: Props) => {
   return <Dialog open={true}>
     <DialogTitle>Confirm delete "{`${props.name}`}"</DialogTitle>
     <DialogContent>
@@ -44,4 +52,4 @@ export const DeleteConfirmationDialog = (props: { isLoading: boolean, userType: 
       </Button>
     </DialogActions>
   </Dialog>;
-}
+};

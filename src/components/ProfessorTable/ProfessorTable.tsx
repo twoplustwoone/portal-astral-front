@@ -4,65 +4,100 @@ import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, IconBu
 import { DeleteOutline, Edit } from "@material-ui/icons";
 import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
-import { IProfessor } from "../../../globals";
+import { deleteProfessor, getAllProfessors } from "../../utils/api";
+import { Link } from "react-router-dom";
+import session from "../../utils/session";
+import { Redirect } from "react-router";
 
 // const styles = require('./ProfessorTable.pcss');
 
 class ProfessorTable extends React.Component<IProps, IState> {
 
   state: IState = {
-    professorBeingDeleted: undefined,
+    professorBeingDeleted: null,
+    professors: [],
+    isDeleting: false,
   };
 
   componentDidMount() {
-    this.props.onFetchProfessors();
+    this.fetchProfessors();
   }
 
-  handleDeleteClick = (id: string) => {
-    const professors = this.props.professors;
+  fetchProfessors = () => {
+    getAllProfessors().then(this.handleResponse).then(this.receiveProfessors);
+  };
 
-    this.props.onClickDeleteProfessor(id);
-    this.setState({
-      professorBeingDeleted: professors.find(professor => professor.id === id),
-    })
+  handleResponse = (response: Response) => {
+    return response.json();
+  };
+
+  handleDeleteClick = (id: string) => {
+    const professors = this.state.professors;
+
+    const professorBeingDeleted = professors.find(professor => professor.id === id);
+    if (!professorBeingDeleted) {
+      return;
+    }
+
+    this.setState({ professorBeingDeleted });
   };
 
   handleCloseDelete = () => {
-    this.props.onCloseDelete();
+    this.setState({ isDeleting: false, professorBeingDeleted: null });
   };
 
   handleConfirmDelete = () => {
-    this.props.onConfirmDelete(this.state.professorBeingDeleted as IProfessor);
+    const { professorBeingDeleted } = this.state;
+
+    if (!professorBeingDeleted) {
+      return;
+    }
+
+    this.setState({ isDeleting: true });
+    deleteProfessor(professorBeingDeleted.id).then(() => {
+      this.handleCloseDelete();
+      this.fetchProfessors();
+    });
+  };
+
+  receiveProfessors = (professors: IProfessor[]) => {
+    this.setState({ professors })
   };
 
   render() {
-    const { professors = [], isDeleteConfirmationOpen, isDeletingProfessor } = this.props;
-    const { professorBeingDeleted } = this.state;
+    const { professorBeingDeleted, isDeleting, professors } = this.state;
 
     const name = professorBeingDeleted ? `${professorBeingDeleted.name} ${professorBeingDeleted.lastName}` : '';
+
+    const userType = session.getUserType();
+
+    if (userType === 'Student') {
+      return <Redirect to={'/'} />;
+    }
 
     return (
       <div>
         {
-          isDeleteConfirmationOpen &&
+          professorBeingDeleted &&
           <DeleteConfirmationDialog
             userType={'professor'}
             name={name}
             handleCloseDelete={this.handleCloseDelete}
             handleConfirmDelete={this.handleConfirmDelete}
-            isLoading={isDeletingProfessor}
+            isLoading={isDeleting}
           />
         }
         <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <Button
-            variant="fab"
-            color="primary"
-            aria-label="Add"
-            onClick={() => this.props.history.push('/new-professor')}
-            mini
-          >
-            <AddIcon />
-          </Button>
+          <Link to={'/new-professor'}>
+            <Button
+              variant="fab"
+              color="primary"
+              aria-label="Add"
+              mini
+            >
+              <AddIcon />
+            </Button>
+          </Link>
         </div>
         <Paper>
           <div>
@@ -84,14 +119,19 @@ class ProfessorTable extends React.Component<IProps, IState> {
                         <TableCell>{row.name}</TableCell>
                         <TableCell>{row.lastName}</TableCell>
                         <TableCell>{row.email}</TableCell>
-                        <TableCell>
-                          <IconButton onClick={() => this.props.history.push('/professor/' + row.id)}>
-                            <Edit />
-                          </IconButton>
-                          <IconButton onClick={() => this.handleDeleteClick(row.id)}>
-                            <DeleteOutline />
-                          </IconButton>
-                        </TableCell>
+                        {
+                          userType === 'Admin' &&
+                          <TableCell>
+                            <Link to={`/professor/${row.id}`}>
+                              <IconButton>
+                                <Edit />
+                              </IconButton>
+                            </Link>
+                            <IconButton onClick={() => this.handleDeleteClick(row.id)}>
+                              <DeleteOutline />
+                            </IconButton>
+                          </TableCell>
+                        }
                       </TableRow>
                     );
                   })
