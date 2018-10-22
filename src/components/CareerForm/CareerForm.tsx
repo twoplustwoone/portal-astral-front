@@ -211,11 +211,10 @@ class CareerForm extends React.Component<IProps, IState> {
                     onClose={this.handleCloseDelete}
                     aria-labelledby="responsive-dialog-title"
                 >
-                    <DialogTitle id="responsive-dialog-title">{"Use Google's location service?"}</DialogTitle>
+                    <DialogTitle id="responsive-dialog-title">{"Dialog"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Let Google help apps determine location. This means sending anonymous location data to
-                            Google, even when no apps are running.
+                            Dialog
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
