@@ -316,6 +316,14 @@ export const deleteExam = (id: string): Promise<Response> => {
     return fetch(url, init);
 };
 
+export const getAllExams = (): Promise<Response> => {
+    const url = 'http://localhost:9000/exam';
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
 /* Authentication endpoints */
 
 export const login = (credentials: ILogin): Promise<Response> => {
