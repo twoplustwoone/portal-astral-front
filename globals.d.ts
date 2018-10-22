@@ -29,6 +29,8 @@ declare interface IStudent extends IUser {
 
 declare interface ICareer {
   id: string;
+  name: string;
+  subjects: string[];
 }
 
 declare interface ISubject {
