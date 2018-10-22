@@ -26,6 +26,7 @@ import Profile from "../Profile/Profile";
 import CourseTable from "../CourseTable/CourseTable";
 import CourseForm from "../CourseForm/CourseForm";
 import ExamFrom from "../ExamForm/ExamFrom";
+import {MyCourses} from "../MyCourses/MyCourses";
 
 const styles = require('./App.pcss');
 
@@ -68,6 +69,8 @@ function Content(props: { classes: any }) {
     <PrivateRoute path={'/course/:id'} component={CourseForm} />
     <PrivateRoute path={'/new-exam'} component={ExamFrom} />
     <PrivateRoute path={'/exam/:id'} component={ExamFrom} />
+
+    <PrivateRoute path={'/my-courses'} component={MyCourses}/>
   </div>;
 }
 

@@ -95,6 +95,18 @@ function CourseItem(props: { pathname: string }) {
   </Link>;
 }
 
+function MyCoursesItem(props: { pathname: string }) {
+    return <Link to={"/my-courses"} className={styles.link}>
+        <ListItem className={styles.listItem} selected={props.pathname === '/my-courses'}>
+            <ListItemIcon>
+                <GolfCourse />
+            </ListItemIcon>
+            <ListItemText primary='My Courses' />
+        </ListItem>
+    </Link>;
+}
+
+
 class Sidebar extends React.Component<Props, State> {
 
   state: State = {
@@ -135,6 +147,8 @@ class Sidebar extends React.Component<Props, State> {
           <SubjectItem pathname={pathname} />
 
           <CourseItem pathname={pathname} />
+
+            {userType === 'Student' && <MyCoursesItem pathname={pathname}/> }
 
         </List>
       </div>
