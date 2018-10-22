@@ -270,6 +270,51 @@ export const deleteCourse = (id: string): Promise<Response> => {
     return fetch(url, init);
 };
 
+
+export const deleteExam = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/exam/${id}`;
+    const init: RequestInit = {
+        method: 'DELETE',
+/* Exam endpoints */
+
+export const createExam = (exam: IExam): Promise<Response> => {
+    const url = 'http://localhost:9000/exam';
+    const init: RequestInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exam),
+    };
+
+    return fetch(url, init);
+};
+
+export const getAllExams = (): Promise<Response> => {
+    const url = 'http://localhost:9000/exam';
+
+export const getExamById = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/exam/${id}`;
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
+export const updateExam = (exam: IExam): Promise<Response> => {
+    const url = `http://localhost:9000/exam/${exam.id}`;
+    const init: RequestInit = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exam),
+    };
+
+    return fetch(url, init);
+};
+
 export const deleteExam = (id: string): Promise<Response> => {
     const url = `http://localhost:9000/exam/${id}`;
     const init: RequestInit = {
@@ -278,16 +323,6 @@ export const deleteExam = (id: string): Promise<Response> => {
 
     return fetch(url, init);
 };
-
-export const getAllExams = (): Promise<Response> => {
-    const url = 'http://localhost:9000/exam';
-    const init: RequestInit = {
-        method: 'GET',
-    };
-
-    return fetch(url, init);
-};
-
 /* Authentication endpoints */
 
 export const login = (credentials: ILogin): Promise<Response> => {
