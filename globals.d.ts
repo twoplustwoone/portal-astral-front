@@ -50,8 +50,8 @@ declare interface ICourse {
 
 declare interface IExam {
     id: string;
-    date: string;
     course: ICourse;
+    date: string;
 }
 
 declare type UserType = 'Professor' | 'Admin' | 'Student';

@@ -283,6 +283,11 @@ export const enrollStudentInCourse = (id: string, studentId: string): Promise<Re
     return fetch(url, init);
 };
 
+
+export const deleteExam = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/exam/${id}`;
+    const init: RequestInit = {
+        method: 'DELETE',
 /* Exam endpoints */
 
 export const createExam = (exam: IExam): Promise<Response> => {
@@ -297,6 +302,9 @@ export const createExam = (exam: IExam): Promise<Response> => {
 
     return fetch(url, init);
 };
+
+export const getAllExams = (): Promise<Response> => {
+    const url = 'http://localhost:9000/exam';
 
 export const getExamById = (id: string): Promise<Response> => {
     const url = `http://localhost:9000/exam/${id}`;
