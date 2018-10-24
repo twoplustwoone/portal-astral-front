@@ -44,7 +44,7 @@ class CourseTable extends React.Component<IProps, IState> {
 
     handleEnrollment = (id: string) => {
         enrollStudentInCourse(id, (session.getUser() as IStudent).id).then(() =>{
-            this.setState({redirect: "/my-courses"});
+            this.setState({redirect: "/courses"});
             console.log("enrolled");
         });
     };
@@ -68,7 +68,7 @@ class CourseTable extends React.Component<IProps, IState> {
     };
 
     redirect = () => {
-        this.setState({ redirect: '/my-courses' });
+        this.setState({ redirect: '/courses' });
     };
 
     receiveCourses = (courses: ICourse[]) => {
@@ -96,8 +96,20 @@ class CourseTable extends React.Component<IProps, IState> {
             return <Redirect to={redirect} />;
         }
 
-        function filter(elem: ICourse){
-            return elem.startTime < today.toISOString() && elem.endTime > today.toISOString();
+        function filter(course: ICourse) {
+            if(course.startTime < today.toISOString() && course.endTime > today.toISOString()) {
+                if(course.enrolled.length > 0){
+                    return !course.enrolled.map(student =>
+                        student.id == (session.getUser() as IStudent).id)
+                        .reduceRight(
+                            (accumulator, currentValue) => accumulator || currentValue,
+                        );
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
         }
 
         isStudent? this.filteredCourses = courses.filter(filter): false;

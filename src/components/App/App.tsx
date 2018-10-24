@@ -70,7 +70,7 @@ function Content(props: { classes: any }) {
     <PrivateRoute path={'/new-exam'} component={ExamFrom} />
     <PrivateRoute path={'/exam/:id'} component={ExamFrom} />
     <PrivateRoute path={'/all-courses'} component={CourseTable} />
-      <PrivateRoute path={'/my-courses'} component={MyCourseTable} />
+    <PrivateRoute path={'/my-courses'} component={MyCourseTable} />
   </div>;
 }
 

@@ -277,7 +277,7 @@ export const enrollStudentInCourse = (id: string, studentId: string): Promise<Re
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(studentId),
+        body: JSON.stringify({ id: studentId}),
     };
 
     return fetch(url, init);
