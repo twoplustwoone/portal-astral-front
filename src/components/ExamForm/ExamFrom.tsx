@@ -31,6 +31,7 @@ class ExamForm extends React.Component<IProps, IState> {
                 startTime: '',
                 endTime: '',
                 schedule: [],
+                enrolled: [],
                 subject: {
                     id: '',
                     subjectName: '',

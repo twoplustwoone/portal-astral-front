@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText/ListItemText';
 import { Props, State } from "./types";
 import { Link, withRouter } from "react-router-dom";
 import session from "../../../utils/session";
+import {BusinessCenter, Description} from "@material-ui/icons";
 
 const drawerWidth = 240;
 
@@ -95,6 +96,39 @@ function CourseItem(props: { pathname: string }) {
   </Link>;
 }
 
+function AllCoursesItem(props: { pathname: string }) {
+    return <Link to={"/all-courses"} className={styles.link}>
+        <ListItem className={styles.listItem} selected={props.pathname === '/all-courses'}>
+            <ListItemIcon>
+                <GolfCourse />
+            </ListItemIcon>
+            <ListItemText primary='All courses' />
+        </ListItem>
+    </Link>;
+}
+
+function MyCoursesItem(props: { pathname: string }) {
+    return <Link to={"/my-courses"} className={styles.link}>
+        <ListItem className={styles.listItem} selected={props.pathname === '/my-courses'}>
+            <ListItemIcon>
+                <BusinessCenter />
+            </ListItemIcon>
+            <ListItemText primary='My courses' />
+        </ListItem>
+    </Link>;
+}
+
+function MyExamsItem(props: { pathname: string }) {
+    return <Link to={"/my-exams"} className={styles.link}>
+        <ListItem className={styles.listItem} selected={props.pathname === '/my-exams'}>
+            <ListItemIcon>
+                <Description />
+            </ListItemIcon>
+            <ListItemText primary='My exams' />
+        </ListItem>
+    </Link>;
+}
+
 class Sidebar extends React.Component<Props, State> {
 
   state: State = {
@@ -130,11 +164,17 @@ class Sidebar extends React.Component<Props, State> {
 
           {userType === 'Professor' || userType === 'Admin' && <ProfessorItem pathname={pathname} />}
 
-          <StudentItem pathname={pathname} />
+          {userType !== 'Student' && <StudentItem pathname={pathname} />}
 
-          <SubjectItem pathname={pathname} />
+          {userType !== 'Student' && <SubjectItem pathname={pathname} />}
 
-          <CourseItem pathname={pathname} />
+          {userType === 'Professor' || userType === 'Admin' && <CourseItem pathname={pathname} />}
+
+          {userType === 'Student' && <AllCoursesItem pathname={pathname} />}
+
+          {userType === 'Student' && <MyCoursesItem pathname={pathname} />}
+
+          {userType === 'Student' && <MyExamsItem pathname={pathname} />}
 
         </List>
       </div>

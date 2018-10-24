@@ -45,6 +45,7 @@ declare interface ICourse {
   endTime: string;
   subject: ISubject;
   schedule: string[];
+  enrolled: IStudent[];
 }
 
 declare interface IExam {

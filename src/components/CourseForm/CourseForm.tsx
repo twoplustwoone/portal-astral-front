@@ -35,6 +35,7 @@ class CourseForm extends React.Component<IProps, IState> {
             schedule: [],
             id: '',
             requiredSubjects: [],
+            enrolled: [],
         },
         showPassword: false,
         errors: {},

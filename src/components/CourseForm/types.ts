@@ -30,6 +30,7 @@ export interface IFields {
     id: string;
     schedule: string[];
     requiredSubjects: string[];
+    enrolled: IStudent[];
 }
 
 export type IErrors = {

@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { IProps, IState } from './types';
 import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, IconButton } from "@material-ui/core";
-import { DeleteOutline, Edit } from "@material-ui/icons";
+import {ControlPoint, DeleteOutline, Edit} from "@material-ui/icons";
 import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
-import { deleteCourse, getAllCourses } from "../../utils/api";
-import { Link } from "react-router-dom";
+import {deleteCourse, enrollStudentInCourse, getAllCourses} from "../../utils/api";
+import {Link, Redirect} from "react-router-dom";
 import session from "../../utils/session";
-import { Redirect } from "react-router";
 
 // const styles = require('./CourseTable.pcss');
 
@@ -17,6 +16,7 @@ class CourseTable extends React.Component<IProps, IState> {
         courseBeingDeleted: null,
         courses: [],
         isDeleting: false,
+        redirect: '',
     };
 
     componentDidMount() {
@@ -42,6 +42,13 @@ class CourseTable extends React.Component<IProps, IState> {
         this.setState({ courseBeingDeleted });
     };
 
+    handleEnrollment = (id: string) => {
+        enrollStudentInCourse(id, (session.getUser() as IStudent).id).then(() =>{
+            this.setState({redirect: "/my-courses"});
+            console.log("enrolled");
+        });
+    };
+
     handleCloseDelete = () => {
         this.setState({ isDeleting: false, courseBeingDeleted: null });
     };
@@ -60,20 +67,40 @@ class CourseTable extends React.Component<IProps, IState> {
         });
     };
 
+    redirect = () => {
+        this.setState({ redirect: '/my-courses' });
+    };
+
     receiveCourses = (courses: ICourse[]) => {
         this.setState({ courses: courses })
     };
 
+    private filteredCourses: any;
+
     render() {
-        const { courseBeingDeleted, isDeleting, courses } = this.state;
+        const { courseBeingDeleted, isDeleting, courses, redirect} = this.state;
 
         const name = courseBeingDeleted ? `${courseBeingDeleted.subject.subjectName}` : '';
 
         const userType = session.getUserType();
 
-        if (userType === 'Student') {
-            return <Redirect to={'/'} />;
+        var isStudent = false;
+
+        var today = new Date();
+
+        if (userType === 'Student'){
+            isStudent = true;
         }
+
+        if (redirect) {
+            return <Redirect to={redirect} />;
+        }
+
+        function filter(elem: ICourse){
+            return elem.startTime < today.toISOString() && elem.endTime > today.toISOString();
+        }
+
+        isStudent? this.filteredCourses = courses.filter(filter): false;
 
         return (
             <div>
@@ -87,18 +114,21 @@ class CourseTable extends React.Component<IProps, IState> {
                         isLoading={isDeleting}
                     />
                 }
-                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                    <Link to={'/new-course'}>
-                        <Button
-                            variant="fab"
-                            color="primary"
-                            aria-label="Add"
-                            mini
-                        >
-                            <AddIcon />
-                        </Button>
-                    </Link>
-                </div>
+                {
+                    !isStudent &&
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                        <Link to={'/new-course'}>
+                            <Button
+                                variant="fab"
+                                color="primary"
+                                aria-label="Add"
+                                mini
+                            >
+                                <AddIcon />
+                            </Button>
+                        </Link>
+                    </div>
+                }
                 <Paper>
                     <div>
                         <Table>
@@ -114,6 +144,25 @@ class CourseTable extends React.Component<IProps, IState> {
                             <TableBody>
 
                                 {
+                                    isStudent?
+                                    this.filteredCourses.map(row => {
+                                        return (
+                                            <TableRow key={row.id}>
+                                                <TableCell>{row.subject.subjectName}</TableCell>
+                                                <TableCell>{row.startTime}</TableCell>
+                                                <TableCell>{row.endTime}</TableCell>
+                                                <TableCell>{row.schedule}</TableCell>
+                                                {
+                                                    <TableCell>
+                                                        <IconButton onClick={() => this.handleEnrollment(row.id)}>
+                                                            <ControlPoint />
+                                                        </IconButton>
+                                                    </TableCell>
+                                                }
+                                            </TableRow>
+                                        );
+                                    })
+                                    :
                                     courses.map(row => {
                                         return (
                                             <TableRow key={row.id}>

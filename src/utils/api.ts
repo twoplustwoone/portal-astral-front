@@ -270,6 +270,19 @@ export const deleteCourse = (id: string): Promise<Response> => {
     return fetch(url, init);
 };
 
+export const enrollStudentInCourse = (id: string, studentId: string): Promise<Response> => {
+    const url = `http://localhost:9000/enrollStudent/${id}`;
+    const init: RequestInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(studentId),
+    };
+
+    return fetch(url, init);
+};
+
 /* Exam endpoints */
 
 export const createExam = (exam: IExam): Promise<Response> => {
