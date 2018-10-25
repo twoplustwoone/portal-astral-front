@@ -100,7 +100,7 @@ function ExamItem(props: { pathname: string }) {
   return <Link to={"/exams"} className={styles.link}>
     <ListItem className={styles.listItem} selected={props.pathname === '/exams'}>
       <ListItemIcon>
-        <Assigment />
+        <Description />
       </ListItemIcon>
       <ListItemText primary='Exams' />
     </ListItem>
@@ -187,7 +187,7 @@ class Sidebar extends React.Component<Props, State> {
 
           {userType === 'Student' && <MyExamsItem pathname={pathname} />}
 
-          <ExamItem pathname={pathname} />
+          {userType !== 'Student' && <ExamItem pathname={pathname} />}
 
         </List>
       </div>

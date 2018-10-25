@@ -6,6 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { deleteExam, getAllExams } from "../../utils/api";
 import { Link } from "react-router-dom";
+import session from "../../utils/session";
 
 // const styles = require('./ExamTable.pcss');
 
@@ -66,10 +67,30 @@ class ExamTable extends React.Component<IProps, IState> {
     this.setState({ exams })
   };
 
+    private filteredExams: any;
+
   render() {
     const { examBeingDeleted, isDeleting, exams } = this.state;
 
     const name = examBeingDeleted ? `${examBeingDeleted.course.subject.subjectName}` : '';
+
+    let isStudent = session.getUserType() === 'Student';
+    let text = '';
+
+      function filter(exam: IExam) {
+          if(exam.course.enrolled.length > 0){
+              return exam.course.enrolled.map(student =>
+                  student.id == (session.getUser() as IStudent).id)
+                  .reduceRight(
+                      (accumulator, currentValue) => accumulator || currentValue,
+                  );
+          } else {
+              return false;
+          }
+      }
+
+    isStudent? this.filteredExams = exams.filter(filter): false;
+    isStudent? text = "Grade": text = "";
 
     return (
       <div>
@@ -83,18 +104,21 @@ class ExamTable extends React.Component<IProps, IState> {
             isLoading={isDeleting}
           />
         }
-        <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <Link to={'/new-exam'}>
-            <Button
-              variant="fab"
-              color="primary"
-              aria-label="Add"
-              mini
-            >
-              <AddIcon />
-            </Button>
-          </Link>
-        </div>
+          {
+              !isStudent &&
+              <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                  <Link to={'/new-exam'}>
+                      <Button
+                          variant="fab"
+                          color="primary"
+                          aria-label="Add"
+                          mini
+                      >
+                          <AddIcon />
+                      </Button>
+                  </Link>
+              </div>
+          }
         <Paper>
           <div>
             <Table>
@@ -102,29 +126,41 @@ class ExamTable extends React.Component<IProps, IState> {
                 <TableRow>
                   <TableCell>Subject</TableCell>
                   <TableCell>Date</TableCell>
-                  <TableCell />
+                  <TableCell>{text}</TableCell>
                 </TableRow>
               </TableHead>
+
               <TableBody>
 
                 {
-                  exams.map(row => {
-                    return (
-                      <TableRow key={row.id}>
-                        <TableCell>{row.course.subject.subjectName}</TableCell>
-                        <TableCell>{row.date}</TableCell>
-                        <TableCell>
-                          <Link to={`/exam/${row.id}`}>
-                            <IconButton>
-                              <Edit />
-                            </IconButton>
-                          </Link>
-                          <IconButton onClick={() => this.handleDeleteClick(row.id)}>
-                            <DeleteOutline />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
+                    isStudent?
+                        this.filteredExams.map( row => {
+                            return (
+                                <TableRow key={row.id}>
+                                    <TableCell>{row.course.subject.subjectName}</TableCell>
+                                    <TableCell>{row.date}</TableCell>
+                                    <TableCell>{"jeje aprobaste"}</TableCell>
+                                </TableRow>
+                            );
+                        })
+                        :
+                      exams.map(row => {
+                        return (
+                            <TableRow key={row.id}>
+                                <TableCell>{row.course.subject.subjectName}</TableCell>
+                                <TableCell>{row.date}</TableCell>
+                                <TableCell>
+                                    <Link to={`/exam/${row.id}`}>
+                                        <IconButton>
+                                            <Edit />
+                                        </IconButton>
+                                    </Link>
+                                    <IconButton onClick={() => this.handleDeleteClick(row.id)}>
+                                        <DeleteOutline />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        );
                   })
                 }
 

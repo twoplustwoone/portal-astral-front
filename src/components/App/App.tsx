@@ -67,13 +67,14 @@ function Content(props: { classes: any }) {
     <PrivateRoute path={'/new-subject'} component={SubjectForm} />
     <PrivateRoute path={'/courses'} component={CourseTable} />
     <PrivateRoute path={'/new-course'} component={CourseForm} />
-      <PrivateRoute path={'/course/:id'} component={CourseForm} />
-      <PrivateRoute path={'/exams'} component={ExamTable} />
+    <PrivateRoute path={'/course/:id'} component={CourseForm} />
+    <PrivateRoute path={'/exams'} component={ExamTable} />
     <PrivateRoute path={'/course/:id'} component={CourseForm} />
     <PrivateRoute path={'/new-exam'} component={ExamFrom} />
     <PrivateRoute path={'/exam/:id'} component={ExamFrom} />
     <PrivateRoute path={'/all-courses'} component={CourseTable} />
     <PrivateRoute path={'/my-courses'} component={MyCourseTable} />
+    <PrivateRoute path={'/my-exams'} component={ExamFrom} />
   </div>;
 }
 

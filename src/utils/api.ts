@@ -288,6 +288,11 @@ export const deleteExam = (id: string): Promise<Response> => {
     const url = `http://localhost:9000/exam/${id}`;
     const init: RequestInit = {
         method: 'DELETE',
+    };
+
+    return fetch(url, init);
+};
+
 /* Exam endpoints */
 
 export const createExam = (exam: IExam): Promise<Response> => {
@@ -305,6 +310,12 @@ export const createExam = (exam: IExam): Promise<Response> => {
 
 export const getAllExams = (): Promise<Response> => {
     const url = 'http://localhost:9000/exam';
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
 
 export const getExamById = (id: string): Promise<Response> => {
     const url = `http://localhost:9000/exam/${id}`;
@@ -323,15 +334,6 @@ export const updateExam = (exam: IExam): Promise<Response> => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(exam),
-    };
-
-    return fetch(url, init);
-};
-
-export const deleteExam = (id: string): Promise<Response> => {
-    const url = `http://localhost:9000/exam/${id}`;
-    const init: RequestInit = {
-        method: 'DELETE',
     };
 
     return fetch(url, init);

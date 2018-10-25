@@ -84,9 +84,9 @@ class CourseTable extends React.Component<IProps, IState> {
 
         const userType = session.getUserType();
 
-        var isStudent = false;
+        let isStudent = false;
 
-        var today = new Date();
+        const today = new Date();
 
         if (userType === 'Student'){
             isStudent = true;
