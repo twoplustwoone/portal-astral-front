@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { IProps, IState } from './types';
-import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, IconButton } from "@material-ui/core";
+import { Paper, Table, TableBody, TableCell, TableHead, TableRow, IconButton } from "@material-ui/core";
 import { DeleteOutline, Edit } from "@material-ui/icons";
-import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import { deleteExamInscription, getAllExamInscriptionsbyCourseId } from "../../utils/api";
 import { Link } from "react-router-dom";
@@ -84,18 +83,6 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
             isLoading={isDeleting}
           />
         }
-        <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <Link to={'/new-examInscription'}>
-            <Button
-              variant="fab"
-              color="primary"
-              aria-label="Add"
-              mini
-            >
-              <AddIcon />
-            </Button>
-          </Link>
-        </div>
         <Paper>
           <div>
             <Table>
