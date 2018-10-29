@@ -13,24 +13,53 @@ import {
 } from "@material-ui/core";
 import {DateTime, Interval} from 'luxon'
 import * as RemoteData from "@devexperts/remote-data-ts";
+import {field, string, succeed} from "jsonous";
+import Decoder from "jsonous/Decoder";
+
+import {iso, Newtype} from "newtype-ts";
+
+
+// ---- HELPER TYPES ----
+
 
 type WebData<T> = RemoteData.RemoteData<string, T>
 
+interface CourseID extends Newtype<{ readonly CourseID: unique symbol }, string> {
+}
+
+interface ExamID extends Newtype<{ readonly ExamID: unique symbol }, string> {
+}
+
+interface StudentID extends Newtype<{ readonly ExamID: unique symbol }, string> {
+}
+
+const isoCourseID = iso<CourseID>();
+const isoStudentID = iso<StudentID>();
+const isoExamID = iso<ExamID>();
+
+
+// ---- MODEL TYPES ----
+
+
 type Course = {
-    id: string
+    id: CourseID
     subjectName: string,
     interval: Interval,
-    exams: string[],
+    exams: ExamID[],
+}
+
+type Student = {
+    id: StudentID,
 }
 
 type Exam = {
-    id: string
+    id: ExamID
     date: DateTime,
-    description: string,
-    grade: number,
+    grade: Option<number>,
 }
 
 type Model = {
+    currentUser: Option<Student>
     currentDate: Option<DateTime>
     examsDict: HashMap<String, Exam>,
     courses: HashMap<String, Course>,
@@ -38,26 +67,31 @@ type Model = {
     examsModalOpen: boolean,
 }
 
+
+// ---- INITIAL MODEL ----
+
+
 const demo: Model = {
+    currentUser: Option.none(),
     currentDate: Option.none(),
 
     examsDict: HashMap.of(
-        ["e1", {id: "e1", description: "Parcial 1", date: DateTime.local(2018, 3, 11), grade: 8.0}],
-        ["e2", {id: "e2", description: "Parcial 2", date: DateTime.local(2018, 3, 12), grade: 4.0}],
-        ["e3", {id: "e3", description: "Final", date: DateTime.local(2018, 3, 13), grade: 7.0}],
+        ["e1", {id: isoExamID.wrap("e1"), date: DateTime.local(2018, 3, 11), grade: Option.some(8.0)}],
+        ["e2", {id: isoExamID.wrap("e2"), date: DateTime.local(2018, 3, 12), grade: Option.some(4.0)}],
+        ["e3", {id: isoExamID.wrap("e3"), date: DateTime.local(2018, 3, 13), grade: Option.some(7.0)}],
     ),
 
     courses: HashMap.of(
         ["c1", {
-            id: 'c1',
+            id: isoCourseID.wrap('c1'),
             subjectName: "Alg 1",
-            exams: ["e1", "e2", "e3"],
+            exams: ["e1", "e2", "e3"].map(isoExamID.wrap),
             interval: Interval.fromDateTimes(DateTime.utc(2017, 3, 13), DateTime.utc(2017, 5, 15)),
         }],
         ["c2", {
-            id: 'c2',
+            id: isoCourseID.wrap('c2'),
             subjectName: "Alg 2",
-            exams: ["e1", "e2"],
+            exams: ["e1", "e2"].map(isoExamID.wrap),
             interval: Interval.fromDateTimes(DateTime.utc(2018, 3, 13), DateTime.utc(2018, 12, 15)),
         }],
     ),
@@ -65,7 +99,6 @@ const demo: Model = {
     modalExams: RemoteData.initial,
     examsModalOpen: false,
 }
-
 
 export class MyCourses extends React.Component<{}, Readonly<Model>> {
 
@@ -81,6 +114,14 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
     }
 
     componentDidMount() {
+        this.setState({
+            currentUser: userDecoder.decodeAny(sessionStorage.getItem('user'))
+                .cata({
+                    Err: err => Option.none(),
+                    Ok: user => Option.some(user),
+                }),
+        });
+
         setInterval(
             () => this.updateTime(),
             1000,
@@ -97,15 +138,15 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
     }
 
 
-    openExamsModal(courseId: string) {
+    openExamsModal(courseId: CourseID) {
         this.setState(
             (prevState: Model): Model => ({
                 ...prevState,
                 examsModalOpen: true,
                 modalExams: RemoteData.success(
                     this.state.courses
-                        .get(courseId)
-                        .flatMap(c => Option.sequence(c.exams.map(eid => this.state.examsDict.get(eid))))
+                        .get(isoCourseID.unwrap(courseId))
+                        .flatMap(c => Option.sequence(c.exams.map(eid => this.state.examsDict.get(isoExamID.unwrap(eid)))))
                         .match({
                             Some: es => es.toArray(),
                             None: () => [],
@@ -125,11 +166,9 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
         )
     }
 
-    unenroll(studentId: string, courseId: string) {
+    unenroll(studentId: StudentID, courseId: CourseID) {
 
     }
-
-    // ---- VIEW ----
 
     render(): React.ReactNode {
 
@@ -207,7 +246,7 @@ const coursesTable = (rowFn: (course: Course) => React.ReactNode) => (courses: C
 
 const courseRow = (actions: React.ReactNode) => (course: Course): React.ReactNode => {
     return (
-        <TableRow key={course.id}>
+        <TableRow key={isoCourseID.unwrap(course.id)}>
             <TableCell>{course.subjectName}</TableCell>
             <TableCell>{course.interval.start.setLocale('es-AR').toLocaleString(DateTime.DATE_SHORT)}</TableCell>
             <TableCell>{course.interval.end.setLocale('es-AR').toLocaleString(DateTime.DATE_SHORT)}</TableCell>
@@ -217,13 +256,14 @@ const courseRow = (actions: React.ReactNode) => (course: Course): React.ReactNod
 };
 
 const courseInProgressRow =
-    (onExamsClick: (courseId: string) => any) => (onUnenrollClick: (studentId: string, courseId: string) => any) => (course: Course) => {
+    (onExamsClick: (courseId: CourseID) => any) => (onUnenrollClick: (studentId: StudentID, courseId: CourseID) => any) => (course: Course) => {
         return (
             courseRow
             (
                 // TODO user id
                 <div>
-                    <Button onClick={() => onUnenrollClick("", course.id)} variant="contained" color="primary"
+                    <Button onClick={() => onUnenrollClick(isoStudentID.wrap(""), course.id)} variant="contained"
+                            color="primary"
                             style={{marginRight: '5px'}}>
                         Unenroll
                     </Button>
@@ -236,7 +276,7 @@ const courseInProgressRow =
         )
     };
 
-const courseFinishedRow = (onExamsClick: (courseId: string) => any) => (course: Course) => {
+const courseFinishedRow = (onExamsClick: (courseId: CourseID) => any) => (course: Course) => {
     return (
         courseRow
         (
@@ -250,24 +290,27 @@ const courseFinishedRow = (onExamsClick: (courseId: string) => any) => (course: 
     );
 };
 
-const examTable = (exams: Exam[]) : React.ReactNode => {
+const examTable = (exams: Exam[]): React.ReactNode => {
     return (
         <Paper>
             <Table>
                 <TableHead>
                     <TableRow>
                         <TableCell>Date</TableCell>
-                        <TableCell>Description</TableCell>
                         <TableCell>Grade</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {exams.map(e => {
                         return (
-                            <TableRow key={e.id}>
+                            <TableRow key={isoExamID.unwrap(e.id)}>
                                 <TableCell>{e.date.setLocale('es-AR').toLocaleString(DateTime.DATE_SHORT)}</TableCell>
-                                <TableCell>{e.description}</TableCell>
-                                <TableCell>{e.grade.toFixed(2)}</TableCell>
+                                <TableCell>
+                                    {e.grade.match({
+                                        Some: (g => g.toFixed(2)),
+                                        None: () => "No grade",
+                                    })}
+                                </TableCell>
                             </TableRow>
                         )
                     })}
@@ -275,10 +318,54 @@ const examTable = (exams: Exam[]) : React.ReactNode => {
             </Table>
         </Paper>
     )
-}
+};
 
 const translateCenter = {
     left: "50%",
     top: "50%",
     transform: "translate(-50%, -50%)",
-}
+};
+
+
+// function map2<A, B, C>(decA: Decoder<A>, decB: Decoder<B>, fn: ((a: A, b: B) => C)): Decoder<C> {
+//     return new Decoder(value => {
+//         return decA.decodeAny(value)
+//             .andThen(a => decB.decodeAny(value)
+//                 .andThen(b => ok(fn(a, b))),
+//             )
+//     });
+// }
+//
+// function option<A>(decoder: Decoder<A>): Decoder<Option<A>> {
+//     return new Decoder(value => {
+//         return decoder.decodeAny(value).cata({
+//             Err: e => ok(Option.none()),
+//             Ok: v => ok(Option.some(v)),
+//         });
+//     });
+// }
+
+// const stringToDateTime = (str: string) => DateTime.fromFormat(str, 'd/M/yyyy');
+//
+// const courseDecoder: Decoder<Course> =
+//     succeed({})
+//         .assign('id', field('id', string).map(isoCourseID.wrap))
+//         .assign('subjectName', at(["subject"], field("subjectName", string)))
+//         .assign('interval',
+//             map2(
+//                 field('startDate', string).map(stringToDateTime),
+//                 field('endDate', string).map(stringToDateTime),
+//                 Interval.fromDateTimes,
+//             ),
+//         )
+//         .assign('exams', succeed([]));
+//
+// const examDecoder: Decoder<Exam> =
+//     succeed({})
+//         .assign('id', at(['exam'], field('id', string).map(isoExamID.wrap)))
+//         .assign('date', at(['exam'], field('date', string.map(stringToDateTime))))
+//         .assign('grade', field('grade', option(number)));
+
+const userDecoder: Decoder<Student> =
+    succeed({})
+        .assign('id', field('id', string).map(isoStudentID.wrap));
