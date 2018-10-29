@@ -89,18 +89,21 @@ class SubjectsTable extends React.Component<IProps, IState> {
                         isLoading={isDeleting}
                     />
                 }
-                <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                    <Link to={'/new-subject'}>
-                        <Button
-                            variant="fab"
-                            color="primary"
-                            aria-label="Add"
-                            mini
-                        >
-                            <AddIcon/>
-                        </Button>
-                    </Link>
-                </div>
+                {
+                    userType === 'Admin' &&
+                    <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+                        <Link to={'/new-subject'}>
+                            <Button
+                                variant="fab"
+                                color="primary"
+                                aria-label="Add"
+                                mini
+                            >
+                                <AddIcon/>
+                            </Button>
+                        </Link>
+                    </div>
+                }
                 <Paper>
 
                     <SearchBar
