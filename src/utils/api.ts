@@ -272,6 +272,15 @@ export const deleteCourse = (id: string): Promise<Response> => {
 
 /* Exam endpoints */
 
+export const getAllExams = (): Promise<Response> => {
+    const url = 'http://localhost:9000/exam';
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
 export const createExam = (exam: IExam): Promise<Response> => {
     const url = 'http://localhost:9000/exam';
     const init: RequestInit = {
@@ -316,8 +325,10 @@ export const deleteExam = (id: string): Promise<Response> => {
     return fetch(url, init);
 };
 
-export const getAllExams = (): Promise<Response> => {
-    const url = 'http://localhost:9000/exam';
+/* Career endpoints */
+
+export const getAllCareers = (): Promise<Response> => {
+    const url = 'http://localhost:9000/career';
     const init: RequestInit = {
         method: 'GET',
     };
@@ -335,10 +346,20 @@ export const createExamInscription = (examInscription: IExamInscription): Promis
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(examInscription),
+};
+
+    return fetch(url, init);
+};
+export const deleteCareer = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/career/${id}`;
+    const init: RequestInit = {
+        method: 'DELETE',
+
     };
 
     return fetch(url, init);
 };
+
 
 export const getExamInscriptionById = (id: string): Promise<Response> => {
     const url = `http://localhost:9000/examInscription/${id}`;
@@ -357,6 +378,19 @@ export const updateExamInscription = (examInscription: IExamInscription): Promis
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(examInscription),
+};
+
+    return fetch(url, init);
+};
+
+export const createCareer = (career: ICareer): Promise<Response> => {
+    const url = 'http://localhost:9000/career';
+    const init: RequestInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(career),
     };
 
     return fetch(url, init);
@@ -373,6 +407,16 @@ export const deleteExamInscription = (id: string): Promise<Response> => {
 
 export const getAllExamInscriptions = (): Promise<Response> => {
     const url = 'http://localhost:9000/examInscription';
+  const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
+
+export const getCareerById = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/career/${id}`;
     const init: RequestInit = {
         method: 'GET',
     };
@@ -380,10 +424,24 @@ export const getAllExamInscriptions = (): Promise<Response> => {
     return fetch(url, init);
 };
 
+
 export const getAllExamInscriptionsbyExamId = (id: string): Promise<Response> => {
     const url = 'http://localhost:9000//getExams/' + id;
     const init: RequestInit = {
         method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
+export const updateCareer = (career: ICareer): Promise<Response> => {
+    const url = `http://localhost:9000/career/${career.id}`;
+    const init: RequestInit = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(career),
     };
 
     return fetch(url, init);

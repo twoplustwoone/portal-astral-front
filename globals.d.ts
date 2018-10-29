@@ -53,6 +53,12 @@ declare interface IExamInscription {
   exam: IExam;
   result: number;
 }
+declare interface ICareer {
+  id: string;
+  careerName: string;
+  careerSubjects: string[];
+  students: IStudent;
+}
 
 declare interface IExam {
     id: string;
