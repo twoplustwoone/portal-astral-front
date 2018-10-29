@@ -7,6 +7,7 @@ import SupervisorAccountOutlinedIcon from '@material-ui/icons/SupervisorAccountO
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import SchoolIcon from '@material-ui/icons/School';
 import BookIcon from '@material-ui/icons/Book';
+import Assigment from '@material-ui/icons/Assignment';
 import GolfCourse from '@material-ui/icons/GolfCourse';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
@@ -14,6 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText/ListItemText';
 import { Props, State } from "./types";
 import { Link, withRouter } from "react-router-dom";
 import session from "../../../utils/session";
+import {Domain} from "@material-ui/icons";
 
 const drawerWidth = 240;
 
@@ -95,6 +97,28 @@ function CourseItem(props: { pathname: string }) {
   </Link>;
 }
 
+function ExamItem(props: { pathname: string }) {
+  return <Link to={"/exams"} className={styles.link}>
+    <ListItem className={styles.listItem} selected={props.pathname === '/exams'}>
+      <ListItemIcon>
+        <Assigment />
+      </ListItemIcon>
+      <ListItemText primary='Exams' />
+    </ListItem>
+  </Link>;
+}
+
+function CareerItem(props: { pathname: string }) {
+    return <Link to={"/careers"} className={styles.link}>
+        <ListItem className={styles.listItem} selected={props.pathname === '/careers'}>
+            <ListItemIcon>
+                <Domain />
+            </ListItemIcon>
+            <ListItemText primary='Careers' />
+        </ListItem>
+    </Link>;
+}
+
 class Sidebar extends React.Component<Props, State> {
 
   state: State = {
@@ -135,6 +159,10 @@ class Sidebar extends React.Component<Props, State> {
           <SubjectItem pathname={pathname} />
 
           <CourseItem pathname={pathname} />
+
+          <ExamItem pathname={pathname} />
+
+          <CareerItem pathname={pathname} />
 
         </List>
       </div>
