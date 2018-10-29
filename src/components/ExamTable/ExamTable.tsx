@@ -4,7 +4,7 @@ import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, IconBu
 import { DeleteOutline, Edit } from "@material-ui/icons";
 import AddIcon from '@material-ui/icons/Add';
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
-import { deleteExam, getAllExams } from "../../utils/api";
+import {deleteExam, getAllExams, getAllExamsStudent} from "../../utils/api";
 import { Link } from "react-router-dom";
 import session from "../../utils/session";
 
@@ -16,6 +16,7 @@ class ExamTable extends React.Component<IProps, IState> {
     examBeingDeleted: null,
     exams: [],
     isDeleting: false,
+    examsStudent: [],
   };
 
   componentDidMount() {
@@ -23,7 +24,11 @@ class ExamTable extends React.Component<IProps, IState> {
   }
 
   fetchExams = () => {
-    getAllExams().then(this.handleResponse).then(this.receiveExams);
+      if(session.getUserType() === 'Student'){
+          getAllExamsStudent((session.getUser() as IStudent).id).then(this.handleResponseStudentExams).then(this.receiveStudentExams);
+      } else {
+          getAllExams().then(this.handleResponse).then(this.receiveExams);
+      }
   };
 
   handleResponse = (response: Response): Promise<IExam[]> => {
@@ -32,6 +37,15 @@ class ExamTable extends React.Component<IProps, IState> {
     }
 
     return response.json();
+  };
+
+  handleResponseStudentExams = (response: Response) => {
+      // if (response.status !== 200) {,
+      //     throw Error('Error fetching exams');
+      // }
+      console.log(response.status);
+
+      return response.json();
   };
 
   handleDeleteClick = (id: string) => {
@@ -64,20 +78,25 @@ class ExamTable extends React.Component<IProps, IState> {
   };
 
   receiveExams = (exams: IExam[]) => {
-    this.setState({ exams })
+    this.setState({ exams: exams })
   };
 
-    private filteredExams: any;
+  receiveStudentExams = (exams: IStudentExam[]) => {
+      this.setState({ examsStudent: exams })
+  };
+
+  private filteredExams: any;
 
   render() {
-    const { examBeingDeleted, isDeleting, exams } = this.state;
+    const { examBeingDeleted, isDeleting, exams, examsStudent } = this.state;
 
     const name = examBeingDeleted ? `${examBeingDeleted.course.subject.subjectName}` : '';
 
     let isStudent = session.getUserType() === 'Student';
     let text = '';
+    console.log(examsStudent);
 
-      function filter(exam: IExam) {
+      function filter(exam: IStudentExam) {
           if(exam.course.enrolled.length > 0){
               return exam.course.enrolled.map(student =>
                   student.id == (session.getUser() as IStudent).id)
@@ -89,7 +108,7 @@ class ExamTable extends React.Component<IProps, IState> {
           }
       }
 
-    isStudent? this.filteredExams = exams.filter(filter): false;
+    isStudent && examsStudent != undefined? this.filteredExams = examsStudent.filter(filter): false;
     isStudent? text = "Grade": text = "";
 
     return (

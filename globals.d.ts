@@ -54,6 +54,14 @@ declare interface IExam {
     date: string;
 }
 
+declare interface IStudentExam{
+    id: string;
+    course: ICourse;
+    date: string;
+    student: IStudent;
+    grade: number;
+}
+
 declare type UserType = 'Professor' | 'Admin' | 'Student';
 
 declare interface ILogin {

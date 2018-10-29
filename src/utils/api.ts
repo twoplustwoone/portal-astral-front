@@ -339,6 +339,15 @@ export const updateExam = (exam: IExam): Promise<Response> => {
     return fetch(url, init);
 };
 
+export const getAllExamsStudent = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/getExamStudent/${id} `;
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
 /* Authentication endpoints */
 
 export const login = (credentials: ILogin): Promise<Response> => {
