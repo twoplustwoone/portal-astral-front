@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { render } from 'react-dom';
-import { BrowserRouter } from 'react-router-dom'
+import {render} from 'react-dom';
+import {BrowserRouter} from 'react-router-dom'
+import session from "./utils/session";
 
 declare var module, process;
 
@@ -26,34 +27,45 @@ console.log(`
 `);
 
 if (process.env.NODE_ENV === 'production') {
-  let style = document.createElement('link');
-  style.setAttribute('rel', 'stylesheet');
-  style.setAttribute('type', 'text/css');
-  style.setAttribute('href', 'styles.css');
-  document.getElementsByTagName('head')[0].appendChild(style);
+    let style = document.createElement('link');
+    style.setAttribute('rel', 'stylesheet');
+    style.setAttribute('type', 'text/css');
+    style.setAttribute('href', 'styles.css');
+    document.getElementsByTagName('head')[0].appendChild(style);
 }
 
 const rootEl = document.getElementById('root');
 
 const withRouter = (Parent) => (
-  <BrowserRouter>
-    <Parent />
-  </BrowserRouter>
+    <BrowserRouter>
+        <Parent/>
+    </BrowserRouter>
 );
 
 function renderApp() {
-  const Parent = require('./Parent').default;
-  render(withRouter(Parent), rootEl);
+    const Parent = require('./Parent').default;
+    render(withRouter(Parent), rootEl);
 }
 
 if (module.hot) {
-  module.hot.accept('./Parent', () => {
-    renderApp();
-  });
+    module.hot.accept('./Parent', () => {
+        renderApp();
+    });
 }
 
 function initRender() {
-  renderApp();
+    renderApp();
 }
+
+session.login({Type: 'Admin',
+    User: {
+        name: 'Lucas',
+        lastName: 'Manza',
+        email: 'manza@manza.com',
+        id: 'zarasa',
+        password: 'manza',
+        userType: 'Admin',
+    },
+});
 
 initRender();

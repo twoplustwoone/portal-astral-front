@@ -13,6 +13,7 @@ class Session {
 
   isLogged = (): boolean => {
     return !!sessionStorage.getItem('user') && !!sessionStorage.getItem('userType');
+    // return true;
   };
 
   getUser = (): IUser | null => {

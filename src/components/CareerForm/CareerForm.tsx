@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {IProps, IState} from './types';
-import CareerServices from "./CareerServices";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
     Button,
@@ -16,6 +15,8 @@ import {
 } from '@material-ui/core';
 import IconButton from "@material-ui/core/IconButton";
 import {DeleteOutline} from "@material-ui/icons";
+import {getAllSubjects} from "../../utils/api";
+import * as CareerService from "./CareerServices";
 
 const styles = require('./CareerForm.pcss');
 
@@ -43,7 +44,7 @@ class CareerForm extends React.Component<IProps, IState> {
         const {match} = this.props;
 
         if (match.params.id) {
-            CareerServices.prototype.getCareerByID(match.params.id)
+            CareerService.getCareerByID(match.params.id)
                 .then(this.handleResponse)
                 .then(this.setCareer)
                 .catch(this.redirect);
@@ -51,7 +52,22 @@ class CareerForm extends React.Component<IProps, IState> {
         } else {
             this.setState({isNew: true});
         }
+
+        this.fetchAllSubjects();
     }
+
+    fetchAllSubjects = () => {
+        getAllSubjects().then(res => {
+            return res.json()
+        }).then((subjects: ISubject[]) => {
+            return this.setState({
+                allSubjects: subjects
+                    .filter(s =>
+                        !(this.state.fields.subjects.indexOf(s.id) > -1)),
+            });
+        });
+
+    };
 
     handleResponse = (response: Response): Promise<ICareer> => {
         if (response.status === 404) {
@@ -122,7 +138,7 @@ class CareerForm extends React.Component<IProps, IState> {
             return;
         }
 
-        CareerServices.prototype.deleteCareer(career.id)
+        CareerService.deleteCareer(career.id)
             .then(() => {
                 this.setState({redirect: '/career'})
             });
@@ -135,11 +151,11 @@ class CareerForm extends React.Component<IProps, IState> {
 
     handleSubmit = () => {
         if (!this.state.isNew) {
-            CareerServices.prototype.updateCareer(this.state.fields)
+            CareerService.updateCareer(this.state.fields)
                 .then(() => this.setState({redirect: '/careers'}));
         }
         else {
-            CareerServices.prototype.createCareer(this.state.fields)
+            CareerService.createCareer(this.state.fields)
                 .then(() => this.setState({redirect: '/careers'}));
         }
     };
@@ -165,8 +181,9 @@ class CareerForm extends React.Component<IProps, IState> {
 
     handleRemoveFromTable = (id: string) => {
         const {subjects} = this.state.fields;
-        const subjectsRemove = subjects.filter((sub) => sub === id);
-        this.setState({...this.state, fields: {...this.state.fields, subjectsRemove}});
+        const subjectsRemove = subjects.filter((subId) => subId != id);
+        this.setState({...this.state, fields: {...this.state.fields, subjects: subjectsRemove}});
+        // this.setState({...this.state, fields: {...this.state.fields, subjects: this.state.fields.subjects.filter(s => s != id)}})
     };
 
     areInputsReadOnly = () => {
@@ -238,8 +255,8 @@ class CareerForm extends React.Component<IProps, IState> {
                                        readOnly={readOnly}
                                 />
                             </FormControl>
-                            <FormControl className={styles['subject-form-control']} error={errors.subjects}>
-                                <InputLabel required htmlFor='subject-requiredSubjects'>Correlativas</InputLabel>
+                            <FormControl className={styles['career-form-control']} error={errors.subjects}>
+                                <InputLabel htmlFor='career-requiredSubjects'>Correlatives</InputLabel>
                                 {
                                     <Select
                                         value={undefined}
@@ -257,51 +274,53 @@ class CareerForm extends React.Component<IProps, IState> {
                                         }
                                     </Select>
                                 }
-                                <Table className={styles.table}>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Name</TableCell>
-                                            <TableCell>Year</TableCell>
-                                            {
-                                                !readOnly ?
-                                                    <TableCell>Remove</TableCell>
-                                                    :
-                                                    undefined
-                                            }
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {
-                                            fields.subjects.map((val: string, i) => {
-
-                                                const subject = this.state.allSubjects.find(s => s.id === val);
-
-                                                if (!subject) {
-                                                    return null;
-                                                }
-
-                                                return <div>
-                                                    <TableRow>
-                                                        <TableCell>{subject.subjectName}</TableCell>
-                                                        <TableCell>{subject.careerYear}</TableCell>
-                                                        {
-                                                            !readOnly ?
-                                                                <TableCell>
-                                                                    <IconButton
-                                                                        onClick={() => this.handleRemoveFromTable(subject.id)}>
-                                                                        <DeleteOutline/>
-                                                                    </IconButton>
-                                                                </TableCell>
-                                                                :
-                                                                undefined
-                                                        }
-                                                    </TableRow>
-                                                </div>
-                                            })
-                                        }
-                                    </TableBody>
-                                </Table>
                             </FormControl>
+                            <Table className={styles['table']}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell className={styles['tableName']}>Name</TableCell>
+                                        <TableCell className={styles['tableYear']}>Year</TableCell>
+                                        {
+                                            !readOnly ?
+                                                <TableCell>Remove</TableCell>
+                                                :
+                                                undefined
+                                        }
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {
+                                        fields.subjects.map((val: string, i) => {
+
+                                            const subject = this.state.allSubjects.find(s => s.id === val);
+
+                                            if (!subject) {
+                                                return null;
+                                            }
+
+                                            return (
+                                                <TableRow>
+                                                    <TableCell
+                                                        className={styles['tableName']}>{subject.subjectName}</TableCell>
+                                                    <TableCell
+                                                        className={styles['tableYear']}>{subject.careerYear}</TableCell>
+                                                    {
+                                                        !readOnly ?
+                                                            <TableCell>
+                                                                <IconButton
+                                                                    onClick={() => this.handleRemoveFromTable(subject.id)}>
+                                                                    <DeleteOutline/>
+                                                                </IconButton>
+                                                            </TableCell>
+                                                            :
+                                                            undefined
+                                                    }
+                                                </TableRow>
+                                            )
+                                        })
+                                    }
+                                </TableBody>
+                            </Table>
                         </form>
 
                     </CardContent>
