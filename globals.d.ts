@@ -47,6 +47,13 @@ declare interface ICourse {
   schedule: string[];
 }
 
+declare interface IExamInscription {
+  id: string;
+  student: IStudent;
+  exam: IExam;
+  result: number;
+}
+
 declare interface IExam {
     id: string;
     course: ICourse;
