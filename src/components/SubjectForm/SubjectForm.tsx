@@ -308,7 +308,7 @@ class SubjectForm extends React.Component<IProps, IState> {
           <CardContent>
             <form className={styles['New-Subject-form']}>
               <FormControl className={styles['subject-form-control']} error={errors.subjectName}>
-                <InputLabel required htmlFor='subject-name'>Nombre</InputLabel>
+                <InputLabel required htmlFor='subject-name'>Name</InputLabel>
                 <Input id='subject-name'
                        value={fields.subjectName}
                        onChange={this.handleChange('subjectName')}
@@ -316,7 +316,7 @@ class SubjectForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['subject-form-control']} error={errors.careerYear}>
-                <InputLabel required htmlFor='subject-year'>Año</InputLabel>
+                <InputLabel required htmlFor='subject-year'>Year</InputLabel>
                 <Input id='subject-year'
                        value={fields.careerYear}
                        onChange={this.handleChange('careerYear')}
@@ -325,7 +325,7 @@ class SubjectForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['subject-form-control']} error={errors.requiredSubjects}>
-                <InputLabel required htmlFor='subject-requiredSubjects'>Correlativas</InputLabel>
+                <InputLabel required htmlFor='subject-requiredSubjects'>Correlatives</InputLabel>
                 {
                   <Select
                     value={undefined}
