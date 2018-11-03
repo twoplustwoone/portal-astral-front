@@ -112,8 +112,8 @@ class SubjectsTable extends React.Component<IProps, IState> {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Nombre</TableCell>
-                                    <TableCell>Año</TableCell>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Year</TableCell>
                                     <TableCell/>
                                 </TableRow>
                             </TableHead>
