@@ -131,13 +131,13 @@ class Topbar extends React.Component<any, any> {
     return (
       <div className={styles.container}>
         <Dialog open={isLogOutDialogOpen} onClose={this.handleCloseLogOut}>
-          <DialogTitle>{'Esta seguro que desea cerrar sesion?'}</DialogTitle>
+          <DialogTitle>{'Are you sure you want to log out?'}</DialogTitle>
           <DialogActions>
-            <Button onClick={this.handleCloseLogOut} color="primary">
+            <Button onClick={this.handleCloseLogOut} variant='outlined' color='primary'>
               No
             </Button>
-            <Button onClick={this.handleLogOut} color="primary" autoFocus>
-              Sí
+            <Button onClick={this.handleLogOut} variant='contained' color='primary' autoFocus>
+              Yes
             </Button>
           </DialogActions>
         </Dialog>
