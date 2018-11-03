@@ -63,7 +63,7 @@ class SubjectForm extends React.Component<IProps, IState> {
   };
 
   redirect = () => {
-    this.setState({ redirect: '/courses' });
+    this.setState({ redirect: '/subjects' });
   };
 
   handleResponse = (response: Response): Promise<ISubject> => {
@@ -111,10 +111,10 @@ class SubjectForm extends React.Component<IProps, IState> {
   handleSubmit = () => {
     if (this.validateAll()) {
       if (!this.state.isNew) {
-        updateSubject(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
+        updateSubject(this.state.fields).then(() => this.setState({ redirect: '/subjects' }));
       }
       else {
-        createSubject(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
+        createSubject(this.state.fields).then(() => this.setState({ redirect: '/subjects' }));
       }
     }
   };
@@ -197,7 +197,7 @@ class SubjectForm extends React.Component<IProps, IState> {
 
   handleCancel = () => {
     if (this.state.isNew) {
-      this.setState({ redirect: '/courses' });
+      this.setState({ redirect: '/subjects' });
     } else {
       this.setState({ isEditing: false }, this.mapSubject);
     }
@@ -229,7 +229,7 @@ class SubjectForm extends React.Component<IProps, IState> {
       return;
     }
 
-    deleteSubject(subject.id).then(() => this.setState({ redirect: '/courses' }));
+    deleteSubject(subject.id).then(() => this.setState({ redirect: '/subjects' }));
   };
 
   renderTitle = () => {
@@ -275,7 +275,7 @@ class SubjectForm extends React.Component<IProps, IState> {
     }
 
     if (userType !== 'Admin') {
-      return <Redirect to={'/courses'} />;
+      return <Redirect to={'/subjects'} />;
     }
 
     if (isFetching || isDeleting || isCreating) {
@@ -308,7 +308,7 @@ class SubjectForm extends React.Component<IProps, IState> {
           <CardContent>
             <form className={styles['New-Subject-form']}>
               <FormControl className={styles['subject-form-control']} error={errors.subjectName}>
-                <InputLabel required htmlFor='subject-name'>Nombre</InputLabel>
+                <InputLabel required htmlFor='subject-name'>Name</InputLabel>
                 <Input id='subject-name'
                        value={fields.subjectName}
                        onChange={this.handleChange('subjectName')}
@@ -316,7 +316,7 @@ class SubjectForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['subject-form-control']} error={errors.careerYear}>
-                <InputLabel required htmlFor='subject-year'>Año</InputLabel>
+                <InputLabel required htmlFor='subject-year'>Year</InputLabel>
                 <Input id='subject-year'
                        value={fields.careerYear}
                        onChange={this.handleChange('careerYear')}
@@ -325,7 +325,7 @@ class SubjectForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['subject-form-control']} error={errors.requiredSubjects}>
-                <InputLabel required htmlFor='subject-requiredSubjects'>Correlativas</InputLabel>
+                <InputLabel required htmlFor='subject-requiredSubjects'>Correlatives</InputLabel>
                 {
                   <Select
                     value={undefined}

@@ -40,7 +40,7 @@ export const DeleteConfirmationDialogCourse = (props: Props) => {
         <DialogContent>
             {props.isLoading && <LoadingOverlay />}
             <DialogContentText>
-                This will permanently delete the course for the subject {props.subject ? props.subject.subjectName : "Loading"} with starting date {props.course.startTime} and cannot be undone.
+                This will permanently delete the course for the subject {props.subject ? props.subject.subjectName : "Loading"} with starting date {props.course.startDate} and cannot be undone.
             </DialogContentText>
         </DialogContent>
         <DialogActions>
