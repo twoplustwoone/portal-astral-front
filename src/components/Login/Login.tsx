@@ -50,6 +50,12 @@ class Login extends React.Component<IProps, IState> {
     },
   };
 
+  checkEnter = (event) => {
+      if(event.keyCode == 13){
+        this.handleLogIn()
+      }
+  };
+
   handleChange = (prop: string) => (event: any) => {
     this.setState({
       ...this.state,
@@ -179,6 +185,7 @@ class Login extends React.Component<IProps, IState> {
                   value={fields.password}
                   onChange={this.handleChange('password')}
                   readOnly={login.isLoading}
+                  onKeyDown={this.checkEnter}
                   endAdornment={
                     <InputAdornment position='end'>
                       <IconButton

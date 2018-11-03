@@ -118,8 +118,8 @@ class CourseTable extends React.Component<IProps, IState> {
                                         return (
                                             <TableRow key={row.id}>
                                                 <TableCell>{row.subject.subjectName}</TableCell>
-                                                <TableCell>{row.startTime}</TableCell>
-                                                <TableCell>{row.endTime}</TableCell>
+                                                <TableCell>{row.startDate}</TableCell>
+                                                <TableCell>{row.endDate}</TableCell>
                                                 <TableCell>{row.schedule}</TableCell>
                                                 {
                                                     userType === 'Admin' &&

@@ -28,8 +28,8 @@ class ExamForm extends React.Component<IProps, IState> {
         fields: {
             course: {
                 id: '',
-                startTime: '',
-                endTime: '',
+                startDate: '',
+                endDate: '',
                 schedule: [],
                 subject: {
                     id: '',
@@ -304,7 +304,7 @@ class ExamForm extends React.Component<IProps, IState> {
                                         {
                                             this.state.allCourses
                                                 .filter(s => s.id !== fields.id)
-                                                .map(s => <MenuItem value={s.id}>{s.subject.subjectName.concat(" ").concat(s.startTime)}</MenuItem>)
+                                                .map(s => <MenuItem value={s.id}>{s.subject.subjectName.concat(" ").concat(s.startDate)}</MenuItem>)
                                         }
                                     </Select>
                                 }
