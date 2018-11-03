@@ -107,7 +107,6 @@ class CourseTable extends React.Component<IProps, IState> {
                                     <TableCell>Subject</TableCell>
                                     <TableCell>Starts</TableCell>
                                     <TableCell>Ends</TableCell>
-                                    <TableCell>Schedule</TableCell>
                                     <TableCell />
                                 </TableRow>
                             </TableHead>
@@ -120,7 +119,6 @@ class CourseTable extends React.Component<IProps, IState> {
                                                 <TableCell>{row.subject.subjectName}</TableCell>
                                                 <TableCell>{row.startDate}</TableCell>
                                                 <TableCell>{row.endDate}</TableCell>
-                                                <TableCell>{row.schedule}</TableCell>
                                                 {
                                                     userType === 'Admin' &&
                                                     <TableCell>

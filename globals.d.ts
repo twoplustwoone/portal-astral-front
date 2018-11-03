@@ -44,7 +44,6 @@ declare interface ICourse {
   startDate: string;
   endDate: string;
   subject: ISubject;
-  schedule: string[];
 }
 
 declare interface ICareer {
