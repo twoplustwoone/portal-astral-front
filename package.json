@@ -47,6 +47,8 @@
     "react-router": "latest",
     "react-router-dom": "^4.3.1",
     "resolve": "1.6.0",
+    "rxjs": "^6.3.3",
+    "safe-units": "0.0.5",
     "source-map-loader": "^0.2.1",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
@@ -70,6 +72,7 @@
     "test": "node scripts/test.js --env=jsdom"
   },
   "devDependencies": {
+    "@reactivex/rxjs": "^6.3.3",
     "@types/jest": "^23.3.1",
     "@types/luxon": "^1.4.0",
     "@types/node": "^10.9.2",
