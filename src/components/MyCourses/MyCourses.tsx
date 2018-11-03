@@ -17,6 +17,7 @@ import {field, string, succeed} from "jsonous";
 import Decoder from "jsonous/Decoder";
 
 import {iso, Newtype} from "newtype-ts";
+import session from "../../utils/session";
 
 
 // ---- HELPER TYPES ----
@@ -34,8 +35,8 @@ interface StudentID extends Newtype<{ readonly ExamID: unique symbol }, string> 
 }
 
 const isoCourseID = iso<CourseID>();
-const isoStudentID = iso<StudentID>();
 const isoExamID = iso<ExamID>();
+const isoStudentID = iso<StudentID>();
 
 
 // ---- MODEL TYPES ----
@@ -59,14 +60,19 @@ type Exam = {
 }
 
 type Model = {
+
+    // -- Context --
     currentUser: Option<Student>
     currentDate: Option<DateTime>
+
+    // -- Main table --
     examsDict: HashMap<String, Exam>,
     courses: HashMap<String, Course>,
-    modalExams: WebData<Exam[]>,
-    examsModalOpen: boolean,
-}
 
+    // -- Modal --
+    selectedCourse: Option<CourseID>,
+    modalExams: WebData<Exam[]>,
+}
 
 // ---- INITIAL MODEL ----
 
@@ -97,7 +103,7 @@ const demo: Model = {
     ),
 
     modalExams: RemoteData.initial,
-    examsModalOpen: false,
+    selectedCourse: Option.none(),
 }
 
 export class MyCourses extends React.Component<{}, Readonly<Model>> {
@@ -114,18 +120,33 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
     }
 
     componentDidMount() {
-        this.setState({
-            currentUser: userDecoder.decodeAny(sessionStorage.getItem('user'))
-                .cata({
-                    Err: err => Option.none(),
-                    Ok: user => Option.some(user),
-                }),
-        });
+
+        // TODO improve session handling, maybe component should assume a student
+        if (session.getUserType() != 'Student')
+            throw new Error("Trying to access MyCourses component with a non-student user");
+
+        let userJson = Option.ofNullable(sessionStorage.getItem('user'))
+            .match({
+                Some: u => u,
+                None: () => "",
+            });
+        // ----------------------------------------------------------------------
 
         setInterval(
             () => this.updateTime(),
             1000,
         );
+
+        this.setState({
+            currentUser: userDecoder.decodeJson(userJson)
+                .cata({
+                    Err: err => {
+                        console.error(err);
+                        return Option.none()
+                    },
+                    Ok: user => Option.some(user),
+                }),
+        });
     }
 
     updateTime() {
@@ -142,7 +163,7 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
         this.setState(
             (prevState: Model): Model => ({
                 ...prevState,
-                examsModalOpen: true,
+                selectedCourse: Option.of(courseId),
                 modalExams: RemoteData.success(
                     this.state.courses
                         .get(isoCourseID.unwrap(courseId))
@@ -160,7 +181,7 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
         this.setState(
             (prevState: Model): Model => ({
                 ...prevState,
-                examsModalOpen: false,
+                selectedCourse: Option.none(),
                 modalExams: RemoteData.initial,
             }),
         )
@@ -174,9 +195,8 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
 
         let model = this.state;
 
-        return model.currentDate.match({
-            Some: (currDate: DateTime) => {
-
+        return Option.liftA2(
+            (user: Student, currDate: DateTime): React.ReactNode => {
                 let coursesInProgress = model.courses
                     .filterValues(c => c.interval.contains(currDate))
                     .toArray()
@@ -188,42 +208,45 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
                     .map(kv => kv[1]);
 
 
-                return <div>
-                    <h1>Courses in progress</h1>
-                    {coursesTable(courseInProgressRow(this.openExamsModal)(this.unenroll))(coursesInProgress)}
+                return (
+                    <div>
+                        <h1>Courses in progress</h1>
+                        {coursesTable(courseInProgressRow(this.openExamsModal)(this.unenroll))(coursesInProgress)}
 
-                    <h1>Finished courses</h1>
-                    {coursesTable(courseFinishedRow(this.openExamsModal))(finishedCourses)}
+                        <h1>Finished courses</h1>
+                        {coursesTable(courseFinishedRow(this.openExamsModal))(finishedCourses)}
 
 
-                    <Modal
-                        open={model.examsModalOpen}
-                        onClose={this.closeExamsModal}
-                    >
-                        <Paper style={
-                            {
-                                ...translateCenter,
-                                position: "absolute",
-                                minWidth: "50%",
-                                maxWidth: "70%",
-                                padding: "20px",
-                            }
-                        }>
-                            {model.modalExams.foldL(
-                                () => <LinearProgress/>,
-                                () => <LinearProgress/>,
-                                (err) => <p>Error!</p>,
-                                (exams) => examTable(exams),
-                            )}
-                        </Paper>
-                    </Modal>
-                </div>
-            },
-            None: () => {
-                return <LinearProgress/>
+                        <Modal
+                            open={model.selectedCourse.isSome()}
+                            onClose={this.closeExamsModal}
+                        >
+                            <Paper style={
+                                {
+                                    ...translateCenter,
+                                    position: "absolute",
+                                    minWidth: "50%",
+                                    maxWidth: "70%",
+                                    padding: "20px",
+                                }
+                            }>
+                                {model.modalExams.foldL(
+                                    () => <LinearProgress/>,
+                                    () => <LinearProgress/>,
+                                    (err) => <p>Error!</p>,
+                                    (exams) => examTable(exams),
+                                )}
+                            </Paper>
+                        </Modal>
+                    </div>
+                )
+            })(model.currentUser, model.currentDate)
+            .match({
+                Some: render => render,
+                None: () => <LinearProgress/>,
+            })
 
-            },
-        });
+
     }
 }
 
