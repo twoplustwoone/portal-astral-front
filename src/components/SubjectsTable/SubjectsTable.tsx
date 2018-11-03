@@ -8,7 +8,7 @@ import {deleteSubject, getAllSubjects} from "../../utils/api";
 import {Link} from "react-router-dom";
 import session from "../../utils/session";
 import SearchBar from 'material-ui-search-bar'
-import {fuzzySort} from "../../utils/fuzzySearch";
+import {searchFilter} from "../../utils/searchUtils";
 
 // const styles = require('./SubjectTable.pcss');
 
@@ -119,7 +119,7 @@ class SubjectsTable extends React.Component<IProps, IState> {
                             </TableHead>
                             <TableBody>
                                 {
-                                    fuzzySort(subject => subject.subjectName + subject.careerYear, this.state.searchString, subjects)
+                                    searchFilter(subject => subject.subjectName + subject.careerYear, this.state.searchString, subjects)
                                         .map(row =>
                                             <TableRow key={row.id}>
                                                 <TableCell>{row.subjectName}</TableCell>

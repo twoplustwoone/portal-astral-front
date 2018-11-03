@@ -28,6 +28,7 @@
     "html-webpack-plugin": "2.29.0",
     "jest": "22.4.2",
     "material-ui-search-bar": "^1.0.0-beta.12",
+    "normalize-diacritics": "^0.5.1",
     "object-assign": "4.1.1",
     "postcss-cssnext": "^3.1.0",
     "postcss-flexbugs-fixes": "3.2.0",
