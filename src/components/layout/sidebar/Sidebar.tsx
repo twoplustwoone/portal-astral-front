@@ -40,7 +40,7 @@ const _styles = (theme: Theme): StyleRules => ({
 });
 
 const sidebarItem = (currentRoute: string) => (d: { route: string, displayText: string, iconElement: any }) =>
-    <Link to={d.route} className={styles.link}>
+    <Link key={d.route} to={d.route} className={styles.link}>
         <ListItem className={styles.listItem} selected={d.route === currentRoute}>
             <ListItemIcon>
                 {d.iconElement}
