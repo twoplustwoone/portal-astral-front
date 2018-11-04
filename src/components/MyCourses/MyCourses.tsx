@@ -3,9 +3,11 @@ import {Future, Option, Vector} from "prelude.ts";
 import {ok} from 'resulty';
 import {
     Button,
+    IconButton,
     LinearProgress,
     Modal,
     Paper,
+    Snackbar,
     Table,
     TableBody,
     TableCell,
@@ -20,6 +22,7 @@ import Decoder from "jsonous/Decoder";
 import {iso, Newtype} from "newtype-ts";
 import session from "../../utils/session";
 import {baseUrl} from "../../utils/api";
+import {Close} from "@material-ui/icons";
 
 
 // ---- HELPER TYPES ----
@@ -72,6 +75,9 @@ type Model = {
     // -- Modal --
     selectedCourse: Option<Course>,
     modalExams: WebData<Vector<Exam>>,
+
+    // -- Snackbar --
+    snackbarData: Option<{ message: string, course: Course, action: "enroll" | "unenroll" }>,
 }
 
 // ---- INITIAL MODEL ----
@@ -84,6 +90,8 @@ const initial: Model = {
 
     selectedCourse: Option.none(),
     modalExams: RemoteData.initial,
+
+    snackbarData: Option.none(),
 }
 
 // const demo: Model = {
@@ -116,6 +124,8 @@ const initial: Model = {
 //             {id: isoExamID.wrap("e3"), date: DateTime.local(2018, 3, 13), grade: Option.some(7.0)},
 //         ),
 //     ),
+//
+//     snackbarData: Option.none(),
 // };
 
 
@@ -130,14 +140,17 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
         super(props);
 
         this.unenroll = this.unenroll.bind(this);
+        this.reenroll = this.reenroll.bind(this);
+        this.hideSnackbar = this.hideSnackbar.bind(this);
         this.openExamsModal = this.openExamsModal.bind(this);
         this.closeExamsModal = this.closeExamsModal.bind(this);
-
     }
 
     componentDidMount() {
 
-        // TODO improve session handling, maybe component should assume a student
+        // TODO improve session handling,
+        // maybe component should assume a student since page should be unavailable oltherwise anyway
+
         if (session.getUserType() != 'Student')
             throw new Error("Trying to access MyCourses component with a non-student user");
 
@@ -157,7 +170,7 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
         });
 
         userOption.ifSome(user =>
-            studentCourses(user.id)
+            requestStudentCourses(user.id)
                 .onComplete(res => {
                     let examsWebData: WebData<Vector<Course>> = res.match({
                         Left: l => RemoteData.failure(l.toString()) as WebData<Vector<Course>>,
@@ -185,6 +198,7 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
         )
     }
 
+
     openExamsModal(course: Course, studentId: StudentID) {
         this.setState({
             selectedCourse: Option.of(course),
@@ -192,7 +206,7 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
         })
 
 
-        courseStudentExams(course.id)(studentId)
+        requestCourseStudentExams(course.id)(studentId)
             .onComplete(res => {
                 let examsWebData: WebData<Vector<Exam>> = res.match({
                     Left: l => RemoteData.failure(l.toString()) as WebData<Vector<Exam>>,
@@ -217,8 +231,36 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
         )
     }
 
-    unenroll(courseId: CourseID, studentId: StudentID) {
+    reenroll(course: Course, studentId: StudentID) {
+        return () => requestEnroll(course.id)(studentId).onComplete(_ => {
+            this.setState({
+                courses: this.state.courses.map(cs => cs.append(course)),
+                snackbarData: Option.some({
+                    message: `Reenrolled to ${course.subjectName}`,
+                    course: course,
+                    action: "enroll" as "enroll",
+                }),
+            })
+        })
+    }
 
+    unenroll(course: Course, studentId: StudentID) {
+        requestUnenroll(course.id)(studentId).onComplete(_ => {
+            this.setState({
+                courses: this.state.courses.map(cs => cs.filter(c => c.id != course.id)),
+                snackbarData: Option.some({
+                    message: `Unenrolled from ${course.subjectName}`,
+                    course: course,
+                    action: "unenroll" as "unenroll",
+                }),
+            })
+        })
+    }
+
+    hideSnackbar() {
+        this.setState({
+            snackbarData: Option.none(),
+        })
     }
 
     render(): React.ReactNode {
@@ -235,13 +277,16 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
                     let coursesInProgress = courses.filter(c => c.interval.contains(currDate))
                     let finishedCourses = courses.filter(c => c.interval.isBefore(currDate))
 
+                    coursesInProgress = finishedCourses
                     return (
                         <div>
+
                             <h1>Courses in progress</h1>
                             {coursesTable(courseInProgressRow(this.openExamsModal)(this.unenroll)(user.id))(coursesInProgress)}
 
                             <h1>Finished courses</h1>
                             {coursesTable(courseFinishedRow(this.openExamsModal)(user.id))(finishedCourses)}
+
 
 
                             <Modal
@@ -266,6 +311,45 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
                                     )}
                                 </Paper>
                             </Modal>
+
+                            {model.snackbarData.match({
+                                None: () => {},
+                                Some: data => <Snackbar
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                    open={model.snackbarData.isSome()}
+                                    autoHideDuration={6000}
+                                    onClose={this.hideSnackbar}
+                                    ContentProps={{
+                                        'aria-describedby': 'message-id',
+                                    }}
+                                    message={<span
+                                        id="message-id">{data.message}</span>}
+                                    action={
+                                        (data.action == "enroll" as "enroll" ?
+                                            [] :
+                                            [
+                                                // TODO handle session data better
+                                                <Button key="undo" color="secondary" size="small"
+                                                        onClick={this.reenroll(data.course, model.currentUser.getOrThrow().id)}>
+                                                    UNDO
+                                                </Button>,
+                                            ]).concat(
+                                            <IconButton
+                                                key="close"
+                                                aria-label="Close"
+                                                color="inherit"
+                                                onClick={this.hideSnackbar}
+                                            >
+                                                <Close/>
+                                            </IconButton>,
+                                        )
+                                    }
+                                />,
+                            })}
+
                         </div>
                     )
                 })(model.currentUser, model.currentDate)
@@ -308,13 +392,13 @@ const courseRow = (actions: React.ReactNode) => (course: Course): React.ReactNod
 };
 
 const courseInProgressRow =
-    (onExamsClick: (course: Course, studentId: StudentID) => any) => (onUnenrollClick: (courseId: CourseID, studentID: StudentID) => any) => (studentId: StudentID) => (course: Course) => {
+    (onExamsClick: (course: Course, studentId: StudentID) => any) => (onUnenrollClick: (course: Course, studentID: StudentID) => any) => (studentId: StudentID) => (course: Course) => {
         return (
             courseRow
             (
                 // TODO user id
                 <div>
-                    <Button onClick={() => onUnenrollClick(course.id, studentId)} variant="contained"
+                    <Button onClick={() => onUnenrollClick(course, studentId)} variant="contained"
                             color="primary"
                             style={{marginRight: '5px'}}>
                         Unenroll
@@ -385,26 +469,70 @@ const translateCenter = {
 
 
 export function httpGetAndDecode<A>(url: string, decoder: Decoder<A>): Future<A> {
-    return Future.of(fetch(url))
+    const init: RequestInit = {
+        method: 'GET',
+    };
+    return requestAndDecode(url, init, decoder)
+}
+
+export function httpPostAndDecode<A>(url: string, body: any, decoder: Decoder<A>): Future<A> {
+    const init: RequestInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    };
+
+    return requestAndDecode(url, init, decoder)
+}
+
+export function httpDeleteAndDecode<A>(url: string, body: any, decoder: Decoder<A>): Future<A> {
+    const init: RequestInit = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    };
+
+    return requestAndDecode(url, init, decoder)
+}
+
+export function requestAndDecode<A>(url: string, requestInit: RequestInit, decoder: Decoder<A>): Future<A> {
+    return Future.of(fetch(url, requestInit))
         .flatMap(res => Future.of(res.json()))
         .flatMap(json => decoder.decodeJson(JSON.stringify(json))
             .cata({
                 Err: decoderError => {
-                    console.error("Request decoder error: " + decoderError, url, json)
+                    console.error("Request decoder error: " + decoderError, json)
                     return Future.failed(decoderError)
                 },
                 Ok: result => Future.ok(result),
             }))
 }
 
-export const studentCourses = (studentId: StudentID): Future<Vector<Course>> =>
+export const requestStudentCourses = (studentId: StudentID): Future<Vector<Course>> =>
     httpGetAndDecode(
         `${baseUrl}/student/${isoStudentID.unwrap(studentId)}/courses`,
         vector(courseDecoder),
     )
 
+export const requestEnroll = (courseId: CourseID) => (studentId: StudentID): Future<any> =>
+    httpPostAndDecode(
+        `${baseUrl}/course/${isoCourseID.unwrap(courseId)}/enroll`,
+        [isoStudentID.unwrap(studentId)],
+        succeed({}),
+    )
 
-export const courseStudentExams = (courseId: CourseID) => (studentId: StudentID): Future<Vector<Exam>> =>
+export const requestUnenroll = (courseId: CourseID) => (studentId: StudentID): Future<any> =>
+    httpDeleteAndDecode(
+        `${baseUrl}/course/${isoCourseID.unwrap(courseId)}/remove`,
+        [isoStudentID.unwrap(studentId)],
+        succeed({}),
+    )
+
+export const requestCourseStudentExams = (courseId: CourseID) => (studentId: StudentID): Future<Vector<Exam>> =>
     httpGetAndDecode(
         `${baseUrl}/getExamInscriptionByCourse/${isoCourseID.unwrap(courseId)}`,
         vector(examDecoder).map(v => v.filter(e => e.studentId == studentId)),
