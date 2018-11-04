@@ -21,6 +21,8 @@ import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConf
 import { Redirect, withRouter } from "react-router";
 import { createStudent, deleteStudent, getStudentById, updateStudent } from "../../utils/api";
 import session from "../../utils/session";
+import {DateTime} from "luxon";
+import {validateBirthdayDate} from "../../utils/validation";
 
 const styles = require('./StudentForm.pcss');
 
@@ -113,11 +115,19 @@ class StudentForm extends React.Component<IProps, IState> {
   };
 
   handleChange = (prop: string) => (event: any) => {
+
+      let value = event.target.value;
+
+      if (prop == 'birthday'){
+          let date = DateTime.fromFormat(value, "yyyy-MM-dd");
+          value = date.isValid ? date.toFormat("dd/MM/yyyy") : value;
+      }
+
     this.setState({
       ...this.state,
       fields: {
         ...this.state.fields,
-        [prop]: event.target.value,
+        [prop]: value,
       },
     });
   };
@@ -181,6 +191,8 @@ class StudentForm extends React.Component<IProps, IState> {
         return (
           this.validatePassword(value)
         );
+        case 'birthday':
+            return validateBirthdayDate(DateTime.local())(DateTime.fromFormat(value, "yyyy-MM-dd"));
       default:
         return true;
     }
@@ -195,7 +207,7 @@ class StudentForm extends React.Component<IProps, IState> {
   };
 
   validateEmail = (value: any): boolean => {
-    return value !== '' && value.includes('@');
+    return value !== '' && value.includes('@') && value.includes('.com');
   };
 
   validatePassword = (value: any): boolean => {
@@ -278,6 +290,11 @@ class StudentForm extends React.Component<IProps, IState> {
     const { fields, showPassword, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
 
     const userType = session.getUserType();
+
+      if (fields.birthday) {
+          let date = DateTime.fromFormat(fields.birthday, "d/M/y");
+          fields.birthday = date.isValid? date.toISODate() : fields.birthday;
+      }
 
     if (redirect) {
       return <Redirect to={redirect} />;

@@ -41,10 +41,9 @@ declare interface ISubject {
 
 declare interface ICourse {
   id: string;
-  startTime: string;
-  endTime: string;
+  startDate: string;
+  endDate: string;
   subject: ISubject;
-  schedule: string[];
 }
 
 declare interface IExamInscription {
