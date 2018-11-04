@@ -192,7 +192,7 @@ class StudentForm extends React.Component<IProps, IState> {
           this.validatePassword(value)
         );
         case 'birthday':
-            return validateBirthdayDate(DateTime.local())(DateTime.fromFormat(value, "dd/MM/yyyy"));
+            return validateBirthdayDate(DateTime.local())(DateTime.fromFormat(value, "yyyy-MM-dd"));
       default:
         return true;
     }

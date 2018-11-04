@@ -180,7 +180,7 @@ class Profile extends React.Component<Props, State> {
           this.validatePassword(value)
         );
         case 'birthday':
-          return validateBirthdayDate(DateTime.local())(DateTime.fromFormat(value, "dd/MM/yyyy"));
+          return validateBirthdayDate(DateTime.local())(DateTime.fromFormat(value, "yyyy-MM-dd"));
       default:
         return true;
     }
