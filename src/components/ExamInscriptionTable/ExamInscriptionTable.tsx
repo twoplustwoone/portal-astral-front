@@ -71,6 +71,10 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
 
     const name = examInscriptionBeingDeleted ? `${examInscriptionBeingDeleted.id + ' exam'}` : '';
 
+    const examInscription = examInscriptions.pop();
+    let course;
+    if (examInscription)
+        course = examInscription.exam.course;
     return (
       <div>
         {
@@ -85,6 +89,12 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
         }
         <Paper>
           <div>
+              {course &&
+                  <div style={{padding: '15px', marginTop: '15px', fontFamily: 'sans-serif'}}>
+                      <h2>{course.subject.subjectName} exams</h2>
+                      <h3 style={{fontWeight: 300}}>{course.startDate} - {course.endDate}</h3>
+                  </div>
+              }
             <Table>
               <TableHead>
                 <TableRow>
