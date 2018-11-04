@@ -131,6 +131,18 @@ const initial: Model = {
 
 // ---- COMPONENT ----
 
+// TODO remove
+function enrollStudentInAllCourses(studentId: StudentID) : Future<Vector<any>>{
+    return requestAllCourses()
+        .flatMap(courses =>
+            Future.sequence(courses.map(c => requestEnroll(c.id)(studentId))),
+        )
+        .onComplete(res => res.match({
+            Left: _ => console.warn("Failed to enroll student in all courses"),
+            Right: _ => console.log("Enrolled student in all courses"),
+        }))
+}
+
 
 export class MyCourses extends React.Component<{}, Readonly<Model>> {
 
@@ -151,6 +163,7 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
         // TODO improve session handling,
         // maybe component should assume a student since page should be unavailable oltherwise anyway
 
+
         if (session.getUserType() != 'Student')
             throw new Error("Trying to access MyCourses component with a non-student user");
 
@@ -169,17 +182,21 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
             currentUser: userOption,
         });
 
-        userOption.ifSome(user =>
-            requestStudentCourses(user.id)
-                .onComplete(res => {
-                    let examsWebData: WebData<Vector<Course>> = res.match({
-                        Left: l => RemoteData.failure(l.toString()) as WebData<Vector<Course>>,
-                        Right: v => RemoteData.success(v),
-                    });
 
-                    this.setState({courses: examsWebData})
-                }),
-        )
+        // TODO remove
+        enrollStudentInAllCourses(userOption.getOrThrow().id).onComplete(_ => {
+            userOption.ifSome(user =>
+                requestStudentCourses(user.id)
+                    .onComplete(res => {
+                        let examsWebData: WebData<Vector<Course>> = res.match({
+                            Left: l => RemoteData.failure(l.toString()) as WebData<Vector<Course>>,
+                            Right: v => RemoteData.success(v),
+                        });
+
+                        this.setState({courses: examsWebData})
+                    }),
+            )
+        })
         // ----------------------------------------------------------------------
 
         setInterval(
@@ -288,7 +305,6 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
                             {coursesTable(courseFinishedRow(this.openExamsModal)(user.id))(finishedCourses)}
 
 
-
                             <Modal
                                 open={model.selectedCourse.isSome()}
                                 onClose={this.closeExamsModal}
@@ -313,7 +329,8 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
                             </Modal>
 
                             {model.snackbarData.match({
-                                None: () => {},
+                                None: () => {
+                                },
                                 Some: data => <Snackbar
                                     anchorOrigin={{
                                         vertical: 'bottom',
@@ -536,6 +553,12 @@ export const requestCourseStudentExams = (courseId: CourseID) => (studentId: Stu
     httpGetAndDecode(
         `${baseUrl}/getExamInscriptionByCourse/${isoCourseID.unwrap(courseId)}`,
         vector(examDecoder).map(v => v.filter(e => e.studentId == studentId)),
+    )
+
+export const requestAllCourses = (): Future<Vector<Course>> =>
+    httpGetAndDecode(
+        `${baseUrl}/course`,
+        vector(courseDecoder),
     )
 
 
