@@ -192,7 +192,7 @@ class StudentForm extends React.Component<IProps, IState> {
           this.validatePassword(value)
         );
         case 'birthday':
-            return validateBirthdayDate(DateTime.local())(DateTime.fromFormat(value, "yyyy-MM-dd"));
+            return value != '' ? validateBirthdayDate(DateTime.local())(DateTime.fromFormat(value, "yyyy-MM-dd")) : true;
       default:
         return true;
     }
@@ -358,7 +358,7 @@ class StudentForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['student-form-control']} error={errors.file}>
-                <InputLabel required htmlFor='student-file'>File</InputLabel>
+                <InputLabel htmlFor='student-file'>File</InputLabel>
                 <Input id='student-file'
                        value={fields.file}
                        onChange={this.handleChange('file')}
@@ -366,7 +366,7 @@ class StudentForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['student-form-control']} error={errors.identification}>
-                <InputLabel required htmlFor='student-identification'>Identification</InputLabel>
+                <InputLabel htmlFor='student-identification'>Identification</InputLabel>
                 <Input id='student-identification'
                        value={fields.identification}
                        onChange={this.handleChange('identification')}
@@ -374,7 +374,7 @@ class StudentForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['student-form-control']} error={errors.identificationType}>
-                <InputLabel required htmlFor='student-identificationType'>Identification type</InputLabel>
+                <InputLabel htmlFor='student-identificationType'>Identification type</InputLabel>
                 <Input id='student-identificationType'
                        value={fields.identificationType}
                        onChange={this.handleChange('identificationType')}
@@ -382,7 +382,7 @@ class StudentForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['student-form-control']} error={errors.birthday}>
-                <InputLabel required htmlFor='student-birthday' shrink>Birthday</InputLabel>
+                <InputLabel htmlFor='student-birthday' shrink>Birthday</InputLabel>
                 <Input id='student-birthday'
                        value={fields.birthday}
                        onChange={this.handleChange('birthday')}
@@ -391,7 +391,7 @@ class StudentForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['student-form-control']} error={errors.address}>
-                <InputLabel required htmlFor='student-address' shrink>Address</InputLabel>
+                <InputLabel htmlFor='student-address' shrink>Address</InputLabel>
                 <Input id='student-address'
                        value={fields.address}
                        onChange={this.handleChange('address')}

@@ -332,7 +332,7 @@ class ProfessorForm extends React.Component<IProps, IState> {
                 />
               </FormControl>
               <FormControl className={styles['professor-form-control']} error={errors.file}>
-                <InputLabel required htmlFor='professor-email'>File</InputLabel>
+                <InputLabel htmlFor='professor-file'>File</InputLabel>
                 <Input id='professor-file'
                        value={fields.file}
                        onChange={this.handleChange('file')}
