@@ -5,4 +5,5 @@ export interface IState {
   adminBeingDeleted: IAdmin | null;
   admins: IAdmin[];
   isDeleting: boolean;
+  snackbarOpen: boolean;
 }
