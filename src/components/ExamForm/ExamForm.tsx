@@ -30,7 +30,6 @@ class ExamForm extends React.Component<IProps, IState> {
                 id: '',
                 startDate: '',
                 endDate: '',
-                schedule: [],
                 enrolled: [],
                 subject: {
                     id: '',
@@ -170,10 +169,6 @@ class ExamForm extends React.Component<IProps, IState> {
     validate = (field: string, value: any): boolean => {
         switch (field) {
             case 'subjectName':
-                return (
-                    this.validatename(value)
-                );
-            case 'schedule':
                 return (
                     this.validatename(value)
                 );

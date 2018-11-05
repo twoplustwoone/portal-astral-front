@@ -28,7 +28,6 @@ export interface IFields {
     startDate: string;
     endDate: string;
     id: string;
-    schedule: string[];
     requiredSubjects: string[];
     enrolled: IStudent[];
 }

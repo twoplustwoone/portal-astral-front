@@ -44,10 +44,14 @@ declare interface ICourse {
   startDate: string;
   endDate: string;
   subject: ISubject;
-  schedule: string[];
-  enrolled: IStudent[];
 }
 
+declare interface IExamInscription {
+  id: string;
+  student: IStudent;
+  exam: IExam;
+  result: number;
+}
 declare interface ICareer {
   id: string;
   careerName: string;

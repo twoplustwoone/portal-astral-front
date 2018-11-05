@@ -1,8 +1,10 @@
 /* Admin endpoints */
 import session from "./session";
 
+export const baseUrl = 'http://localhost:9000'
+
 export const createAdmin = (admin: IAdmin): Promise<Response> => {
-  const url = 'http://localhost:9000/administrator';
+  const url = baseUrl + '/administrator';
   const init: RequestInit = {
     method: 'POST',
     headers: {
@@ -15,7 +17,7 @@ export const createAdmin = (admin: IAdmin): Promise<Response> => {
 };
 
 export const getAllAdmins = (): Promise<Response> => {
-  const url = 'http://localhost:9000/administrator';
+  const url = baseUrl + '/administrator';
   const init: RequestInit = {
     method: 'GET',
   };
@@ -24,7 +26,7 @@ export const getAllAdmins = (): Promise<Response> => {
 };
 
 export const getAdminById = (id: string): Promise<Response> => {
-  const url = `http://localhost:9000/administrator/${id}`;
+  const url = `${baseUrl}/administrator/${id}`;
   const init: RequestInit = {
     method: 'GET',
   };
@@ -33,7 +35,7 @@ export const getAdminById = (id: string): Promise<Response> => {
 };
 
 export const updateAdmin = (admin: IAdmin): Promise<Response> => {
-  const url = `http://localhost:9000/administrator/${admin.id}`;
+  const url = `${baseUrl}/administrator/${admin.id}`;
   const init: RequestInit = {
     method: 'PUT',
     headers: {
@@ -46,7 +48,7 @@ export const updateAdmin = (admin: IAdmin): Promise<Response> => {
 };
 
 export const deleteAdmin = (id: string): Promise<Response> => {
-  const url = `http://localhost:9000/administrator/${id}`;
+  const url = `${baseUrl}/administrator/${id}`;
   const init: RequestInit = {
     method: 'DELETE',
   };
@@ -56,7 +58,7 @@ export const deleteAdmin = (id: string): Promise<Response> => {
 
 /* Professor endpoints */
 export const createProfessor = (professor: IProfessor): Promise<Response> => {
-  const url = 'http://localhost:9000/professor';
+  const url = baseUrl + '/professor';
   const init: RequestInit = {
     method: 'POST',
     headers: {
@@ -69,7 +71,7 @@ export const createProfessor = (professor: IProfessor): Promise<Response> => {
 };
 
 export const getAllProfessors = (): Promise<Response> => {
-  const url = 'http://localhost:9000/professor';
+  const url = baseUrl + '/professor';
   const init: RequestInit = {
     method: 'GET',
   };
@@ -78,7 +80,7 @@ export const getAllProfessors = (): Promise<Response> => {
 };
 
 export const getProfessorById = (id: string): Promise<Response> => {
-  const url = `http://localhost:9000/professor/${id}`;
+  const url = `${baseUrl}/professor/${id}`;
   const init: RequestInit = {
     method: 'GET',
   };
@@ -87,7 +89,7 @@ export const getProfessorById = (id: string): Promise<Response> => {
 };
 
 export const updateProfessor = (professor: IProfessor): Promise<Response> => {
-  const url = `http://localhost:9000/professor/${professor.id}`;
+  const url = `${baseUrl}/professor/${professor.id}`;
   const init: RequestInit = {
     method: 'PUT',
     headers: {
@@ -100,7 +102,7 @@ export const updateProfessor = (professor: IProfessor): Promise<Response> => {
 };
 
 export const deleteProfessor = (id: string): Promise<Response> => {
-  const url = `http://localhost:9000/professor/${id}`;
+  const url = `${baseUrl}/professor/${id}`;
   const init: RequestInit = {
     method: 'DELETE',
   };
@@ -110,7 +112,7 @@ export const deleteProfessor = (id: string): Promise<Response> => {
 
 /* Student endpoints */
 export const createStudent = (student: IStudent): Promise<Response> => {
-  const url = 'http://localhost:9000/student';
+  const url = baseUrl + '/student';
   const init: RequestInit = {
     method: 'POST',
     headers: {
@@ -123,7 +125,7 @@ export const createStudent = (student: IStudent): Promise<Response> => {
 };
 
 export const getAllStudents = (): Promise<Response> => {
-  const url = 'http://localhost:9000/student';
+  const url = baseUrl + '/student';
   const init: RequestInit = {
     method: 'GET',
   };
@@ -132,7 +134,7 @@ export const getAllStudents = (): Promise<Response> => {
 };
 
 export const getStudentById = (id: string): Promise<Response> => {
-  const url = `http://localhost:9000/student/${id}`;
+  const url = `${baseUrl}/student/${id}`;
   const init: RequestInit = {
     method: 'GET',
   };
@@ -141,7 +143,7 @@ export const getStudentById = (id: string): Promise<Response> => {
 };
 
 export const updateStudent = (student: IStudent): Promise<Response> => {
-  const url = `http://localhost:9000/student/${student.id}`;
+  const url = `${baseUrl}/student/${student.id}`;
   const init: RequestInit = {
     method: 'PUT',
     headers: {
@@ -154,7 +156,7 @@ export const updateStudent = (student: IStudent): Promise<Response> => {
 };
 
 export const deleteStudent = (id: string): Promise<Response> => {
-  const url = `http://localhost:9000/student/${id}`;
+  const url = `${baseUrl}/student/${id}`;
   const init: RequestInit = {
     method: 'DELETE',
   };
@@ -164,7 +166,7 @@ export const deleteStudent = (id: string): Promise<Response> => {
 
 /* Subject endpoints */
 export const createSubject = (subject: ISubject): Promise<Response> => {
-  const url = 'http://localhost:9000/subject';
+  const url = baseUrl + '/subject';
   const init: RequestInit = {
     method: 'POST',
     headers: {
@@ -177,7 +179,7 @@ export const createSubject = (subject: ISubject): Promise<Response> => {
 };
 
 export const getAllSubjects = (): Promise<Response> => {
-  const url = 'http://localhost:9000/subject';
+  const url = baseUrl + '/subject';
   const init: RequestInit = {
     method: 'GET',
   };
@@ -186,7 +188,7 @@ export const getAllSubjects = (): Promise<Response> => {
 };
 
 export const getSubjectById = (id: string): Promise<Response> => {
-  const url = `http://localhost:9000/subject/${id}`;
+  const url = `${baseUrl}/subject/${id}`;
   const init: RequestInit = {
     method: 'GET',
   };
@@ -195,7 +197,7 @@ export const getSubjectById = (id: string): Promise<Response> => {
 };
 
 export const updateSubject = (subject: ISubject): Promise<Response> => {
-  const url = `http://localhost:9000/subject/${subject.id}`;
+  const url = `${baseUrl}/subject/${subject.id}`;
   const init: RequestInit = {
     method: 'PUT',
     headers: {
@@ -208,7 +210,7 @@ export const updateSubject = (subject: ISubject): Promise<Response> => {
 };
 
 export const deleteSubject = (id: string): Promise<Response> => {
-  const url = `http://localhost:9000/subject/${id}`;
+  const url = `${baseUrl}/subject/${id}`;
   const init: RequestInit = {
     method: 'DELETE',
   };
@@ -218,7 +220,7 @@ export const deleteSubject = (id: string): Promise<Response> => {
 
 /* Course endpoints */
 export const createCourse = (course: ICourse): Promise<Response> => {
-    const url = 'http://localhost:9000/course';
+    const url = baseUrl + '/course';
     const init: RequestInit = {
         method: 'POST',
         headers: {
@@ -231,7 +233,7 @@ export const createCourse = (course: ICourse): Promise<Response> => {
 };
 
 export const getAllCourses = (): Promise<Response> => {
-    const url = 'http://localhost:9000/course';
+    const url = baseUrl + '/course';
     const init: RequestInit = {
         method: 'GET',
     };
@@ -240,7 +242,7 @@ export const getAllCourses = (): Promise<Response> => {
 };
 
 export const getCourseById = (id: string): Promise<Response> => {
-    const url = `http://localhost:9000/course/${id}`;
+    const url = `${baseUrl}/course/${id}`;
     const init: RequestInit = {
         method: 'GET',
     };
@@ -249,7 +251,7 @@ export const getCourseById = (id: string): Promise<Response> => {
 };
 
 export const updateCourse = (course: ICourse): Promise<Response> => {
-    const url = `http://localhost:9000/course/${course.id}`;
+    const url = `${baseUrl}/course/${course.id}`;
     const init: RequestInit = {
         method: 'PUT',
         headers: {
@@ -262,7 +264,7 @@ export const updateCourse = (course: ICourse): Promise<Response> => {
 };
 
 export const deleteCourse = (id: string): Promise<Response> => {
-    const url = `http://localhost:9000/course/${id}`;
+    const url = `${baseUrl}/course/${id}`;
     const init: RequestInit = {
         method: 'DELETE',
     };
@@ -286,7 +288,7 @@ export const enrollStudentInCourse = (id: string, studentId: string): Promise<Re
 
 
 export const deleteExam = (id: string): Promise<Response> => {
-    const url = `http://localhost:9000/exam/${id}`;
+    const url = baseUrl + '/exam/${id}';
     const init: RequestInit = {
         method: 'DELETE',
     };
@@ -297,7 +299,7 @@ export const deleteExam = (id: string): Promise<Response> => {
 /* Exam endpoints */
 
 export const createExam = (exam: IExam): Promise<Response> => {
-    const url = 'http://localhost:9000/exam';
+    const url = baseUrl + '/exam';
     const init: RequestInit = {
         method: 'POST',
         headers: {
@@ -319,7 +321,7 @@ export const getAllExams = (): Promise<Response> => {
 };
 
 export const getExamById = (id: string): Promise<Response> => {
-    const url = `http://localhost:9000/exam/${id}`;
+    const url = `${baseUrl}/exam/${id}`;
     const init: RequestInit = {
         method: 'GET',
     };
@@ -328,7 +330,7 @@ export const getExamById = (id: string): Promise<Response> => {
 };
 
 export const updateExam = (exam: IExam): Promise<Response> => {
-    const url = `http://localhost:9000/exam/${exam.id}`;
+    const url = `${baseUrl}/exam/${exam.id}`;
     const init: RequestInit = {
         method: 'PUT',
         headers: {
@@ -341,9 +343,19 @@ export const updateExam = (exam: IExam): Promise<Response> => {
 };
 
 export const getAllExamsStudent = (id: string): Promise<Response> => {
-    const url = `http://localhost:9000/getExamInscriptionByStudent/${id} `;
+    const url = `${baseUrl}/getExamInscriptionByStudent/${id} `;
     const init: RequestInit = {
         method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
+
+export const deleteExam = (id: string): Promise<Response> => {
+    const url = `${baseUrl}/exam/${id}`;
+    const init: RequestInit = {
+        method: 'DELETE',
     };
 
     return fetch(url, init);
@@ -360,15 +372,52 @@ export const getAllCareers = (): Promise<Response> => {
     return fetch(url, init);
 };
 
+/* ExamInscription endpoints */
+
+export const createExamInscription = (examInscription: IExamInscription): Promise<Response> => {
+    const url = 'http://localhost:9000/examInscription';
+    const init: RequestInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(examInscription),
+};
+
+    return fetch(url, init);
+};
 export const deleteCareer = (id: string): Promise<Response> => {
     const url = `http://localhost:9000/career/${id}`;
     const init: RequestInit = {
         method: 'DELETE',
+
     };
 
     return fetch(url, init);
 };
 
+
+export const getExamInscriptionById = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/examInscription/${id}`;
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
+export const updateExamInscription = (examInscription: IExamInscription): Promise<Response> => {
+    const url = `http://localhost:9000/examInscription/${examInscription.id}`;
+    const init: RequestInit = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(examInscription),
+};
+
+    return fetch(url, init);
+};
 
 export const createCareer = (career: ICareer): Promise<Response> => {
     const url = 'http://localhost:9000/career';
@@ -383,9 +432,37 @@ export const createCareer = (career: ICareer): Promise<Response> => {
     return fetch(url, init);
 };
 
+export const deleteExamInscription = (id: string): Promise<Response> => {
+    const url = `http://localhost:9000/examInscription/${id}`;
+    const init: RequestInit = {
+        method: 'DELETE',
+    };
+
+    return fetch(url, init);
+};
+
+export const getAllExamInscriptions = (): Promise<Response> => {
+    const url = 'http://localhost:9000/examInscription';
+  const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
 
 export const getCareerById = (id: string): Promise<Response> => {
     const url = `http://localhost:9000/career/${id}`;
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
+
+
+export const getAllExamInscriptionsbyExamId = (id: string): Promise<Response> => {
+    const url = 'http://localhost:9000//getExams/' + id;
     const init: RequestInit = {
         method: 'GET',
     };
@@ -406,10 +483,18 @@ export const updateCareer = (career: ICareer): Promise<Response> => {
     return fetch(url, init);
 };
 
+export const getAllExamInscriptionsbyCourseId = (id: string): Promise<Response> => {
+    const url = 'http://localhost:9000/getExamInscriptionByCourse/' + id;
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
 /* Authentication endpoints */
 
 export const login = (credentials: ILogin): Promise<Response> => {
-  const url = `http://localhost:9000/login`;
+  const url = `${baseUrl}/login`;
   const body = { ...credentials };
 
   const init: RequestInit = {
@@ -428,7 +513,7 @@ export const logout = (): Promise<Response | null> => {
 
   if (maybeUser) {
     debugger;
-    const url = `http://localhost:9000/logout/${maybeUser.id}`;
+    const url = `${baseUrl}/logout/${maybeUser.id}`;
     const init: RequestInit = {
       method: 'GET',
     };

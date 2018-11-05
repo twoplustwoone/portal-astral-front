@@ -18,6 +18,8 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { updateAdmin, updateProfessor, updateStudent } from "../../utils/api";
 import session from "../../utils/session";
+import {DateTime} from "luxon";
+import {validateBirthdayDate} from "../../utils/validation";
 
 const styles = require('./Profile.pcss');
 
@@ -91,11 +93,18 @@ class Profile extends React.Component<Props, State> {
   };
 
   handleChange = (prop: string) => (event: any) => {
-    this.setState({
+      let value = event.target.value;
+
+      if (prop == 'birthday'){
+          let date = DateTime.fromFormat(value, "yyyy-MM-dd");
+          value = date.isValid ? date.toFormat("dd/MM/yyyy") : value;
+      }
+
+      this.setState({
       ...this.state,
       fields: {
         ...this.state.fields,
-        [prop]: event.target.value,
+        [prop]: value,
       },
     });
   };
@@ -170,6 +179,8 @@ class Profile extends React.Component<Props, State> {
         return (
           this.validatePassword(value)
         );
+        case 'birthday':
+          return validateBirthdayDate(DateTime.local())(DateTime.fromFormat(value, "yyyy-MM-dd"));
       default:
         return true;
     }
@@ -227,6 +238,11 @@ class Profile extends React.Component<Props, State> {
     const userType = session.getUserType();
 
     const readOnly = this.areInputsReadOnly();
+
+    if (fields.birthday) {
+        let date = DateTime.fromFormat(fields.birthday, "d/M/y");
+        fields.birthday = date.isValid? date.toISODate() : fields.birthday;
+    }
 
     return (
       <div className={styles.NewUser}>

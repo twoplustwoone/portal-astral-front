@@ -32,7 +32,6 @@ class CourseForm extends React.Component<IProps, IState> {
             },
             startDate: '',
             endDate: '',
-            schedule: [],
             id: '',
             requiredSubjects: [],
             enrolled: [],
@@ -93,7 +92,7 @@ class CourseForm extends React.Component<IProps, IState> {
             return;
         }
 
-        const { subject, startDate, endDate, id, schedule } = course;
+        const { subject, startDate, endDate, id } = course;
         this.setState({
             ...this.state,
             fields: {
@@ -102,7 +101,6 @@ class CourseForm extends React.Component<IProps, IState> {
                 startDate,
                 endDate,
                 id,
-                schedule,
             },
         });
     };
@@ -167,19 +165,33 @@ class CourseForm extends React.Component<IProps, IState> {
         switch (field) {
             case 'subjectName':
                 return (
-                    this.validatename(value)
+                    this.validateName(value)
                 );
-            case 'schedule':
-                return (
-                    this.validatename(value)
+            case 'startDate':
+                return(
+                    this.validateStartDate(value)
+                );
+            case 'endDate':
+                return(
+                    this.validateEndDate(value)
                 );
             default:
                 return true;
         }
     };
 
-    validatename = (value: any): boolean => {
+    validateName = (value: any): boolean => {
         return value !== '';
+    };
+
+    validateStartDate = (value: any): boolean => {
+        const today = new Date();
+        return value >= today.toISOString().substr(0,10);
+    };
+
+    validateEndDate = (value: any): boolean => {
+        const { startDate } = this.state.fields;
+        return startDate <= value;
     };
 
     areInputsReadOnly = () => {
@@ -290,7 +302,7 @@ class CourseForm extends React.Component<IProps, IState> {
                     <CardContent>
                         <form className={styles['New-Course-form']}>
                             <FormControl className={styles['course-form-control']} error={errors.requiredSubjects}>
-                                <InputLabel required htmlFor='subject-requiredSubjects'>Course</InputLabel>
+                                <InputLabel required htmlFor='subject-requiredSubjects'>Subject</InputLabel>
                                 {
                                     <Select
                                         value={this.state.fields.subject.id}
@@ -325,14 +337,6 @@ class CourseForm extends React.Component<IProps, IState> {
                                        onChange={this.handleChange('endDate')}
                                        readOnly={readOnly}
                                        type={'date'}
-                                />
-                            </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.schedule}>
-                                <InputLabel required htmlFor='course-schedule'>Schedule</InputLabel>
-                                <Input id='course-schedule'
-                                       value={fields.schedule}
-                                       onChange={this.handleChange('schedule')}
-                                       readOnly={readOnly}
                                 />
                             </FormControl>
                         </form>
