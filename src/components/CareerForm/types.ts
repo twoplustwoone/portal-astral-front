@@ -25,7 +25,7 @@ export interface IState {
 export interface IFields {
     id: string;
     careerName : string;
-    subjects: string[];
+    careerSubjects: string[];
 }
 
 export type IErrors = {

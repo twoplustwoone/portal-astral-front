@@ -30,7 +30,7 @@ declare interface IStudent extends IUser {
 declare interface ICareer {
   id: string;
   careerName: string;
-  subjects: string[];
+  careerSubjects: string[];
 }
 
 declare interface ISubject {

@@ -31,7 +31,7 @@ export const getAllCareers = (): Promise<Response> => {
 };
 
 export const updateCareer = (career: ICareer): Promise<Response> => {
-    const url = 'http://localhost:9000/career' + career.id;
+    const url = 'http://localhost:9000/career/' + career.id;
     const init: RequestInit = {
         method: 'PUT',
         headers: {

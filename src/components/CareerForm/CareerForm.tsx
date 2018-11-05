@@ -26,7 +26,7 @@ class CareerForm extends React.Component<IProps, IState> {
         fields: {
             id: '',
             careerName: '',
-            subjects: [],
+            careerSubjects: [],
         },
         errors: {
             careerName: false,
@@ -63,7 +63,7 @@ class CareerForm extends React.Component<IProps, IState> {
             return this.setState({
                 allSubjects: subjects
                     .filter(s =>
-                        !(this.state.fields.subjects.indexOf(s.id) > -1)),
+                        !(this.state.fields.careerSubjects.indexOf(s.id) > -1)),
             });
         });
 
@@ -97,21 +97,21 @@ class CareerForm extends React.Component<IProps, IState> {
             return;
         }
 
-        const {id, careerName, subjects} = career;
+        const {id, careerName, careerSubjects} = career;
         this.setState({
             ...this.state,
             fields: {
                 ...this.state.fields,
                 id,
                 careerName,
-                subjects,
+                careerSubjects,
             },
         });
     };
 
     redirect = () => {
         this.setState({
-            redirect: '/career',
+            redirect: '/careers',
         })
     };
 
@@ -140,7 +140,7 @@ class CareerForm extends React.Component<IProps, IState> {
 
         CareerService.deleteCareer(career.id)
             .then(() => {
-                this.setState({redirect: '/career'})
+                this.setState({redirect: '/careers'})
             });
     };
 
@@ -173,17 +173,15 @@ class CareerForm extends React.Component<IProps, IState> {
     };
 
     handleAddTable = (event: any) => {
-        // TODO check this
-        const {subjects} = this.state.fields;
-        subjects.push(event.target.value);
-        this.setState({...this.state, fields: {...this.state.fields, subjects}});
+        const {careerSubjects} = this.state.fields;
+        careerSubjects.push(event.target.value);
+        this.setState({...this.state, fields: {...this.state.fields, careerSubjects}});
     };
 
     handleRemoveFromTable = (id: string) => {
-        const {subjects} = this.state.fields;
-        const subjectsRemove = subjects.filter((subId) => subId != id);
-        this.setState({...this.state, fields: {...this.state.fields, subjects: subjectsRemove}});
-        // this.setState({...this.state, fields: {...this.state.fields, subjects: this.state.fields.subjects.filter(s => s != id)}})
+        const {careerSubjects} = this.state.fields;
+        const subjectsRemove = careerSubjects.filter((subId) => subId != id);
+        this.setState({...this.state, fields: {...this.state.fields, careerSubjects: subjectsRemove}});
     };
 
     areInputsReadOnly = () => {
@@ -255,7 +253,7 @@ class CareerForm extends React.Component<IProps, IState> {
                                        readOnly={readOnly}
                                 />
                             </FormControl>
-                            <FormControl className={styles['career-form-control']} error={errors.subjects}>
+                            <FormControl className={styles['career-form-control']} error={errors.careerSubjects}>
                                 <InputLabel htmlFor='career-requiredSubjects'>Subjects</InputLabel>
                                 {
                                     <Select
@@ -269,7 +267,7 @@ class CareerForm extends React.Component<IProps, IState> {
                                     >
                                         {
                                             this.state.allSubjects
-                                                .filter(s => s.id !== fields.id && fields.subjects.indexOf(s.id) < 0)
+                                                .filter(s => s.id !== fields.id && fields.careerSubjects.indexOf(s.id) < 0)
                                                 .map(s => <MenuItem value={s.id}>{s.subjectName}</MenuItem>)
                                         }
                                     </Select>
@@ -290,7 +288,7 @@ class CareerForm extends React.Component<IProps, IState> {
                                 </TableHead>
                                 <TableBody>
                                     {
-                                        fields.subjects.map((val: string, i) => {
+                                        fields.careerSubjects.map((val: string, i) => {
 
                                             const subject = this.state.allSubjects.find(s => s.id === val);
 
