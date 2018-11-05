@@ -43,18 +43,17 @@ declare interface ISubject {
 
 declare interface ICourse {
   id: string;
-  startTime: string;
-  endTime: string;
+  startDate: string;
+  endDate: string;
   subject: ISubject;
-  schedule: string[];
 }
 
-// declare interface ICareer {
-//   id: string;
-//   careerName: string;
-//   careerSubjects: string[];
-//   // students: IStudent;
-// }
+declare interface IExamInscription {
+  id: string;
+  student: IStudent;
+  exam: IExam;
+  result: number;
+}
 
 declare interface IExam {
     id: string;
