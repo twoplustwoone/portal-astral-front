@@ -25,10 +25,9 @@ export interface IState {
 
 export interface IFields {
     subject: ISubject;
-    startTime: string;
-    endTime: string;
+    startDate: string;
+    endDate: string;
     id: string;
-    schedule: string[];
     requiredSubjects: string[];
 }
 
