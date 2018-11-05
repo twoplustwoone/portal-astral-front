@@ -17,6 +17,8 @@ import IconButton from "@material-ui/core/IconButton";
 import {DeleteOutline} from "@material-ui/icons";
 import {getAllSubjects} from "../../utils/api";
 import * as CareerService from "./CareerServices";
+import { Redirect } from "react-router";
+import session from "../../utils/session";
 
 const styles = require('./CareerForm.pcss');
 
@@ -213,9 +215,20 @@ class CareerForm extends React.Component<IProps, IState> {
 
     render() {
         // const {fields, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating} = this.state;
-        const {fields, errors, isFetching, isDeleting, isCreating} = this.state;
+        const {fields, errors, isFetching, isDeleting, isCreating,redirect} = this.state;
 
         const readOnly = this.areInputsReadOnly();
+
+        const userType = session.getUserType();
+
+        if (redirect) {
+            return <Redirect to={redirect} />;
+        }
+
+        if (userType !== 'Admin') {
+            return <Redirect to={'/careers'} />;
+        }
+
 
         if (isFetching || isDeleting || isCreating) {
             return <div><CircularProgress/></div>
