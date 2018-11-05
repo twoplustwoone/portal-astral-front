@@ -207,7 +207,7 @@ class StudentForm extends React.Component<IProps, IState> {
   };
 
   validateEmail = (value: any): boolean => {
-    return value !== '' && value.includes('@');
+    return value !== '' && value.includes('@') && value.includes('.com');
   };
 
   validatePassword = (value: any): boolean => {
