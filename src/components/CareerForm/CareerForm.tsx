@@ -25,11 +25,11 @@ class CareerForm extends React.Component<IProps, IState> {
     state: IState = {
         fields: {
             id: '',
-            name: '',
+            careerName: '',
             subjects: [],
         },
         errors: {
-            name: false,
+            careerName: false,
         },
         isNew: true,
         isEditing: true,
@@ -97,13 +97,13 @@ class CareerForm extends React.Component<IProps, IState> {
             return;
         }
 
-        const {id, name, subjects} = career;
+        const {id, careerName, subjects} = career;
         this.setState({
             ...this.state,
             fields: {
                 ...this.state.fields,
                 id,
-                name,
+                careerName,
                 subjects,
             },
         });
@@ -193,7 +193,7 @@ class CareerForm extends React.Component<IProps, IState> {
 
     renderTitle = () => {
         const {isNew} = this.state;
-        const {name} = this.state.fields;
+        const {careerName} = this.state.fields;
         return <div>
             {
                 !isNew &&
@@ -207,7 +207,7 @@ class CareerForm extends React.Component<IProps, IState> {
                     </Button>
                 </div>
             }
-            <div className={styles.displayNameDiv}>{`${name}`}</div>
+            <div className={styles.displayNameDiv}>{`${careerName}`}</div>
         </div>
     };
 
@@ -247,16 +247,16 @@ class CareerForm extends React.Component<IProps, IState> {
                     <CardHeader title={this.renderTitle()} className={styles.displayName}/>
                     <CardContent>
                         <form className={styles['New-Career-form']}>
-                            <FormControl className={styles['career-form-control']} error={errors.name}>
-                                <InputLabel required htmlFor='career-name'>First name</InputLabel>
+                            <FormControl className={styles['career-form-control']} error={errors.careerName}>
+                                <InputLabel required htmlFor='career-name'>Name</InputLabel>
                                 <Input id='career-name'
-                                       value={fields.name}
-                                       onChange={this.handleChange('name')}
+                                       value={fields.careerName}
+                                       onChange={this.handleChange('careerName')}
                                        readOnly={readOnly}
                                 />
                             </FormControl>
                             <FormControl className={styles['career-form-control']} error={errors.subjects}>
-                                <InputLabel htmlFor='career-requiredSubjects'>Correlatives</InputLabel>
+                                <InputLabel htmlFor='career-requiredSubjects'>Subjects</InputLabel>
                                 {
                                     <Select
                                         value={undefined}

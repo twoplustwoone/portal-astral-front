@@ -29,7 +29,7 @@ declare interface IStudent extends IUser {
 
 declare interface ICareer {
   id: string;
-  name: string;
+  careerName: string;
   subjects: string[];
 }
 
@@ -49,12 +49,12 @@ declare interface ICourse {
   schedule: string[];
 }
 
-declare interface ICareer {
-  id: string;
-  careerName: string;
-  careerSubjects: string[];
-  students: IStudent;
-}
+// declare interface ICareer {
+//   id: string;
+//   careerName: string;
+//   careerSubjects: string[];
+//   // students: IStudent;
+// }
 
 declare interface IExam {
     id: string;
