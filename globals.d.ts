@@ -48,6 +48,13 @@ declare interface ICourse {
   enrolled: IStudent[];
 }
 
+declare interface ICareer {
+  id: string;
+  careerName: string;
+  careerSubjects: string[];
+  students: IStudent;
+}
+
 declare interface IExam {
     id: string;
     course: ICourse;

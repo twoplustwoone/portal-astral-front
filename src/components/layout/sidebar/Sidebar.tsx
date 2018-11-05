@@ -15,6 +15,7 @@ import { Props, State } from "./types";
 import { Link, withRouter } from "react-router-dom";
 import session from "../../../utils/session";
 import {BusinessCenter, Description} from "@material-ui/icons";
+import {Domain} from "@material-ui/icons";
 
 const drawerWidth = 240;
 
@@ -107,6 +108,17 @@ function ExamItem(props: { pathname: string }) {
   </Link>;
 }
 
+function CareerItem(props: { pathname: string }) {
+    return <Link to={"/careers"} className={styles.link}>
+        <ListItem className={styles.listItem} selected={props.pathname === '/careers'}>
+            <ListItemIcon>
+                <Domain />
+            </ListItemIcon>
+            <ListItemText primary='Careers' />
+        </ListItem>
+    </Link>;
+}
+
 function AllCoursesItem(props: { pathname: string }) {
     return <Link to={"/all-courses"} className={styles.link}>
         <ListItem className={styles.listItem} selected={props.pathname === '/all-courses'}>
@@ -188,6 +200,8 @@ class Sidebar extends React.Component<Props, State> {
           {userType === 'Student' && <MyExamsItem pathname={pathname} />}
 
           {userType !== 'Student' && <ExamItem pathname={pathname} />}
+
+          <CareerItem pathname={pathname} />
 
         </List>
       </div>

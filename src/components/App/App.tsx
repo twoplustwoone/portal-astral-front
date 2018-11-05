@@ -27,8 +27,8 @@ import CourseTable from "../CourseTable/CourseTable";
 import MyCourseTable from "../MyCoursesTable/MyCourseTable";
 import CourseForm from "../CourseForm/CourseForm";
 import ExamTable from "../ExamTable/ExamTable";
-import ExamFrom from "../ExamForm/ExamFrom";
-
+import ExamForm from "../ExamForm/ExamForm";
+import CareerTable from "../CareerTable/CareerTable";
 const styles = require('./App.pcss');
 
 const _styles = (theme: Theme): StyleRules => ({
@@ -68,13 +68,13 @@ function Content(props: { classes: any }) {
     <PrivateRoute path={'/courses'} component={CourseTable} />
     <PrivateRoute path={'/new-course'} component={CourseForm} />
     <PrivateRoute path={'/course/:id'} component={CourseForm} />
+    <PrivateRoute path={'/careers'} component={CareerTable} />
     <PrivateRoute path={'/exams'} component={ExamTable} />
-    <PrivateRoute path={'/course/:id'} component={CourseForm} />
-    <PrivateRoute path={'/new-exam'} component={ExamFrom} />
-    <PrivateRoute path={'/exam/:id'} component={ExamFrom} />
+    <PrivateRoute path={'/new-exam'} component={ExamForm} />
+    <PrivateRoute path={'/exam/:id'} component={ExamForm} />
     <PrivateRoute path={'/all-courses'} component={CourseTable} />
     <PrivateRoute path={'/my-courses'} component={MyCourseTable} />
-    <PrivateRoute path={'/my-exams'} component={ExamFrom} />
+    <PrivateRoute path={'/my-exams'} component={ExamForm} />
   </div>;
 }
 
