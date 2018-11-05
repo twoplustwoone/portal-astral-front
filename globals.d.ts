@@ -46,6 +46,12 @@ declare interface ICourse {
   subject: ISubject;
 }
 
+declare interface IExamInscription {
+  id: string;
+  student: IStudent;
+  exam: IExam;
+  result: number;
+}
 declare interface ICareer {
   id: string;
   careerName: string;
