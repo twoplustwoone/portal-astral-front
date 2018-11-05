@@ -41,8 +41,8 @@ declare interface ISubject {
 
 declare interface ICourse {
   id: string;
-  startTime: string;
-  endTime: string;
+  startDate: string;
+  endDate: string;
   subject: ISubject;
   schedule: string[];
   enrolled: IStudent[];
@@ -56,10 +56,10 @@ declare interface IExam {
 
 declare interface IStudentExam{
     id: string;
-    course: ICourse;
+    exam: IExam;
     date: string;
     student: IStudent;
-    grade: number;
+    result: number;
 }
 
 declare type UserType = 'Professor' | 'Admin' | 'Student';

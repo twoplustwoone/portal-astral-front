@@ -30,8 +30,8 @@ class CourseForm extends React.Component<IProps, IState> {
                 requiredSubjects: [],
                 students: [],
             },
-            startTime: '',
-            endTime: '',
+            startDate: '',
+            endDate: '',
             schedule: [],
             id: '',
             requiredSubjects: [],
@@ -93,14 +93,14 @@ class CourseForm extends React.Component<IProps, IState> {
             return;
         }
 
-        const { subject, startTime, endTime, id, schedule } = course;
+        const { subject, startDate, endDate, id, schedule } = course;
         this.setState({
             ...this.state,
             fields: {
                 ...this.state.fields,
                 subject,
-                startTime,
-                endTime,
+                startDate,
+                endDate,
                 id,
                 schedule,
             },
@@ -309,20 +309,20 @@ class CourseForm extends React.Component<IProps, IState> {
                                     </Select>
                                 }
                             </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.startTime}>
-                                <InputLabel required htmlFor='course-startTime' shrink>Start Time</InputLabel>
-                                <Input id='course-startTime'
-                                       value={fields.startTime}
-                                       onChange={this.handleChange('startTime')}
+                            <FormControl className={styles['course-form-control']} error={errors.startDate}>
+                                <InputLabel required htmlFor='course-startDate' shrink>Start Date</InputLabel>
+                                <Input id='course-startDate'
+                                       value={fields.startDate}
+                                       onChange={this.handleChange('startDate')}
                                        readOnly={readOnly}
                                        type={'date'}
                                 />
                             </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.endTime}>
-                                <InputLabel required htmlFor='course-endtime' shrink>End Time</InputLabel>
-                                <Input id='course-endtime'
-                                       value={fields.endTime}
-                                       onChange={this.handleChange('endTime')}
+                            <FormControl className={styles['course-form-control']} error={errors.endDate}>
+                                <InputLabel required htmlFor='course-endDate' shrink>End Date</InputLabel>
+                                <Input id='course-endDate'
+                                       value={fields.endDate}
+                                       onChange={this.handleChange('endDate')}
                                        readOnly={readOnly}
                                        type={'date'}
                                 />

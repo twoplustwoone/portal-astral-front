@@ -25,7 +25,9 @@ class ExamTable extends React.Component<IProps, IState> {
 
   fetchExams = () => {
       if(session.getUserType() === 'Student'){
-          getAllExamsStudent((session.getUser() as IStudent).id).then(this.handleResponseStudentExams).then(this.receiveStudentExams);
+          getAllExamsStudent((session.getUser() as IStudent).id)
+              .then(this.handleResponseStudentExams)
+              .then(this.receiveStudentExams);
       } else {
           getAllExams().then(this.handleResponse).then(this.receiveExams);
       }
@@ -43,7 +45,6 @@ class ExamTable extends React.Component<IProps, IState> {
       // if (response.status !== 200) {,
       //     throw Error('Error fetching exams');
       // }
-      console.log(response.status);
 
       return response.json();
   };
@@ -85,8 +86,6 @@ class ExamTable extends React.Component<IProps, IState> {
       this.setState({ examsStudent: exams })
   };
 
-  private filteredExams: any;
-
   render() {
     const { examBeingDeleted, isDeleting, exams, examsStudent } = this.state;
 
@@ -94,21 +93,7 @@ class ExamTable extends React.Component<IProps, IState> {
 
     let isStudent = session.getUserType() === 'Student';
     let text = '';
-    console.log(examsStudent);
 
-      function filter(exam: IStudentExam) {
-          if(exam.course.enrolled.length > 0){
-              return exam.course.enrolled.map(student =>
-                  student.id == (session.getUser() as IStudent).id)
-                  .reduceRight(
-                      (accumulator, currentValue) => accumulator || currentValue,
-                  );
-          } else {
-              return false;
-          }
-      }
-
-    isStudent && examsStudent != undefined? this.filteredExams = examsStudent.filter(filter): false;
     isStudent? text = "Grade": text = "";
 
     return (
@@ -152,13 +137,13 @@ class ExamTable extends React.Component<IProps, IState> {
               <TableBody>
 
                 {
-                    isStudent?
-                        this.filteredExams.map( row => {
+                    isStudent && examsStudent !== undefined ?
+                        examsStudent.map( row => {
                             return (
                                 <TableRow key={row.id}>
-                                    <TableCell>{row.course.subject.subjectName}</TableCell>
-                                    <TableCell>{row.date}</TableCell>
-                                    <TableCell>{"jeje aprobaste"}</TableCell>
+                                    <TableCell>{row.exam.course.subject.subjectName}</TableCell>
+                                    <TableCell>{row.exam.date}</TableCell>
+                                    <TableCell>{row.result}</TableCell>
                                 </TableRow>
                             );
                         })
@@ -167,6 +152,7 @@ class ExamTable extends React.Component<IProps, IState> {
                         return (
                             <TableRow key={row.id}>
                                 <TableCell>{row.course.subject.subjectName}</TableCell>
+                                {/*<TableCell>{row.course && row.course.subject && row.course.subject.subjectName}</TableCell>*/}
                                 <TableCell>{row.date}</TableCell>
                                 <TableCell>
                                     <Link to={`/exam/${row.id}`}>

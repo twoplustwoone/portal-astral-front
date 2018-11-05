@@ -88,7 +88,7 @@ class MyCourseTable extends React.Component<IProps, IState> {
         var today = new Date();
 
         function filter(course: ICourse) {
-            if(course.startTime < today.toISOString() && course.endTime > today.toISOString() && course.enrolled.length > 0) {
+            if(course.startDate < today.toISOString() && course.endDate > today.toISOString() && course.enrolled.length > 0) {
                 return course.enrolled.map(student =>
                     student.id == (session.getUser() as IStudent).id)
                     .reduceRight(
@@ -123,8 +123,8 @@ class MyCourseTable extends React.Component<IProps, IState> {
                                         return (
                                             <TableRow key={row.id}>
                                                 <TableCell>{row.subject.subjectName}</TableCell>
-                                                <TableCell>{row.startTime}</TableCell>
-                                                <TableCell>{row.endTime}</TableCell>
+                                                <TableCell>{row.startDate}</TableCell>
+                                                <TableCell>{row.endDate}</TableCell>
                                                 <TableCell>{row.schedule}</TableCell>
                                             </TableRow>
                                         );

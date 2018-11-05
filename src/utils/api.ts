@@ -340,7 +340,7 @@ export const updateExam = (exam: IExam): Promise<Response> => {
 };
 
 export const getAllExamsStudent = (id: string): Promise<Response> => {
-    const url = `http://localhost:9000/getExamStudent/${id} `;
+    const url = `http://localhost:9000/getExamInscriptionByStudent/${id} `;
     const init: RequestInit = {
         method: 'GET',
     };
