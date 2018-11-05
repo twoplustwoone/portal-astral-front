@@ -290,7 +290,7 @@ export const createExam = (exam: IExam): Promise<Response> => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(exam),
+        body: JSON.stringify({courseID: exam.course.id, dateTime: exam.date}),
     };
 
     return fetch(url, init);
@@ -312,7 +312,7 @@ export const updateExam = (exam: IExam): Promise<Response> => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(exam),
+        body: JSON.stringify({courseID: exam.course.id, dateTime: exam.date}),
     };
 
     return fetch(url, init);
