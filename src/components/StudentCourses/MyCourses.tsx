@@ -21,15 +21,12 @@ import session from "../../utils/session";
 import {baseUrl} from "../../utils/api";
 import {Close} from "@material-ui/icons";
 import {
-    httpDeleteAndDecode,
     httpGetAndDecode,
-    httpPostAndDecode,
     option,
     vector,
 } from "../../utils/decoderRequests";
 import {
     Course,
-    courseDecoder,
     CourseID,
     ExamID,
     isoCourseID,
@@ -39,6 +36,8 @@ import {
     StudentID, userDecoder,
     WebData,
 } from "./types";
+import {requestEnroll, requestStudentCourses, requestUnenroll} from "./requests";
+import {interval, Subscription} from "rxjs";
 
 // ---- MODEL TYPES ----
 
@@ -116,22 +115,9 @@ const initial: Model = {
 
 // ---- COMPONENT ----
 
-// TODO remove
-function enrollStudentInAllCourses(studentId: StudentID) : Future<Vector<any>>{
-    return requestAllCourses()
-        .flatMap(courses =>
-            Future.sequence(courses.map(c => requestEnroll(c.id)(studentId))),
-        )
-        .onComplete(res => res.match({
-            Left: _ => console.warn("Failed to enroll student in all courses"),
-            Right: _ => console.log("Enrolled student in all courses"),
-        }))
-}
-
-
 export class MyCourses extends React.Component<{}, Readonly<Model>> {
 
-    readonly state: Model = initial;
+    readonly state: Model & { sub: Subscription } = {...initial, sub: interval(1000).subscribe(_ => this.updateTime())};
 
     constructor(props) {
         super(props);
@@ -167,28 +153,24 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
             currentUser: userOption,
         });
 
+        userOption.ifSome(user =>
+            requestStudentCourses(user.id)
+                .onComplete(res => {
+                    let examsWebData: WebData<Vector<Course>> = res.match({
+                        Left: l => RemoteData.failure(l.toString()) as WebData<Vector<Course>>,
+                        Right: v => RemoteData.success(v),
+                    });
 
-        // TODO remove
-        enrollStudentInAllCourses(userOption.getOrThrow().id).onComplete(_ => {
-            userOption.ifSome(user =>
-                requestStudentCourses(user.id)
-                    .onComplete(res => {
-                        let examsWebData: WebData<Vector<Course>> = res.match({
-                            Left: l => RemoteData.failure(l.toString()) as WebData<Vector<Course>>,
-                            Right: v => RemoteData.success(v),
-                        });
-
-                        this.setState({courses: examsWebData})
-                    }),
-            )
-        })
+                    this.setState({courses: examsWebData})
+                }),
+        )
         // ----------------------------------------------------------------------
 
-        setInterval(
-            () => this.updateTime(),
-            1000,
-        );
 
+    }
+
+    componentWillUnmount(): void {
+        this.state.sub.unsubscribe()
     }
 
     updateTime() {
@@ -279,7 +261,7 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
                     let coursesInProgress = courses.filter(c => c.interval.contains(currDate))
                     let finishedCourses = courses.filter(c => c.interval.isBefore(currDate))
 
-                    coursesInProgress = finishedCourses
+                    coursesInProgress = finishedCourses; // TODO [remove] all initial server courses are already expired
                     return (
                         <div>
 
@@ -470,41 +452,14 @@ const translateCenter = {
 // ---- REQUESTS ----
 
 
-export const requestStudentCourses = (studentId: StudentID): Future<Vector<Course>> =>
-    httpGetAndDecode(
-        `${baseUrl}/student/${isoStudentID.unwrap(studentId)}/courses`,
-        vector(courseDecoder),
-    )
-
-export const requestEnroll = (courseId: CourseID) => (studentId: StudentID): Future<any> =>
-    httpPostAndDecode(
-        `${baseUrl}/course/${isoCourseID.unwrap(courseId)}/enroll`,
-        [isoStudentID.unwrap(studentId)],
-        succeed({}),
-    )
-
-export const requestUnenroll = (courseId: CourseID) => (studentId: StudentID): Future<any> =>
-    httpDeleteAndDecode(
-        `${baseUrl}/course/${isoCourseID.unwrap(courseId)}/remove`,
-        [isoStudentID.unwrap(studentId)],
-        succeed({}),
-    )
-
 export const requestCourseStudentExams = (courseId: CourseID) => (studentId: StudentID): Future<Vector<Exam>> =>
     httpGetAndDecode(
         `${baseUrl}/getExamInscriptionByCourse/${isoCourseID.unwrap(courseId)}`,
         vector(examDecoder).map(v => v.filter(e => e.studentId == studentId)),
     )
 
-export const requestAllCourses = (): Future<Vector<Course>> =>
-    httpGetAndDecode(
-        `${baseUrl}/course`,
-        vector(courseDecoder),
-    )
-
 
 // ---- DECODERS ----
-
 
 
 // TODO Remove FullExam shenanigans when server adds a way to filter exams by student AND course
