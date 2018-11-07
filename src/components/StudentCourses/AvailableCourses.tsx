@@ -95,7 +95,7 @@ export class AvailableCourses extends React.Component<{}, Readonly<Model>> {
                     .map(cs => cs.map(c => isoCourseID.unwrap(c.id)))
                     .flatMap(studentCoursesIds => {
                         return Future.ok(all
-                            .filter(c => c.interval.isBefore(DateTime.local())) // TODO [remove] all initial server courses are already expired
+                            // .filter(c => c.interval.isBefore(DateTime.local())) // TODO [uncomment] all initial server courses are already expired
                             .filter(c => !studentCoursesIds.contains(isoCourseID.unwrap(c.id))),
                         )
                     })
