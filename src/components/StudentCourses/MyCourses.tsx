@@ -13,12 +13,10 @@ import {
     TableHead,
     TableRow,
 } from "@material-ui/core";
-import {DateTime, Interval} from 'luxon'
+import {DateTime} from 'luxon'
 import * as RemoteData from "@devexperts/remote-data-ts";
-import {at, field, string, succeed, array, number} from "jsonous";
+import {at, field, string, succeed, number} from "jsonous";
 import Decoder from "jsonous/Decoder";
-
-import {iso, Newtype} from "newtype-ts";
 import session from "../../utils/session";
 import {baseUrl} from "../../utils/api";
 import {Close} from "@material-ui/icons";
@@ -26,43 +24,23 @@ import {
     httpDeleteAndDecode,
     httpGetAndDecode,
     httpPostAndDecode,
-    map2,
     option,
     vector,
 } from "../../utils/decoderRequests";
-
-
-// ---- HELPER TYPES ----
-
-
-type WebData<T> = RemoteData.RemoteData<string, T>
-
-interface CourseID extends Newtype<{ readonly CourseID: unique symbol }, string> {
-}
-
-interface ExamID extends Newtype<{ readonly ExamID: unique symbol }, string> {
-}
-
-interface StudentID extends Newtype<{ readonly ExamID: unique symbol }, string> {
-}
-
-const isoCourseID = iso<CourseID>();
-const isoExamID = iso<ExamID>();
-const isoStudentID = iso<StudentID>();
-
+import {
+    Course,
+    courseDecoder,
+    CourseID,
+    ExamID,
+    isoCourseID,
+    isoExamID,
+    isoStudentID, stringToDateTime,
+    Student,
+    StudentID, userDecoder,
+    WebData,
+} from "./types";
 
 // ---- MODEL TYPES ----
-
-
-type Course = {
-    id: CourseID
-    subjectName: string,
-    interval: Interval,
-}
-
-type Student = {
-    id: StudentID,
-}
 
 type Exam = {
     id: ExamID
@@ -172,7 +150,7 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
 
 
         if (session.getUserType() != 'Student')
-            throw new Error("Trying to access MyCourses component with a non-student user");
+            throw new Error("Trying to access StudentCourses component with a non-student user");
 
         let userOption: Option<Student> =
             Option.ofNullable(sessionStorage.getItem('user'))
@@ -529,21 +507,6 @@ export const requestAllCourses = (): Future<Vector<Course>> =>
 
 
 
-const stringToDateTime = (str: string) => DateTime.fromFormat(str, 'd/M/yyyy');
-
-const courseDecoder: Decoder<Course> =
-    succeed({})
-        .assign('id', field('id', string).map(isoCourseID.wrap))
-        .assign('subjectName', at(["subject"], field("subjectName", string)))
-        .assign('interval',
-            map2(
-                field('startDate', string).map(stringToDateTime),
-                field('endDate', string).map(stringToDateTime),
-                Interval.fromDateTimes,
-            ),
-        )
-        .assign('exams', succeed([]));
-
 // TODO Remove FullExam shenanigans when server adds a way to filter exams by student AND course
 type FullExam = Exam & { studentId: StudentID }
 
@@ -553,7 +516,3 @@ const examDecoder: Decoder<FullExam> =
         .assign('date', at(['exam'], field('date', string.map(stringToDateTime))))
         .assign('grade', field('result', option(number)))
         .assign('studentId', at(['student'], field('id', string).map(isoStudentID.wrap)));
-
-const userDecoder: Decoder<Student> =
-    succeed({})
-        .assign('id', field('id', string).map(isoStudentID.wrap));

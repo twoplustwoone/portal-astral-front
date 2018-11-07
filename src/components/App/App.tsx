@@ -30,7 +30,7 @@ import ExamTable from "../ExamTable/ExamTable";
 import ExamForm from "../ExamForm/ExamForm";
 import ExamInscriptionTable from "../ExamInscriptionTable/ExamInscriptionTable";
 import CareerTable from "../CareerTable/CareerTable";
-import {MyCourses} from "../MyCourses/MyCourses";
+import {MyCourses} from "../StudentCourses/MyCourses";
 
 const styles = require('./App.pcss');
 
