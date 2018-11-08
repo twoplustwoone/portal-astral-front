@@ -28,7 +28,7 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
     examInscriptionBeingDeleted: null,
     examInscriptions: [],
     isDeleting: false,
-      examInscriptionOnEdit: '',
+      examInscriptionOnEditIndex: -1,
   };
 
   componentDidMount() {
@@ -93,26 +93,27 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
     //     // });
     // };
 
-    handleChange = (index) => (event: any) => {
-        const newExamInscriptions = this.state.examInscriptions;
-        newExamInscriptions[index].result = event.target.value;
-        this.forceUpdate();
+    handleChange = () => (event: any) => {
+        const {examInscriptions, examInscriptionOnEditIndex} = this.state;
+        examInscriptions[examInscriptionOnEditIndex].result = event.target.value;
+        this.setState({examInscriptions: examInscriptions});
     };
 
-    handleSubmit = (index) => {
-        updateExamInscription(this.state.examInscriptions[index]).then(() => console.log("Modified!", this.state));
+    handleSubmit = () => {
+        updateExamInscription(this.state.examInscriptions[this.state.examInscriptionOnEditIndex]);
+        this.setState({examInscriptionOnEditIndex: -1});
     };
 
-    handleExamInscriptionEdit = (id) => {
-        this.setState({examInscriptionOnEdit: id})
+    handleExamInscriptionEdit = (index) => {
+        this.setState({examInscriptionOnEditIndex: index})
     };
 
   render() {
-    const { examInscriptionBeingDeleted, isDeleting, examInscriptions, examInscriptionOnEdit } = this.state;
+    const { examInscriptionBeingDeleted, isDeleting, examInscriptions, examInscriptionOnEditIndex } = this.state;
 
     const name = examInscriptionBeingDeleted ? `${examInscriptionBeingDeleted.id + ' exam'}` : '';
 
-    const examInscription = examInscriptions.pop();
+    const examInscription = examInscriptions.length > 0 ? examInscriptions[0] : undefined;
     let course;
     if (examInscription)
         course = examInscription.exam.course;
@@ -155,32 +156,32 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
                           <TableCell>{row.student.name + row.student.lastName}</TableCell>
                           <TableCell>{row.exam.date}</TableCell>
                           <TableCell>
-                            {examInscriptionOnEdit === '' &&
+                            {examInscriptionOnEditIndex !== index &&
                                 <span>{row.result}</span>
                             }
-                            {examInscriptionOnEdit ===  row.id &&
+                            {examInscriptionOnEditIndex === index &&
                                 <FormControl>
                                     <InputLabel required htmlFor='exam-result'>Result</InputLabel>
                                     <Input id='exam-result'
                                            value={row.result}
-                                           onChange={this.handleChange(index)}
+                                           onChange={this.handleChange()}
                                            type={'number'}
                                     />
                                 </FormControl>
                             }
                           </TableCell>
                           <TableCell>
-                            {examInscriptionOnEdit === '' &&
-                                <IconButton onClick={() => this.handleExamInscriptionEdit(row.id)}>
+                            {examInscriptionOnEditIndex !== index &&
+                                <IconButton onClick={() => this.handleExamInscriptionEdit(index)}>
                                   <Edit />
                                 </IconButton>
                             }
-                            {examInscriptionOnEdit === row.id &&
+                            {examInscriptionOnEditIndex === index &&
                                 <span>
-                                    <IconButton onClick={() => this.handleExamInscriptionEdit('')}>
+                                    <IconButton onClick={() => this.handleExamInscriptionEdit(-1)}>
                                         <Cancel />
                                     </IconButton>
-                                    <IconButton onClick={() => this.handleSubmit(index)}>
+                                    <IconButton onClick={() => this.handleSubmit()}>
                                         <Check />
                                     </IconButton>
                                 </span>
