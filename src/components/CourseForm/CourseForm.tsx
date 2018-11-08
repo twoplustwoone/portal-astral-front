@@ -315,7 +315,7 @@ class CourseForm extends React.Component<IProps, IState> {
                                         {
                                             this.state.allSubjects
                                                 .filter(s => s.id !== fields.id && fields.requiredSubjects.indexOf(s.id) < 0)
-                                                .map(s => <MenuItem value={s.id}>{s.subjectName}</MenuItem>)
+                                                .map(s => <MenuItem key={s.id} value={s.id}>{s.subjectName}</MenuItem>)
                                         }
                                     </Select>
                                 }

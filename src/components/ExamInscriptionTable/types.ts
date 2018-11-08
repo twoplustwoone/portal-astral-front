@@ -8,4 +8,5 @@ export interface IState {
   examInscriptionBeingDeleted: IExamInscription | null;
   examInscriptions: IExamInscription[];
   isDeleting: boolean;
+  examInscriptionOnEdit: string;
 }
