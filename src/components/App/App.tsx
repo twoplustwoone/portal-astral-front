@@ -30,6 +30,7 @@ import ExamForm from "../ExamForm/ExamForm";
 import ExamInscriptionTable from "../ExamInscriptionTable/ExamInscriptionTable";
 import CareerTable from "../CareerTable/CareerTable";
 import {MyCourses} from "../MyCourses/MyCourses";
+import ExamCourseTable from "../ExamCourseTable/ExamCourseTable";
 
 const styles = require('./App.pcss');
 
@@ -76,6 +77,7 @@ function Content(props: { classes: any }) {
     <PrivateRoute path={'/exam/:id'} component={ExamForm} />
     <PrivateRoute path={'/course/:courseId/exams'} component={ExamInscriptionTable} />
     <PrivateRoute path={'/my-courses'} component={MyCourses}/>
+    <PrivateRoute path={'/view-exam/:courseId'} component={ExamCourseTable}/>
   </div>;
 }
 
