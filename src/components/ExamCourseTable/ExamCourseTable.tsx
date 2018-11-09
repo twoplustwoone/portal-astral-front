@@ -14,7 +14,7 @@ import Button from "@material-ui/core/es/Button/Button";
 
 // const styles = require('./ExamTable.pcss');
 
-class ExamTable extends React.Component<IProps, IState> {
+class ExamCourseTable extends React.Component<IProps, IState> {
 
     state: IState = {
         course: {
@@ -73,8 +73,8 @@ class ExamTable extends React.Component<IProps, IState> {
         this.setState({ examIns: examIns });
     };
 
-    handleEnrollment = (examId: string, student: IStudent) => {
-        enrollStudentInExam(examId, student).then()
+    handleEnrollment = (examId: string, studentId: string) => {
+        enrollStudentInExam(examId, studentId).then()
         console.log("inscripto")
     };
 
@@ -134,7 +134,7 @@ class ExamTable extends React.Component<IProps, IState> {
                                                 <TableCell>{row.date}</TableCell>
                                                 <TableCell>{"-"}</TableCell>
                                                 <TableCell>
-                                                    <Button variant="contained" color="primary" onClick={() => this.handleEnrollment(row.id, (session.getUser() as IStudent))}>
+                                                    <Button variant="contained" color="primary" onClick={() => this.handleEnrollment(row.id, (session.getUser() as IStudent).id)}>
                                                         REGISTER
                                                     </Button>
                                                 </TableCell>
@@ -174,4 +174,4 @@ class ExamTable extends React.Component<IProps, IState> {
     }
 }
 
-export default ExamTable;
+export default ExamCourseTable;

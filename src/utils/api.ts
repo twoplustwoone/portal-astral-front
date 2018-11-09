@@ -385,14 +385,14 @@ export const updateExamInscription = (examInscription: IExamInscription): Promis
     return fetch(url, init);
 };
 
-export const enrollStudentInExam = (id: string, student: IStudent): Promise<Response> => {
+export const enrollStudentInExam = (id: string, studentId: string): Promise<Response> => {
     const url = `${baseUrl}/exam/enroll/${id}`;
     const init: RequestInit = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(student.id),
+        body: JSON.stringify({ studentId }),
     };
 
     return fetch(url, init);
