@@ -351,7 +351,7 @@ class AdminForm extends React.Component<IProps, IState> {
                                 />
                             </FormControl>
                             <FormControl className={styles['admin-form-control']} error={errors.file}>
-                                <InputLabel required htmlFor='admin-email'>File</InputLabel>
+                                <InputLabel htmlFor='admin-file'>File</InputLabel>
                                 <Input id='admin-file'
                                        value={fields.file}
                                        onChange={this.handleChange('file')}
