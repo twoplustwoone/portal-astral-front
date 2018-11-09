@@ -172,6 +172,10 @@ class ExamForm extends React.Component<IProps, IState> {
                 return (
                     this.validatename(value)
                 );
+            case 'date':
+                return (
+                    this.validateDate(value)
+                );
             default:
                 return true;
         }
@@ -179,6 +183,10 @@ class ExamForm extends React.Component<IProps, IState> {
 
     validatename = (value: any): boolean => {
         return value !== '';
+    };
+
+    validateDate = (value: any): boolean => {
+        return new Date(value) > new Date();
     };
 
     areInputsReadOnly = () => {
