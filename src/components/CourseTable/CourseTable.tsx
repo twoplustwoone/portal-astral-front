@@ -44,7 +44,7 @@ class CourseTable extends React.Component<IProps, IState> {
 
     handleEnrollment = (id: string) => {
         enrollStudentInCourse(id, (session.getUser() as IStudent).id).then(() =>{
-            this.setState({redirect: "/courses"});
+            this.setState({redirect: "/my-courses"});
             console.log("enrolled");
         });
     };
@@ -97,22 +97,27 @@ class CourseTable extends React.Component<IProps, IState> {
         }
 
         function filter(course: ICourse) {
-            if(course.startDate < today.toISOString() && course.endDate > today.toISOString()) {
-                if(course.enrolled.length > 0){
-                    return !course.enrolled.map(student =>
-                        student.id == (session.getUser() as IStudent).id)
-                        .reduceRight(
-                            (accumulator, currentValue) => accumulator || currentValue,
-                        );
-                } else {
-                    return true;
-                }
+            if(course.startDate > today.toISOString().substr(0,10) && course.endDate > today.toISOString().substr(0,10)) {
+                // if(course.enrolled.length > 0){
+                //     return !course.enrolled.map(student =>
+                //         student.id == (session.getUser() as IStudent).id)
+                //         .reduceRight(
+                //             (accumulator, currentValue) => accumulator || currentValue,
+                //         );
+                // } else {
+                //     return true;
+                // }
+                return true;
             } else {
                 return false;
             }
         }
 
+        console.log(courses);
+
         isStudent? this.filteredCourses = courses.filter(filter): false;
+
+        console.log(this.filteredCourses);
 
         return (
             <div>
@@ -179,7 +184,6 @@ class CourseTable extends React.Component<IProps, IState> {
                                                 <TableCell>{row.subject.subjectName}</TableCell>
                                                 <TableCell>{row.startDate}</TableCell>
                                                 <TableCell>{row.endDate}</TableCell>
-                                                <TableCell>{row.schedule}</TableCell>
                                                 {
                                                     userType === 'Admin' &&
                                                     <TableCell>

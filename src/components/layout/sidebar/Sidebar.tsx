@@ -7,14 +7,11 @@ import SupervisorAccountOutlinedIcon from '@material-ui/icons/SupervisorAccountO
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import SchoolIcon from '@material-ui/icons/School';
 import BookIcon from '@material-ui/icons/Book';
+import {Assignment} from '@material-ui/icons';
 import GolfCourse from '@material-ui/icons/GolfCourse';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText/ListItemText';
-import { Props, State } from "./types";
-import { Link, withRouter } from "react-router-dom";
-import session from "../../../utils/session";
-import {BusinessCenter, Description} from "@material-ui/icons";
 import {Props, State} from "./types";
 import {Link, withRouter} from "react-router-dom";
 import {Domain} from "@material-ui/icons";
@@ -63,7 +60,7 @@ function sidebarLinks(s: UserType): Vector<{ route: string, displayText: string,
                 {route: '/careers', displayText: 'Careers', iconElement: <Domain/>},
                 {route: '/subjects', displayText: 'Subjects', iconElement: <BookIcon/>},
                 {route: '/courses', displayText: 'Courses', iconElement: <GolfCourse/>},
-                {route: '/exams', displayText: 'Exams', iconElement: <Assigment/>},
+                {route: '/exams', displayText: 'Exams', iconElement: <Assignment/>},
 
             ]);
         case 'Professor':
@@ -74,46 +71,13 @@ function sidebarLinks(s: UserType): Vector<{ route: string, displayText: string,
         case 'Student':
             return Vector.ofIterable([
                 {route: '/my-courses', displayText: 'My Courses', iconElement: <GolfCourse/>},
-                {route: '/my-exams', displayText: 'My Exams', iconElement: <Assigment/>},
+                {route: '/my-exams', displayText: 'My Exams', iconElement: <Assignment/>},
                 {route: '/available-courses', displayText: 'Available Courses', iconElement: <GolfCourse/>},
             ]);
         default:
             let _exhaustiveCheck: never = s;
             return _exhaustiveCheck
     }
-}
-
-function AllCoursesItem(props: { pathname: string }) {
-    return <Link to={"/all-courses"} className={styles.link}>
-        <ListItem className={styles.listItem} selected={props.pathname === '/all-courses'}>
-            <ListItemIcon>
-                <GolfCourse />
-            </ListItemIcon>
-            <ListItemText primary='All courses' />
-        </ListItem>
-    </Link>;
-}
-
-function MyCoursesItem(props: { pathname: string }) {
-    return <Link to={"/my-courses"} className={styles.link}>
-        <ListItem className={styles.listItem} selected={props.pathname === '/my-courses'}>
-            <ListItemIcon>
-                <BusinessCenter />
-            </ListItemIcon>
-            <ListItemText primary='My courses' />
-        </ListItem>
-    </Link>;
-}
-
-function MyExamsItem(props: { pathname: string }) {
-    return <Link to={"/my-exams"} className={styles.link}>
-        <ListItem className={styles.listItem} selected={props.pathname === '/my-exams'}>
-            <ListItemIcon>
-                <Description />
-            </ListItemIcon>
-            <ListItemText primary='My exams' />
-        </ListItem>
-    </Link>;
 }
 
 class Sidebar extends React.Component<Props, State> {
@@ -147,34 +111,6 @@ class Sidebar extends React.Component<Props, State> {
             <List>
                 {sidebarLinks(userKind).map(sidebarItem(pathname))}
             </List>
-    const drawerContent = (
-      <div>
-        {/*<div className={classes.toolbar} />*/}
-        <List>
-
-          {userType === 'Admin' && <AdminItem pathname={pathname} />}
-
-          {userType === 'Professor' || userType === 'Admin' && <ProfessorItem pathname={pathname} />}
-
-          {userType !== 'Student' && <StudentItem pathname={pathname} />}
-
-          {userType !== 'Student' && <SubjectItem pathname={pathname} />}
-
-          {userType === 'Professor' || userType === 'Admin' && <CourseItem pathname={pathname} />}
-
-          {userType === 'Student' && <AllCoursesItem pathname={pathname} />}
-
-          {userType === 'Student' && <MyCoursesItem pathname={pathname} />}
-
-          {userType === 'Student' && <MyExamsItem pathname={pathname} />}
-
-          {userType !== 'Student' && <ExamItem pathname={pathname} />}
-
-          <CareerItem pathname={pathname} />
-
-        </List>
-      </div>
-    );
 
         return (
             <div className={styles.container}>

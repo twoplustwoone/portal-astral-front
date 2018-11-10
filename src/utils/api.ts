@@ -273,7 +273,7 @@ export const deleteCourse = (id: string): Promise<Response> => {
 };
 
 export const enrollStudentInCourse = (id: string, studentId: string): Promise<Response> => {
-    const url = `http://localhost:9000/enrollStudent/${id}`;
+    const url = `${baseUrl}/course/${id}/enroll`;
     const init: RequestInit = {
         method: 'POST',
         headers: {
@@ -346,16 +346,6 @@ export const getAllExamsStudent = (id: string): Promise<Response> => {
     const url = `${baseUrl}/getExamInscriptionByStudent/${id} `;
     const init: RequestInit = {
         method: 'GET',
-    };
-
-    return fetch(url, init);
-};
-
-
-export const deleteExam = (id: string): Promise<Response> => {
-    const url = `${baseUrl}/exam/${id}`;
-    const init: RequestInit = {
-        method: 'DELETE',
     };
 
     return fetch(url, init);

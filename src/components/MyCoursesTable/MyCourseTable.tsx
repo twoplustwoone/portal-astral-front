@@ -88,12 +88,14 @@ class MyCourseTable extends React.Component<IProps, IState> {
         var today = new Date();
 
         function filter(course: ICourse) {
-            if(course.startDate < today.toISOString() && course.endDate > today.toISOString() && course.enrolled.length > 0) {
-                return course.enrolled.map(student =>
-                    student.id == (session.getUser() as IStudent).id)
-                    .reduceRight(
-                        (accumulator, currentValue) => accumulator || currentValue,
-                    );
+            if(course.startDate < today.toISOString().substr(0,10) && course.endDate > today.toISOString().substr(0,10)) {
+                // if(course.startDate < today.toISOString() && course.endDate > today.toISOString() && course.enrolled.length > 0) {
+                // return course.enrolled.map(student =>
+                //     student.id == (session.getUser() as IStudent).id)
+                //     .reduceRight(
+                //         (accumulator, currentValue) => accumulator || currentValue,
+                //     );
+                return true;
             } else {
                 return false;
             }
@@ -125,7 +127,6 @@ class MyCourseTable extends React.Component<IProps, IState> {
                                                 <TableCell>{row.subject.subjectName}</TableCell>
                                                 <TableCell>{row.startDate}</TableCell>
                                                 <TableCell>{row.endDate}</TableCell>
-                                                <TableCell>{row.schedule}</TableCell>
                                             </TableRow>
                                         );
                                     })

@@ -80,6 +80,7 @@ function Content(props: { classes: any }) {
     <PrivateRoute path={'/my-exams'} component={ExamForm} />
     <PrivateRoute path={'/course/:courseId/exams'} component={ExamInscriptionTable} />
     <PrivateRoute path={'/my-courses'} component={MyCourses}/>
+    <PrivateRoute path={'/available-courses'} component={CourseTable}/>
   </div>;
 }
 
