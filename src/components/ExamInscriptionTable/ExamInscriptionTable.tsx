@@ -95,7 +95,10 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
 
     handleChange = () => (event: any) => {
         const {examInscriptions, examInscriptionOnEditIndex} = this.state;
-        examInscriptions[examInscriptionOnEditIndex].result = event.target.value;
+        let result = event.target.value;
+        result > 10 ? result = 10 : '';
+        result < 1 ? result = 1 : '';
+        examInscriptions[examInscriptionOnEditIndex].result = result;
         this.setState({examInscriptions: examInscriptions});
     };
 
@@ -163,6 +166,7 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
                                 <FormControl>
                                     <InputLabel required htmlFor='exam-result'>Result</InputLabel>
                                     <Input id='exam-result'
+                                           inputProps={{ min: "0", max: "10"}}
                                            value={row.result}
                                            onChange={this.handleChange()}
                                            type={'number'}
