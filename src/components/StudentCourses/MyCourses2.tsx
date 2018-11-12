@@ -58,7 +58,7 @@ class MyCourses2 extends React.Component<IProps, IState> {
                         <TableCell>{row.endDate}</TableCell>
                         <TableCell>
                           <Button variant="contained" color="primary">
-                            <Link to={`/course/${row.id}/exams`} style={{ color: '#fff', textDecoration: 'none' }}>
+                            <Link to={`/view-exam/${row.id}`} style={{ color: '#fff', textDecoration: 'none' }}>
                               View exams
                             </Link>
                           </Button>

@@ -28,6 +28,7 @@ class ExamCourseTable extends React.Component<IProps, IState> {
         "requiredSubjects": [],
         "students": [],
       },
+      courseProfessors: [],
     },
     examIns: [],
     exams: [],

@@ -34,6 +34,7 @@ import CareerTable from "../CareerTable/CareerTable";
 import { AvailableCourses } from "../StudentCourses/AvailableCourses";
 import OngoingCourses from "../OngoingCourses/OngoingCourses";
 import MyCourses2 from "../StudentCourses/MyCourses2";
+import ExamCourseTable from "../ExamCourseTable/ExamCourseTable";
 
 const styles = require('./App.pcss');
 
