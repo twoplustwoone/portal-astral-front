@@ -51,9 +51,9 @@ class Login extends React.Component<IProps, IState> {
   };
 
   checkEnter = (event) => {
-      if(event.keyCode == 13){
-        this.handleLogIn()
-      }
+    if (event.keyCode == 13) {
+      this.handleLogIn()
+    }
   };
 
   handleChange = (prop: string) => (event: any) => {
@@ -126,7 +126,20 @@ class Login extends React.Component<IProps, IState> {
 
   handleLogInSuccess = (response: ILoginResponse) => {
     session.login(response);
-    this.setState({ redirect: '/' });
+    let redirect = '/';
+    switch (session.getUserType()) {
+      case 'Admin':
+        redirect = '/admins';
+        break;
+      case 'Professor':
+        redirect = '/ongoing-courses';
+        break;
+      case 'Student':
+        redirect = '/available-courses';
+        break;
+    }
+
+    this.setState({ redirect });
   };
 
   handleResponse = (response: Response): Promise<ILoginResponse> => {
