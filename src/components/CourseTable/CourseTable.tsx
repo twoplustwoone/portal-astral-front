@@ -17,6 +17,7 @@ class CourseTable extends React.Component<IProps, IState> {
         courses: [],
         isDeleting: false,
         redirect: '',
+        enrolledCourses: [],
     };
 
     componentDidMount() {
@@ -44,7 +45,10 @@ class CourseTable extends React.Component<IProps, IState> {
 
     handleEnrollment = (id: string) => {
         enrollStudentInCourse(id, (session.getUser() as IStudent).id).then(() =>{
-            this.setState({redirect: "/my-courses"});
+            this.state.enrolledCourses.push(id);
+            this.setState({
+                enrolledCourses: this.state.enrolledCourses,
+            });
             console.log("enrolled");
         });
     };
@@ -72,13 +76,16 @@ class CourseTable extends React.Component<IProps, IState> {
     };
 
     receiveCourses = (courses: ICourse[]) => {
-        this.setState({ courses: courses })
+        this.setState({
+            courses: courses,
+            //todo enrolledCourses: courses.filter(course => course)
+        })
     };
 
     private filteredCourses: any;
 
     render() {
-        const { courseBeingDeleted, isDeleting, courses, redirect} = this.state;
+        const { courseBeingDeleted, isDeleting, courses, redirect, enrolledCourses} = this.state;
 
         const name = courseBeingDeleted ? `${courseBeingDeleted.subject.subjectName}` : '';
 
@@ -98,26 +105,17 @@ class CourseTable extends React.Component<IProps, IState> {
 
         function filter(course: ICourse) {
             if(course.startDate > today.toISOString().substr(0,10) && course.endDate > today.toISOString().substr(0,10)) {
-                // if(course.enrolled.length > 0){
-                //     return !course.enrolled.map(student =>
-                //         student.id == (session.getUser() as IStudent).id)
-                //         .reduceRight(
-                //             (accumulator, currentValue) => accumulator || currentValue,
-                //         );
-                // } else {
-                //     return true;
-                // }
-                return true;
+                return enrolledCourses.filter(enrolled => enrolled == course.id).length <= 0;
+
             } else {
                 return false;
             }
         }
 
-        console.log(courses);
-
         isStudent? this.filteredCourses = courses.filter(filter): false;
 
         console.log(this.filteredCourses);
+        console.log(enrolledCourses);
 
         return (
             <div>

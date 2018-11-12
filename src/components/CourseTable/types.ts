@@ -6,4 +6,5 @@ export interface IState {
   courses: ICourse[];
   isDeleting: boolean;
   redirect: string;
+  enrolledCourses: string[];
 }
