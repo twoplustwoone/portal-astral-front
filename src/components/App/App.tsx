@@ -85,6 +85,7 @@ function Content(props: { classes: any }) {
     <PrivateRoute exact path={'/my-courses'} component={MyCourses2} />
     <PrivateRoute exact path={'/available-courses'} component={AvailableCourses} />
     <PrivateRoute exact path={'/ongoing-courses'} component={OngoingCourses} />
+    <PrivateRoute exact path={'/view-exam/:courseId'} component={ExamCourseTable}/>
   </div>;
 }
 

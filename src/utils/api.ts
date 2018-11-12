@@ -458,6 +458,28 @@ export const updateExamInscription = (examInscription: IExamInscription): Promis
   return fetch(url, init);
 };
 
+export const enrollStudentInExam = (id: string, student: IStudent): Promise<Response> => {
+    const url = `${baseUrl}/exam/enroll/${id}`;
+    const init: RequestInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(student.id),
+    };
+
+    return fetch(url, init);
+};
+
+export const unenrollStudentInExam = (id: string): Promise<Response> => {
+    const url = `${baseUrl}/exam/unenroll/${id}`;
+    const init: RequestInit = {
+        method: 'DELETE',
+    };
+
+    return fetch(url, init);
+};
+
 export const createCareer = (career: ICareer): Promise<Response> => {
   const url = 'http://localhost:9000/career';
   const init: RequestInit = {
