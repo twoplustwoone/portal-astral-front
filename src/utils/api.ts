@@ -226,7 +226,12 @@ export const createCourse = (course: ICourse): Promise<Response> => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(course),
+        body: JSON.stringify({
+            "startDate" : course.startDate,
+            "endDate" : course.endDate,
+            "subject" : course.subject,
+            "schedules" : [],
+        }),
     };
 
     return fetch(url, init);
@@ -257,7 +262,12 @@ export const updateCourse = (course: ICourse): Promise<Response> => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(course),
+        body: JSON.stringify({
+            "startDate" : course.startDate,
+            "endDate" : course.endDate,
+            "subject" :  course.subject,
+            "schedules" : [],
+        }),
     };
 
     return fetch(url, init);
@@ -398,10 +408,15 @@ export const enrollStudentInExam = (id: string, studentId: string): Promise<Resp
     return fetch(url, init);
 };
 
-export const unenrollStudentInExam = (id: string): Promise<Response> => {
-    const url = `${baseUrl}/exam/unenroll/${id}`;
+export const unenrollStudentInExam = (examId: string, studentId: string): Promise<Response> => {
+    const url = `${baseUrl}/exam/unenroll/${examId}`;
+    console.log(studentId);
     const init: RequestInit = {
         method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "studentId": studentId }),
     };
 
     return fetch(url, init);
@@ -450,7 +465,7 @@ export const getCareerById = (id: string): Promise<Response> => {
 
 
 export const getAllExamInscriptionsbyExamId = (id: string): Promise<Response> => {
-    const url = 'http://localhost:9000//getExams/' + id;
+    const url = 'http://localhost:9000/getExamInscriptionByExam/' + id;
     const init: RequestInit = {
         method: 'GET',
     };

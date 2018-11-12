@@ -3,7 +3,7 @@ import { IProps, IState } from './types';
 import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
 import {
     enrollStudentInExam,
-    getAllExamInscriptionsbyCourseId,
+    getAllExamInscriptionsbyCourseId, getAllExamInscriptionsbyExamId,
     getAllExams,
     getCourseById,
     unenrollStudentInExam,
@@ -74,12 +74,19 @@ class ExamCourseTable extends React.Component<IProps, IState> {
     };
 
     handleEnrollment = (examId: string, studentId: string) => {
-        enrollStudentInExam(examId, studentId).then()
-        console.log("inscripto")
+        this.filteredExams = this.filteredExams.filter(exam => exam.id != examId);
+        debugger;
+        enrollStudentInExam(examId, studentId).then();
+        this.addExamIns(examId)
+    };
+
+    addExamIns = (examId: string) => {
+        const examIns = getAllExamInscriptionsbyExamId(examId);
+        this.filteredExamIns.push(examIns);
     };
 
     handleUnenrollment = (examId: string) => {
-        unenrollStudentInExam(examId).then()
+        unenrollStudentInExam(examId, (session.getUser() as IStudent).id).then()
     };
 
     private filteredExamIns: any;
@@ -88,19 +95,16 @@ class ExamCourseTable extends React.Component<IProps, IState> {
     render() {
         const { examIns, exams, course } = this.state;
 
+        this.filteredExamIns = examIns.filter(examFilter);
+        var examsToFilter = this.filteredExamIns.map(ins => ins.exam);
+
+        this.filteredExams = exams.filter(exam => exam.course.id == course.id &&
+            examsToFilter.filter(x => x.id == exam.id).length <= 0);
+
         function examFilter(examIns: IExamInscription) {
             return examIns.student.id == (session.getUser() as IStudent).id
         }
 
-        function filter(exam: IExam) {
-            return exam.course.id == course.id;
-        }
-
-        this.filteredExamIns = examIns.filter(examFilter);
-        this.filteredExams = exams.filter(filter);
-
-        console.log(this.filteredExams);
-        // console.log(this.filteredExamIns);
         return (
             <div>
                 <Typography color='textPrimary' variant="title">
@@ -150,8 +154,8 @@ class ExamCourseTable extends React.Component<IProps, IState> {
                                                 <TableCell>{row.result}</TableCell>
                                                 <TableCell>
                                                 {
-                                                    row.result === undefined ?
-                                                        <Button variant="outlined" color="primary" onClick={() => this.handleUnenrollment(row.id)}>
+                                                    row.result == 0 ?
+                                                        <Button variant="outlined" color="primary" onClick={() => this.handleUnenrollment(row.exam.id)}>
                                                             UNREGISTER
                                                         </Button>
                                                     :
