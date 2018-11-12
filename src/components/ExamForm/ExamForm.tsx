@@ -36,6 +36,7 @@ class ExamForm extends React.Component<IProps, IState> {
                     careerYear: 1,
                     requiredSubjects: [],
                     students: [],
+                    courseProfessors: [],
                 },
             },
             date: '',

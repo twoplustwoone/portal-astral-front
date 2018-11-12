@@ -38,6 +38,7 @@ declare interface ISubject {
   subjectName: string;
   careerYear: number;
   requiredSubjects: string[];
+  courseProfessors: string[];
   students: string[];
 }
 

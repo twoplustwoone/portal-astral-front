@@ -21,6 +21,7 @@ export interface IState {
     course?: ICourse;
     isDeleteModalOpen: boolean;
     allSubjects: ISubject[],
+    allProfesors: IProfessor[],
 }
 
 export interface IFields {
@@ -29,6 +30,8 @@ export interface IFields {
     endDate: string;
     id: string;
     requiredSubjects: string[];
+    courseProfessors: string[];
+    originalCourseProfessors: string[];
 }
 
 export type IErrors = {

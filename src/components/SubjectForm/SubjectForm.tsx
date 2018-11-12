@@ -28,6 +28,7 @@ class SubjectForm extends React.Component<IProps, IState> {
       id: '',
       requiredSubjects: [],
       careerYear: 1,
+      courseProfessors: [],
       students: [],
     },
     errors: {},
