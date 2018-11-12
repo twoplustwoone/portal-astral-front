@@ -262,15 +262,28 @@ export const getCourseById = (id: string): Promise<Response> => {
 export const addCourseProfessor = (courseId: string, professorId: string) => {
   const url = `${baseUrl}/course/professor/` + courseId;
   const init: RequestInit = {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({'profId': professorId}),
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ 'profId': professorId }),
   };
 
   return fetch(url, init);
-}
+};
+
+export const updateCourseProfessors = (courseId: string, professorId: string) => {
+  const url = `${baseUrl}/course/professor/${courseId}`;
+  const init: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ 'professorId': professorId }),
+  };
+
+  return fetch(url, init);
+};
 
 export const updateCourse = (course: ICourse): Promise<Response> => {
   const url = `${baseUrl}/course/${course.id}`;
@@ -282,35 +295,49 @@ export const updateCourse = (course: ICourse): Promise<Response> => {
     body: JSON.stringify(course),
   };
 
+  if (course.courseProfessors && course.courseProfessors.length > 0) {
+    return fetch(url, init).then(() => addCourseProfessor(course.id, course.courseProfessors[0]));
+  }
+
   return fetch(url, init);
 };
 
 export const deleteCourse = (id: string): Promise<Response> => {
-    const url = `${baseUrl}/course/${id}`;
-    const init: RequestInit = {
-        method: 'DELETE',
-    };
+  const url = `${baseUrl}/course/${id}`;
+  const init: RequestInit = {
+    method: 'DELETE',
+  };
 
-    return fetch(url, init);
+  return fetch(url, init);
 };
-
 
 export const deleteCourseProfessor = (courseId: string, professorId: string): Promise<Response> => {
   const url = `${baseUrl}/course/professor/` + courseId;
   const init: RequestInit = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({'professorId': professorId}),
+    body: JSON.stringify({ 'professorId': professorId }),
   };
 
   return fetch(url, init);
 };
 
 export const getProfessorCourses = (): Promise<Response> => {
-  const professorId = (session.getUser() as IUser).id
+  const professorId = (session.getUser() as IUser).id;
   const url = `${baseUrl}/professor/courses/${professorId}`;
+  const init: RequestInit = {
+    method: 'GET',
+  };
+
+  return fetch(url, init);
+};
+
+export const getStudentCourses = (): Promise<Response> => {
+  const studentId = (session.getUser() as IUser).id;
+  const url = `${baseUrl}/student/${studentId}/courses`
+
   const init: RequestInit = {
     method: 'GET',
   };
@@ -352,14 +379,14 @@ export const getExamById = (id: string): Promise<Response> => {
 };
 
 export const updateExam = (exam: IExam): Promise<Response> => {
-    const url = `${baseUrl}/exam/${exam.id}`;
-    const init: RequestInit = {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({courseID: exam.course.id, dateTime: exam.date}),
-    };
+  const url = `${baseUrl}/exam/${exam.id}`;
+  const init: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ courseID: exam.course.id, dateTime: exam.date }),
+  };
 
   return fetch(url, init);
 };
