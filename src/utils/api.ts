@@ -243,6 +243,10 @@ export const createCourse = (course: ICourse): Promise<Response> => {
         }),
     };
 
+  if (course.courseProfessors && course.courseProfessors.length > 0) {
+    return fetch(url, init).then(() => addCourseProfessor(course.id, course.courseProfessors[0]));
+  }
+
   return fetch(url, init);
 };
 
