@@ -1,24 +1,25 @@
 import * as React from 'react';
 import { IProps, IState } from './types';
 import {
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    IconButton,
-    InputLabel,
-    Input,
-    FormControl,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  IconButton,
+  InputLabel,
+  Input,
+  FormControl,
 } from "@material-ui/core";
-import {Cancel, Check, DeleteOutline, Edit} from "@material-ui/icons";
+import { Cancel, Check, DeleteOutline, Edit } from "@material-ui/icons";
 import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
 import {
-    deleteExamInscription,
-    getAllExamInscriptionsbyCourseId,
-    updateExamInscription,
+  deleteExamInscription,
+  getAllExamInscriptionsbyCourseId,
+  updateExamInscription,
 } from "../../utils/api";
+import session from "../../utils/session";
 
 // const styles = require('./ExamInscriptionTable.pcss');
 
@@ -28,7 +29,7 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
     examInscriptionBeingDeleted: null,
     examInscriptions: [],
     isDeleting: false,
-      examInscriptionOnEditIndex: -1,
+    examInscriptionOnEditIndex: -1,
   };
 
   componentDidMount() {
@@ -37,7 +38,7 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
   }
 
   fetchExamInscriptions = (id: string) => {
-      getAllExamInscriptionsbyCourseId(id).then(this.handleResponse).then(this.receiveExamInscriptions);
+    getAllExamInscriptionsbyCourseId(id).then(this.handleResponse).then(this.receiveExamInscriptions);
   };
 
   handleResponse = (response: Response): Promise<IExamInscription[]> => {
@@ -81,35 +82,23 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
     this.setState({ examInscriptions })
   };
 
-    // handleChange = (index) => (event: any) => {
-    //     this.setState({
-    //         examInscriptions: update(this.state.examInscriptions, {index: {result: {$set: event.target.value}}})
-    //     });
-    //     // let newExamInscriptions = Object.assign({}, this.state.examInscriptions);
-    //     // newExamInscriptions[index].result = event.target.value;
-    //     // this.setState({
-    //     //     examInscriptions: newExamInscriptions,
-    //     //     examInscriptionOnEdit: '',
-    //     // });
-    // };
+  handleChange = () => (event: any) => {
+    const { examInscriptions, examInscriptionOnEditIndex } = this.state;
+    let result = event.target.value;
+    result > 10 ? result = 10 : '';
+    result < 1 ? result = 1 : '';
+    examInscriptions[examInscriptionOnEditIndex].result = result;
+    this.setState({ examInscriptions: examInscriptions });
+  };
 
-    handleChange = () => (event: any) => {
-        const {examInscriptions, examInscriptionOnEditIndex} = this.state;
-        let result = event.target.value;
-        result > 10 ? result = 10 : '';
-        result < 1 ? result = 1 : '';
-        examInscriptions[examInscriptionOnEditIndex].result = result;
-        this.setState({examInscriptions: examInscriptions});
-    };
+  handleSubmit = () => {
+    updateExamInscription(this.state.examInscriptions[this.state.examInscriptionOnEditIndex]);
+    this.setState({ examInscriptionOnEditIndex: -1 });
+  };
 
-    handleSubmit = () => {
-        updateExamInscription(this.state.examInscriptions[this.state.examInscriptionOnEditIndex]);
-        this.setState({examInscriptionOnEditIndex: -1});
-    };
-
-    handleExamInscriptionEdit = (index) => {
-        this.setState({examInscriptionOnEditIndex: index})
-    };
+  handleExamInscriptionEdit = (index) => {
+    this.setState({ examInscriptionOnEditIndex: index })
+  };
 
   render() {
     const { examInscriptionBeingDeleted, isDeleting, examInscriptions, examInscriptionOnEditIndex } = this.state;
@@ -119,7 +108,9 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
     const examInscription = examInscriptions.length > 0 ? examInscriptions[0] : undefined;
     let course;
     if (examInscription)
-        course = examInscription.exam.course;
+      course = examInscription.exam.course;
+
+    const isStudent = session.getUserType() === 'Student';
 
     return (
       <div>
@@ -135,19 +126,19 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
         }
         <Paper>
           <div>
-              {course &&
-                  <div style={{padding: '15px', marginTop: '15px', fontFamily: 'sans-serif'}}>
-                      <h2>{course.subject.subjectName} exams</h2>
-                      <h3 style={{fontWeight: 300}}>{course.startDate} - {course.endDate}</h3>
-                  </div>
-              }
+            {course &&
+            <div style={{ padding: '15px', marginTop: '15px', fontFamily: 'sans-serif' }}>
+              <h2>{course.subject.subjectName} exams</h2>
+              <h3 style={{ fontWeight: 300 }}>{course.startDate} - {course.endDate}</h3>
+            </div>
+            }
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Student</TableCell>
+                  {!isStudent && <TableCell>Student</TableCell>}
                   <TableCell>Date</TableCell>
                   <TableCell>Mark</TableCell>
-                  <TableCell />
+                  {!isStudent && <TableCell />}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -156,32 +147,32 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
                   examInscriptions.map((row, index) => {
                     return (
                       <TableRow key={row.id}>
-                          <TableCell>{row.student.name + row.student.lastName}</TableCell>
-                          <TableCell>{row.exam.date}</TableCell>
-                          <TableCell>
-                            {examInscriptionOnEditIndex !== index &&
-                                <span>{row.result}</span>
-                            }
-                            {examInscriptionOnEditIndex === index &&
-                                <FormControl>
-                                    <InputLabel required htmlFor='exam-result'>Result</InputLabel>
-                                    <Input id='exam-result'
-                                           inputProps={{ min: "0", max: "10"}}
-                                           value={row.result}
-                                           onChange={this.handleChange()}
-                                           type={'number'}
-                                    />
-                                </FormControl>
-                            }
-                          </TableCell>
-                          <TableCell>
-                            {examInscriptionOnEditIndex !== index &&
-                                <IconButton onClick={() => this.handleExamInscriptionEdit(index)}>
-                                  <Edit />
-                                </IconButton>
-                            }
-                            {examInscriptionOnEditIndex === index &&
-                                <span>
+                        {!isStudent && <TableCell>{row.student.name + row.student.lastName}</TableCell>}
+                        <TableCell>{row.exam.date}</TableCell>
+                        <TableCell>
+                          {examInscriptionOnEditIndex !== index &&
+                          <span>{row.result}</span>
+                          }
+                          {examInscriptionOnEditIndex === index &&
+                          <FormControl>
+                            <InputLabel required htmlFor='exam-result'>Result</InputLabel>
+                            <Input id='exam-result'
+                                   inputProps={{ min: "0", max: "10" }}
+                                   value={row.result}
+                                   onChange={this.handleChange()}
+                                   type={'number'}
+                            />
+                          </FormControl>
+                          }
+                        </TableCell>
+                        {!isStudent && <TableCell>
+                          {examInscriptionOnEditIndex !== index &&
+                          <IconButton onClick={() => this.handleExamInscriptionEdit(index)}>
+                            <Edit />
+                          </IconButton>
+                          }
+                          {examInscriptionOnEditIndex === index &&
+                          <span>
                                     <IconButton onClick={() => this.handleExamInscriptionEdit(-1)}>
                                         <Cancel />
                                     </IconButton>
@@ -189,11 +180,11 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
                                         <Check />
                                     </IconButton>
                                 </span>
-                            }
-                            <IconButton onClick={() => this.handleDeleteClick(row.id)}>
-                              <DeleteOutline />
-                            </IconButton>
-                          </TableCell>
+                          }
+                          <IconButton onClick={() => this.handleDeleteClick(row.id)}>
+                            <DeleteOutline />
+                          </IconButton>
+                        </TableCell>}
                       </TableRow>
                     );
                   })

@@ -38,7 +38,6 @@ declare interface ISubject {
   subjectName: string;
   careerYear: number;
   requiredSubjects: string[];
-  courseProfessors: string[];
   students: string[];
 }
 
@@ -47,6 +46,8 @@ declare interface ICourse {
   startDate: string;
   endDate: string;
   subject: ISubject;
+  courseProfessors: string[];
+  enrolled?: IStudent[]
 }
 
 declare interface IExamInscription {
