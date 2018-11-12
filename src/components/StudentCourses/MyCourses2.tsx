@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button } from "@material-ui/core";
-import { getStudentCourses } from "../../utils/api";
+import { getStudentCourses, unenrollStudentInCourse } from "../../utils/api";
 import { Link } from "react-router-dom";
+import session from "../../utils/session";
 
 export type IProps = {}
 
@@ -31,6 +32,17 @@ class MyCourses2 extends React.Component<IProps, IState> {
     this.setState({ courses: courses })
   };
 
+  unEnroll = (courseId: string) => {
+    unenrollStudentInCourse(courseId, (session.getUser() as IStudent).id).then(this.fetchCourses);
+  };
+
+  isOngoing = (endDateAsString: string) => {
+    const endDate = new Date(endDateAsString).getTime();
+    const now = new Date().getTime();
+
+    return now < endDate;
+  };
+
   render() {
     const { courses } = this.state;
 
@@ -57,6 +69,12 @@ class MyCourses2 extends React.Component<IProps, IState> {
                         <TableCell>{row.startDate}</TableCell>
                         <TableCell>{row.endDate}</TableCell>
                         <TableCell>
+                          {
+                            this.isOngoing(row.endDate) &&
+                            <Button variant="contained" color="primary" onClick={this.unEnroll.bind(row.id)}>
+                              Unenroll
+                            </Button>
+                          }
                           <Button variant="contained" color="primary">
                             <Link to={`/view-exam/${row.id}`} style={{ color: '#fff', textDecoration: 'none' }}>
                               View exams

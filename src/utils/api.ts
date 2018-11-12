@@ -501,6 +501,20 @@ export const unenrollStudentInExam = (examId: string, studentId: string): Promis
   return fetch(url, init);
 };
 
+export const unenrollStudentInCourse = (courseId: string, studentId: string): Promise<Response> => {
+  const url = `${baseUrl}/course/${courseId}/remove`;
+  console.log(studentId);
+  const init: RequestInit = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ "studentId": studentId }),
+  };
+
+  return fetch(url, init);
+};
+
 export const createCareer = (career: ICareer): Promise<Response> => {
   const url = 'http://localhost:9000/career';
   const init: RequestInit = {
