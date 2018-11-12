@@ -226,7 +226,7 @@ class CourseForm extends React.Component<IProps, IState> {
 
   validateStartDate = (value: any): boolean => {
     const today = new Date();
-    return value >= today.toISOString().substr(0, 10);
+    return true;
   };
 
   validateEndDate = (value: any): boolean => {
