@@ -71,7 +71,6 @@ function sidebarLinks(s: UserType): Vector<{ route: string, displayText: string,
         case 'Student':
             return Vector.ofIterable([
                 {route: '/my-courses', displayText: 'My Courses', iconElement: <GolfCourse/>},
-                {route: '/my-exams', displayText: 'My Exams', iconElement: <Assigment/>},
                 {route: '/available-courses', displayText: 'Available Courses', iconElement: <GolfCourse/>},
             ]);
         default:

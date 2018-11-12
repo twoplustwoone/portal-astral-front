@@ -27,6 +27,7 @@ import {
 import session from "../../utils/session";
 import { DeleteConfirmationDialogCourse } from "../DeleteConfirmationDialogCourse/DeleteConfirmationDialogCourse";
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
+import { Link } from "react-router-dom";
 
 const styles = require('./CourseForm.pcss');
 
@@ -432,38 +433,48 @@ class CourseForm extends React.Component<IProps, IState> {
             </form>
           </CardContent>
 
-          <CardActions>
-            <div className={styles.buttonContainer}>
-              {
-                readOnly
-                  ? <Button
-                    variant='contained'
-                    color='primary'
-                    className={styles['create-course-button']}
-                    onClick={this.handleEdit}
-                  >
-                    EDIT
-                  </Button>
-                  : <div className={styles.submitCancelButtons}>
-                    <Button
-                      variant='outlined'
-                      className={styles['create-course-button']}
-                      onClick={this.handleCancel}
-                    >
-                      CANCEL
-                    </Button>
-                    <Button
-                      variant='contained'
-                      color='primary'
-                      className={styles['create-course-button']}
-                      onClick={this.handleSubmit}
-                    >
-                      SAVE
-                    </Button>
-                  </div>
-              }
-            </div>
-          </CardActions>
+                    <CardActions>
+                        <div className={styles.buttonContainer}>
+                            {
+                                readOnly
+                                    ? <div className={styles.examsButton}>
+                                        <Link to={'/course/' + fields.id + '/exams'}>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                            >
+                                                EXAMS
+                                            </Button>
+                                        </Link>
+                                        <Button
+                                            variant='contained'
+                                            color='primary'
+                                            className={styles['create-course-button']}
+                                            onClick={this.handleEdit}
+                                        >
+                                        EDIT
+                                        </Button>
+                                    </div>
+                                    : <div className={styles.submitCancelButtons}>
+                                        <Button
+                                            variant='outlined'
+                                            className={styles['create-course-button']}
+                                            onClick={this.handleCancel}
+                                        >
+                                            CANCEL
+                                        </Button>
+                                        <Button
+                                            variant='contained'
+                                            color='primary'
+                                            className={styles['create-course-button']}
+                                            onClick={this.handleSubmit}
+                                        >
+                                            SAVE
+                                        </Button>
+                                    </div>
+                            }
+                        </div>
+                    </CardActions>
 
         </Card>
 
