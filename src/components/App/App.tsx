@@ -30,7 +30,8 @@ import ExamTable from "../ExamTable/ExamTable";
 import ExamForm from "../ExamForm/ExamForm";
 import ExamInscriptionTable from "../ExamInscriptionTable/ExamInscriptionTable";
 import CareerTable from "../CareerTable/CareerTable";
-import {MyCourses} from "../MyCourses/MyCourses";
+import {MyCourses} from "../StudentCourses/MyCourses";
+import {AvailableCourses} from "../StudentCourses/AvailableCourses";
 
 const styles = require('./App.pcss');
 
@@ -53,34 +54,35 @@ const _styles = (theme: Theme): StyleRules => ({
 
 function Content(props: { classes: any }) {
 
-  return <div className={props.classes.content}>
-    <Route path={"/login"} component={Login} />
-    <PrivateRoute exact path={"/"} component={Home} />
-    <PrivateRoute path='/profile' component={Profile} />
-    <PrivateRoute path='/admins' component={AdminTable} />
-    <PrivateRoute path={'/admin/:id'} component={AdminForm} />
-    <PrivateRoute path={'/new-admin'} component={AdminForm} />
-    <PrivateRoute path={'/students'} component={StudentTable} />
-    <PrivateRoute path={'/student/:id'} component={StudentForm} />
-    <PrivateRoute path={'/new-student'} component={StudentForm} />
-    <PrivateRoute path={'/professors'} component={ProfessorTable} />
-    <PrivateRoute path={'/professor/:id'} component={ProfessorForm} />
-    <PrivateRoute path={'/new-professor'} component={ProfessorForm} />
-    <PrivateRoute path={'/subjects'} component={SubjectsTable} />
-    <PrivateRoute path={'/subject/:id'} component={SubjectForm} />
-    <PrivateRoute path={'/new-subject'} component={SubjectForm} />
-    <PrivateRoute path={'/courses'} component={CourseTable} />
-    <PrivateRoute path={'/new-course'} component={CourseForm} />
-    <PrivateRoute path={'/course/:id'} component={CourseForm} />
-    <PrivateRoute path={'/careers'} component={CareerTable} />
-    <PrivateRoute path={'/exams'} component={ExamTable} />
-    <PrivateRoute path={'/new-exam'} component={ExamForm} />
-    <PrivateRoute path={'/exam/:id'} component={ExamForm} />
-      <PrivateRoute path={'/new-career'} component={CareerForm}/>
-      <PrivateRoute path={'/career/:id'} component={CareerForm}/>
-      <PrivateRoute path={'/course/:courseId/exams'} component={ExamInscriptionTable} />
-      <PrivateRoute path={'/my-courses'} component={MyCourses}/>
-  </div>;
+    return <div className={props.classes.content}>
+        <Route path={"/login"} component={Login}/>
+        <PrivateRoute exact path={"/"} component={Home}/>
+        <PrivateRoute path='/profile' component={Profile}/>
+        <PrivateRoute path='/admins' component={AdminTable}/>
+        <PrivateRoute path={'/admin/:id'} component={AdminForm}/>
+        <PrivateRoute path={'/new-admin'} component={AdminForm}/>
+        <PrivateRoute path={'/students'} component={StudentTable}/>
+        <PrivateRoute path={'/student/:id'} component={StudentForm}/>
+        <PrivateRoute path={'/new-student'} component={StudentForm}/>
+        <PrivateRoute path={'/professors'} component={ProfessorTable}/>
+        <PrivateRoute path={'/professor/:id'} component={ProfessorForm}/>
+        <PrivateRoute path={'/new-professor'} component={ProfessorForm}/>
+        <PrivateRoute path={'/subjects'} component={SubjectsTable}/>
+        <PrivateRoute path={'/subject/:id'} component={SubjectForm}/>
+        <PrivateRoute path={'/new-subject'} component={SubjectForm}/>
+        <PrivateRoute path={'/courses'} component={CourseTable}/>
+        <PrivateRoute path={'/new-course'} component={CourseForm}/>
+        <PrivateRoute path={'/course/:id'} component={CourseForm}/>
+        <PrivateRoute path={'/careers'} component={CareerTable}/>
+        <PrivateRoute path={'/exams'} component={ExamTable}/>
+        <PrivateRoute path={'/new-exam'} component={ExamForm}/>
+        <PrivateRoute path={'/exam/:id'} component={ExamForm}/>
+        <PrivateRoute path={'/new-career'} component={CareerForm}/>
+        <PrivateRoute path={'/career/:id'} component={CareerForm}/>
+        <PrivateRoute path={'/course/:courseId/exams'} component={ExamInscriptionTable}/>
+        <PrivateRoute path={'/my-courses'} component={MyCourses}/>
+        <PrivateRoute path={'/available-courses'} component={AvailableCourses}/>
+    </div>;
 }
 
 class App extends React.Component<Props, {}> {
