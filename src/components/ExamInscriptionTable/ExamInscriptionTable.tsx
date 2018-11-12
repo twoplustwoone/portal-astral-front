@@ -19,6 +19,7 @@ import {
   getAllExamInscriptionsbyCourseId,
   updateExamInscription,
 } from "../../utils/api";
+import session from "../../utils/session";
 
 // const styles = require('./ExamInscriptionTable.pcss');
 
@@ -109,6 +110,8 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
     if (examInscription)
       course = examInscription.exam.course;
 
+    const isStudent = session.getUserType() === 'Student';
+
     return (
       <div>
         {
@@ -132,10 +135,10 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Student</TableCell>
+                  {!isStudent && <TableCell>Student</TableCell>}
                   <TableCell>Date</TableCell>
                   <TableCell>Mark</TableCell>
-                  <TableCell />
+                  {!isStudent && <TableCell />}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -144,7 +147,7 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
                   examInscriptions.map((row, index) => {
                     return (
                       <TableRow key={row.id}>
-                        <TableCell>{row.student.name + row.student.lastName}</TableCell>
+                        {!isStudent && <TableCell>{row.student.name + row.student.lastName}</TableCell>}
                         <TableCell>{row.exam.date}</TableCell>
                         <TableCell>
                           {examInscriptionOnEditIndex !== index &&
@@ -162,7 +165,7 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
                           </FormControl>
                           }
                         </TableCell>
-                        <TableCell>
+                        {!isStudent && <TableCell>
                           {examInscriptionOnEditIndex !== index &&
                           <IconButton onClick={() => this.handleExamInscriptionEdit(index)}>
                             <Edit />
@@ -181,7 +184,7 @@ class ExamInscriptionTable extends React.Component<IProps, IState> {
                           <IconButton onClick={() => this.handleDeleteClick(row.id)}>
                             <DeleteOutline />
                           </IconButton>
-                        </TableCell>
+                        </TableCell>}
                       </TableRow>
                     );
                   })
