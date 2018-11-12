@@ -71,7 +71,7 @@ class MyCourses2 extends React.Component<IProps, IState> {
                         <TableCell>
                           {
                             this.isOngoing(row.endDate) &&
-                            <Button variant="contained" color="primary" onClick={this.unEnroll.bind(row.id)}>
+                            <Button variant="contained" color="primary" onClick={() => this.unEnroll(row.id)}>
                               Unenroll
                             </Button>
                           }
