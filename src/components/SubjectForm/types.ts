@@ -27,6 +27,7 @@ export interface IFields {
   id: string;
   careerYear: number;
   requiredSubjects: string[];
+  courseProfessors: string[];
   students: string[];
 }
 

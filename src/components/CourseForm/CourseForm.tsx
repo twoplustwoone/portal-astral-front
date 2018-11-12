@@ -6,13 +6,14 @@ import {
     CardActions,
     CardContent,
     FormControl,
+    Chip,
     Input,
     InputLabel, MenuItem, Select,
     Typography,
 } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 import { Redirect, withRouter } from "react-router";
-import { createCourse, deleteCourse, getCourseById, updateCourse , getAllSubjects} from "../../utils/api";
+import { createCourse, deleteCourse, getCourseById, updateCourse , getAllSubjects, getAllProfessors, getAllProfessorsForCourse, deleteCourseProfessor, addCourseProfessor} from "../../utils/api";
 import session from "../../utils/session";
 import {DeleteConfirmationDialogCourse} from "../DeleteConfirmationDialogCourse/DeleteConfirmationDialogCourse";
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
@@ -28,12 +29,15 @@ class CourseForm extends React.Component<IProps, IState> {
                 subjectName: '',
                 careerYear: 1,
                 requiredSubjects: [],
+                courseProfessors: [],
                 students: [],
             },
             startDate: '',
             endDate: '',
             id: '',
             requiredSubjects: [],
+            courseProfessors:[],
+            originalCourseProfessors: [],
         },
         showPassword: false,
         errors: {},
@@ -44,6 +48,7 @@ class CourseForm extends React.Component<IProps, IState> {
         isDeleting: false,
         isDeleteModalOpen: false,
         allSubjects: [],
+        allProfesors: [],
     };
 
 
@@ -58,7 +63,27 @@ class CourseForm extends React.Component<IProps, IState> {
         }
 
         getAllSubjects().then(this.handleFetchAllSubjects).then(this.setAllSubjects);
+        getAllProfessors().then(this.handleFetchAllProfessors).then(this.setAllProfessors);
+        getAllProfessorsForCourse(match.params.id).then(this.handleFetchAllProfessorsOfCourse).then(this.setAllProfessorsOfCourse);
     }
+
+    handleFetchAllProfessorsOfCourse = (response: Response) => {
+        return response.json();
+    };
+    
+    setAllProfessorsOfCourse = (professors: IProfessor[]) => {
+        let ids: string[] = professors.map( p => p.id)
+        this.setState({ ...this.state, fields: { ...this.state.fields, courseProfessors: ids } });
+        this.setState({ ...this.state, fields: { ...this.state.fields, originalCourseProfessors: ids } });
+    };
+
+    handleFetchAllProfessors  = (response: Response) => {
+    return response.json();
+    };
+
+    setAllProfessors = (professors: IProfessor[]) => {
+    this.setState({ allProfesors: professors });
+    };
 
     handleFetchAllSubjects = (response: Response) => {
         return response.json();
@@ -128,9 +153,15 @@ class CourseForm extends React.Component<IProps, IState> {
     };
 
     handleSubmit = () => {
+        let deletedProfessors = this.state.fields.originalCourseProfessors.filter( p => 
+            this.state.fields.courseProfessors.find(x => x == p) == undefined)
+        let addedProfessors = this.state.fields.courseProfessors.filter( p =>
+            this.state.fields.originalCourseProfessors.find( x => x == p ) == undefined)
+        addedProfessors.forEach(p => addCourseProfessor(this.state.fields.id, p))
+        deletedProfessors.forEach(p => deleteCourseProfessor(this.state.fields.id, p))
         if (this.validateAll()) {
             if (!this.state.isNew) {
-                updateCourse(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
+                updateCourse(this.state.fields).then(() => this.setState({ redirect: '/courses' }))
             }
             else {
                 createCourse(this.state.fields).then(() => this.setState({ redirect: '/courses' }));
@@ -258,6 +289,19 @@ class CourseForm extends React.Component<IProps, IState> {
         </div>
     };
 
+    handleAddChip = (event: any) => {
+        // TODO check this
+        const { courseProfessors } = this.state.fields;
+        courseProfessors.push(event.target.value);
+        this.setState({ ...this.state, fields: { ...this.state.fields, courseProfessors } });
+      };
+
+    handleDeleteChip = (id: string) => {
+    const { courseProfessors } = this.state.fields;
+    const newArray = courseProfessors.filter(s => s !== id);
+    this.setState({ ...this.state, fields: { ...this.state.fields, courseProfessors: newArray } });
+    };
+
     render() {
         const { fields, errors, isFetching, isDeleteModalOpen, isDeleting, isCreating, redirect } = this.state;
 
@@ -337,6 +381,44 @@ class CourseForm extends React.Component<IProps, IState> {
                                        readOnly={readOnly}
                                        type={'date'}
                                 />
+                            </FormControl>
+                            <FormControl className={styles['professors-form-control']}>
+                                <InputLabel required htmlFor='subject-courseProfessors'>Profesores</InputLabel>
+                                {
+                                <Select
+                                    value={undefined}
+                                    onChange={this.handleAddChip}
+                                    inputProps={{
+                                    name: 'Profesores',
+                                    id: 'course-professors',
+                                    }}
+                                    disabled={readOnly}
+                                >
+                                    {
+                                    this.state.allProfesors
+                                        .filter(s => s.id !== fields.id && fields.courseProfessors.indexOf(s.id) < 0)
+                                        .map(s => <MenuItem value={s.id}>{s.name + " " + s.lastName }</MenuItem>)
+                                    }
+                                </Select>
+                                }
+                                <div style={{ display: 'flex' }}>
+                                {
+                                    fields.courseProfessors.map((val: string, i) => {
+
+                                    const professor = this.state.allProfesors.find(s => s.id === val);
+
+                                    if (!professor) {
+                                        return null;
+                                    }
+
+                                    return <Chip
+                                        key={`${val}-${i}`}
+                                        label={professor.name + " " + professor.lastName}
+                                        onDelete={readOnly ? undefined : () => this.handleDeleteChip(val)}
+                                    />
+                                    })
+                                }
+                                </div>
                             </FormControl>
                         </form>
                     </CardContent>

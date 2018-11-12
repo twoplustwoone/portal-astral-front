@@ -79,6 +79,15 @@ export const getAllProfessors = (): Promise<Response> => {
   return fetch(url, init);
 };
 
+export const getAllProfessorsForCourse = (id): Promise<Response> => {
+  const url = baseUrl + '/course/professors/' + id;
+  const init: RequestInit = {
+    method: 'GET',
+  };
+
+  return fetch(url, init);
+};
+
 export const getProfessorById = (id: string): Promise<Response> => {
   const url = `${baseUrl}/professor/${id}`;
   const init: RequestInit = {
@@ -250,6 +259,19 @@ export const getCourseById = (id: string): Promise<Response> => {
     return fetch(url, init);
 };
 
+export const addCourseProfessor = (courseId: string, professorId: string) => {
+  const url = `${baseUrl}/course/professor/` + courseId;
+  const init: RequestInit = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({'profId': professorId}),
+  };
+
+  return fetch(url, init);
+}
+
 export const updateCourse = (course: ICourse): Promise<Response> => {
     const url = `${baseUrl}/course/${course.id}`;
     const init: RequestInit = {
@@ -270,6 +292,20 @@ export const deleteCourse = (id: string): Promise<Response> => {
     };
 
     return fetch(url, init);
+};
+
+
+export const deleteCourseProfessor = (courseId: string, professorId: string): Promise<Response> => {
+  const url = `${baseUrl}/course/professor/` + courseId;
+  const init: RequestInit = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({'professorId': professorId}),
+  };
+
+  return fetch(url, init);
 };
 
 /* Exam endpoints */
@@ -478,7 +514,6 @@ export const logout = (): Promise<Response | null> => {
   const maybeUser: IUser | null = session.getUser();
 
   if (maybeUser) {
-    debugger;
     const url = `${baseUrl}/logout/${maybeUser.id}`;
     const init: RequestInit = {
       method: 'GET',
