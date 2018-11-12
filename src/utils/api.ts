@@ -229,22 +229,24 @@ export const deleteSubject = (id: string): Promise<Response> => {
 
 /* Course endpoints */
 export const createCourse = (course: ICourse): Promise<Response> => {
-    const url = baseUrl + '/course';
-    const init: RequestInit = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            "startDate" : course.startDate,
-            "endDate" : course.endDate,
-            "subject" : course.subject,
-            "schedules" : [],
-        }),
-    };
+  const url = baseUrl + '/course';
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      "startDate": course.startDate,
+      "endDate": course.endDate,
+      "subject": course.subject,
+      "schedules": [],
+    }),
+  };
 
   if (course.courseProfessors && course.courseProfessors.length > 0) {
-    return fetch(url, init).then(() => addCourseProfessor(course.id, course.courseProfessors[0]));
+    return fetch(url, init)
+      .then(response => response.text())
+      .then((id) => addCourseProfessor(id, course.courseProfessors[0]));
   }
 
   return fetch(url, init);
@@ -295,19 +297,19 @@ export const updateCourseProfessors = (courseId: string, professorId: string) =>
 };
 
 export const updateCourse = (course: ICourse): Promise<Response> => {
-    const url = `${baseUrl}/course/${course.id}`;
-    const init: RequestInit = {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            "startDate" : course.startDate,
-            "endDate" : course.endDate,
-            "subject" :  course.subject,
-            "schedules" : [],
-        }),
-    };
+  const url = `${baseUrl}/course/${course.id}`;
+  const init: RequestInit = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      "startDate": course.startDate,
+      "endDate": course.endDate,
+      "subject": course.subject,
+      "schedules": [],
+    }),
+  };
 
   if (course.courseProfessors && course.courseProfessors.length > 0) {
     return fetch(url, init).then(() => addCourseProfessor(course.id, course.courseProfessors[0]));
@@ -473,30 +475,30 @@ export const updateExamInscription = (examInscription: IExamInscription): Promis
 };
 
 export const enrollStudentInExam = (id: string, studentId: string): Promise<Response> => {
-    const url = `${baseUrl}/exam/enroll/${id}`;
-    const init: RequestInit = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ studentId }),
-    };
+  const url = `${baseUrl}/exam/enroll/${id}`;
+  const init: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ studentId }),
+  };
 
-    return fetch(url, init);
+  return fetch(url, init);
 };
 
 export const unenrollStudentInExam = (examId: string, studentId: string): Promise<Response> => {
-    const url = `${baseUrl}/exam/unenroll/${examId}`;
-    console.log(studentId);
-    const init: RequestInit = {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ "studentId": studentId }),
-    };
+  const url = `${baseUrl}/exam/unenroll/${examId}`;
+  console.log(studentId);
+  const init: RequestInit = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ "studentId": studentId }),
+  };
 
-    return fetch(url, init);
+  return fetch(url, init);
 };
 
 export const createCareer = (career: ICareer): Promise<Response> => {
@@ -541,10 +543,10 @@ export const getCareerById = (id: string): Promise<Response> => {
 
 
 export const getAllExamInscriptionsbyExamId = (id: string): Promise<Response> => {
-    const url = 'http://localhost:9000/getExamInscriptionByExam/' + id;
-    const init: RequestInit = {
-        method: 'GET',
-    };
+  const url = 'http://localhost:9000/getExamInscriptionByExam/' + id;
+  const init: RequestInit = {
+    method: 'GET',
+  };
 
   return fetch(url, init);
 };

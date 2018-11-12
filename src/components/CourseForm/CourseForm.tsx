@@ -82,7 +82,7 @@ class CourseForm extends React.Component<IProps, IState> {
   };
 
   setAllProfessorsOfCourse = (professors: IProfessor[]) => {
-    let ids: string[] = professors.map(p => p.id)
+    let ids: string[] = professors.map(p => p.id);
     this.setState({ ...this.state, fields: { ...this.state.fields, courseProfessors: ids } });
     this.setState({ ...this.state, fields: { ...this.state.fields, originalCourseProfessors: ids } });
   };
