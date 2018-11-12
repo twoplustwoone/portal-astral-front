@@ -11,4 +11,5 @@ export interface IState {
   course: ICourse;
   exams: IExam[];
   examIns: IExamInscription[];
+  redirect?: string;
 }
