@@ -46,6 +46,7 @@ declare interface ICourse {
   startDate: string;
   endDate: string;
   subject: ISubject;
+  enrolled?: any;
 }
 
 declare interface IExamInscription {
