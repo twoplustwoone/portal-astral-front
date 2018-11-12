@@ -261,7 +261,7 @@ export class MyCourses extends React.Component<{}, Readonly<Model>> {
                     let coursesInProgress = courses.filter(c => c.interval.contains(currDate))
                     let finishedCourses = courses.filter(c => c.interval.isBefore(currDate))
 
-                    coursesInProgress = finishedCourses; // TODO [remove] all initial server courses are already expired
+                    // coursesInProgress = finishedCourses; // TODO [remove] all initial server courses are already expired
                     return (
                         <div>
 
