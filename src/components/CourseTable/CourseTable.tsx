@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { IProps, IState } from './types';
-import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, IconButton } from "@material-ui/core";
-import { DeleteOutline, Edit } from "@material-ui/icons";
+import {IProps, IState} from './types';
+import {Paper, Table, TableBody, TableCell, TableHead, TableRow, Button, IconButton} from "@material-ui/core";
+import {DeleteOutline, Edit} from "@material-ui/icons";
 import AddIcon from '@material-ui/icons/Add';
-import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
-import { deleteCourse, getAllCourses } from "../../utils/api";
-import { Link } from "react-router-dom";
+import {DeleteConfirmationDialog} from "../DeleteConfirmationDialog/DeleteConfirmationDialog";
+import {deleteCourse, getAllCourses} from "../../utils/api";
+import {Link} from "react-router-dom";
 import session from "../../utils/session";
-import { Redirect } from "react-router";
+import {Redirect} from "react-router";
 
 // const styles = require('./CourseTable.pcss');
 
@@ -39,21 +39,21 @@ class CourseTable extends React.Component<IProps, IState> {
             return;
         }
 
-        this.setState({ courseBeingDeleted });
+        this.setState({courseBeingDeleted});
     };
 
     handleCloseDelete = () => {
-        this.setState({ isDeleting: false, courseBeingDeleted: null });
+        this.setState({isDeleting: false, courseBeingDeleted: null});
     };
 
     handleConfirmDelete = () => {
-        const { courseBeingDeleted } = this.state;
+        const {courseBeingDeleted} = this.state;
 
         if (!courseBeingDeleted) {
             return;
         }
 
-        this.setState({ isDeleting: true });
+        this.setState({isDeleting: true});
         deleteCourse(courseBeingDeleted.id).then(() => {
             this.handleCloseDelete();
             this.fetchCourses();
@@ -61,18 +61,18 @@ class CourseTable extends React.Component<IProps, IState> {
     };
 
     receiveCourses = (courses: ICourse[]) => {
-        this.setState({ courses: courses })
+        this.setState({courses: courses})
     };
 
     render() {
-        const { courseBeingDeleted, isDeleting, courses } = this.state;
+        const {courseBeingDeleted, isDeleting, courses} = this.state;
 
         const name = courseBeingDeleted ? `${courseBeingDeleted.subject.subjectName}` : '';
 
         const userType = session.getUserType();
 
         if (userType === 'Student') {
-            return <Redirect to={'/'} />;
+            return <Redirect to={'/'}/>;
         }
 
         return (
@@ -87,7 +87,7 @@ class CourseTable extends React.Component<IProps, IState> {
                         isLoading={isDeleting}
                     />
                 }
-                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
                     <Link to={'/new-course'}>
                         <Button
                             variant="fab"
@@ -95,7 +95,7 @@ class CourseTable extends React.Component<IProps, IState> {
                             aria-label="Add"
                             mini
                         >
-                            <AddIcon />
+                            <AddIcon/>
                         </Button>
                     </Link>
                 </div>
@@ -107,7 +107,7 @@ class CourseTable extends React.Component<IProps, IState> {
                                     <TableCell>Subject</TableCell>
                                     <TableCell>Starts</TableCell>
                                     <TableCell>Ends</TableCell>
-                                    <TableCell />
+                                    <TableCell/>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -122,13 +122,21 @@ class CourseTable extends React.Component<IProps, IState> {
                                                 {
                                                     userType === 'Admin' &&
                                                     <TableCell>
+                                                        <Link to={'/course/' + row.id + '/exams'}>
+                                                            <Button
+                                                                variant="contained"
+                                                                color="primary"
+                                                            >
+                                                                EXAMS
+                                                            </Button>
+                                                        </Link>
                                                         <Link to={`/course/${row.id}`}>
                                                             <IconButton>
-                                                                <Edit />
+                                                                <Edit/>
                                                             </IconButton>
                                                         </Link>
                                                         <IconButton onClick={() => this.handleDeleteClick(row.id)}>
-                                                            <DeleteOutline />
+                                                            <DeleteOutline/>
                                                         </IconButton>
                                                     </TableCell>
                                                 }
